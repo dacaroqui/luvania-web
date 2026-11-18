@@ -16,6 +16,10 @@ El servidor de desarrollo queda en el puerto que indique Next. Para un puerto fi
 npx next dev -p 43123
 ```
 
+## Tipografía
+
+Los titulares usan Bodoni Moda. La interfaz usa Figtree como sustituto de Avenir: Avenir no tiene licencia web en este proyecto. Figtree es una sans geométrica de Google Fonts, más cercana a Avenir que Nunito Sans. La variable CSS sigue llamándose `--font-nunito` para no romper el tema.
+
 ## Datos
 
 Los tratamientos, sedes, ofertas y textos viven en `src/data`. Cada ficha tiene `status`: `VERIFIED` (publicado en luvania.com), `NEEDS_REVIEW` (fuera del inventario o ficha incompleta; `noindex` y fuera del sitemap) o, en el caso de `x`, `ARCHIVED` con respuesta 410. La matriz está en `src/data/revision.json`.
@@ -36,3 +40,5 @@ Cada ficha puede tener una foto propia. Si el campo no está, la ficha, las tarj
 ```
 
 La ruta empieza con `/` y coincide con el archivo de `public/`. Una sola imagen por tratamiento, la del protocolo, no un antes/después.
+
+Las categorías de la home y la sección de sedes usan el mismo criterio: el retrato de `public/brand/hero-lcp.webp` solo como atmósfera de Faciales, y el marco de marca en el resto hasta que haya fotos reales. No hay foto de instalaciones todavía.

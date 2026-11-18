@@ -7,11 +7,11 @@ import { ToneField } from "@/components/tone-field";
 import { resolveSedes } from "@/data/sedes";
 import { site } from "@/data/site";
 import type { Metadata } from "next";
-import { Bodoni_Moda, Nunito_Sans } from "next/font/google";
+import { Bodoni_Moda, Figtree } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 
-const sans = Nunito_Sans({
+const sans = Figtree({
   subsets: ["latin"],
   variable: "--font-nunito",
   display: "swap",

@@ -73,10 +73,15 @@ export function SiteHeader() {
           >
             Tratamientos
           </button>
-          <Link href="/promociones">Promociones</Link>
           <Link href="/sedes">Sedes</Link>
-          <Link href="/franquicias">Franquicias</Link>
-          <Link href="/pqrs">PQRS</Link>
+          <details className="nav-more">
+            <summary className="min-h-11 cursor-pointer">Más</summary>
+            <div className="nav-more-panel">
+              <Link href="/promociones">Promociones</Link>
+              <Link href="/franquicias">Franquicias</Link>
+              <Link href="/pqrs">PQRS</Link>
+            </div>
+          </details>
         </nav>
         <div className="flex items-center gap-2">
           <BookButton className="btn-coral magnetic max-md:!hidden" />
