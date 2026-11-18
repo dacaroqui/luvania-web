@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { heroCopy } from "@/data/hero";
 import { BookButton } from "./book-button";
-import { HeroPetals } from "./hero-petals";
+import { HeroScene } from "./hero-petals";
 
 const benefits = [
   { name: "Tecnología avanzada", icon: "spark" },
@@ -11,15 +11,7 @@ const benefits = [
 
 export function Hero() {
   return (
-    <section className="hero-shell">
-      <div className="hero-stage">
-        {/* provisional: ilustración. Sustituir con sesión propia. Sin filtro de color. public/stock/CREDITOS.md */}
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img className="hero-bleed" src="/stock/hero.webp" alt="" />
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img className="petal petal-right" src="/stock/petalo-b.webp" alt="" />
-      </div>
-      <HeroPetals />
+    <HeroScene>
       <div className="hero-grid mx-auto px-4">
         <div className="hero-copy">
           <p className="hero-eyebrow">{heroCopy.eyebrow}</p>
@@ -49,7 +41,7 @@ export function Hero() {
           ))}
         </ul>
       </div>
-    </section>
+    </HeroScene>
   );
 }
 

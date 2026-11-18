@@ -1393,6 +1393,11 @@ body:has(dialog[open]) .sticky-cta {
   width: 50%;
 }
 
+.hero-portrait-parallax {
+  position: absolute;
+  inset: 0;
+}
+
 .hero-bleed {
   position: absolute;
   inset: 0;
@@ -1492,21 +1497,60 @@ body:has(dialog[open]) .sticky-cta {
   pointer-events: none;
 }
 
-.petal-left {
+.petal-slot {
+  position: absolute;
+  z-index: 3;
+  pointer-events: none;
+  will-change: transform;
+}
+
+.petal-slot-left {
   z-index: 1;
   top: 46%;
   left: -13rem;
   width: 20rem;
-  transform: rotate(-12deg);
-  opacity: 0.94;
 }
 
-.petal-right {
+.petal-slot-right {
   right: 0;
   bottom: 0;
   width: 34%;
-  transform: rotate(16deg);
-  opacity: 0.95;
+}
+
+.petal-slot .petal {
+  position: relative;
+  display: block;
+  width: 100%;
+  will-change: transform;
+}
+
+.petal-slot-left .petal { opacity: 0.94; }
+.petal-slot-right .petal { opacity: 0.95; }
+
+.petal-drift-right {
+  animation: petal-drift-right 9.2s ease-in-out -4.6s infinite alternate;
+}
+
+.petal-drift-left {
+  animation: petal-drift-left 7.6s ease-in-out -1.9s infinite alternate;
+}
+
+@keyframes petal-drift-right {
+  from { transform: translate3d(-10px, 12px, 0) rotate(12deg); }
+  to { transform: translate3d(10px, -12px, 0) rotate(20deg); }
+}
+
+@keyframes petal-drift-left {
+  from { transform: translate3d(11px, -9px, 0) rotate(-17deg); }
+  to { transform: translate3d(-11px, 9px, 0) rotate(-7deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .petal-drift-right,
+  .petal-drift-left { animation: none; }
+
+  .petal-drift-right { transform: rotate(16deg); }
+  .petal-drift-left { transform: rotate(-12deg); }
 }
 
 .btn-line {
@@ -1674,7 +1718,7 @@ body:has(dialog[open]) .sticky-cta {
 
   .menu-toggle { display: grid; }
 
-  .petal-left { display: none; }
+  .petal-slot-left { display: none; }
 
 
   .hero-lead {
@@ -1704,12 +1748,13 @@ body:has(dialog[open]) .sticky-cta {
     min-width: 0;
   }
 
-  .petal-right {
+  .petal-slot-right {
     right: -4%;
     bottom: 10%;
     width: 38%;
-    opacity: 0.95;
   }
+
+  .petal-slot-right .petal { opacity: 0.95; }
 }
 
 @media (max-width: 640px) {
