@@ -5,34 +5,57 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
-const zones = [
-  { id: "rostro", name: "Rostro", href: "/zonas/rostro", x: 50, y: 8.3, halo: 22 },
-  { id: "ojos", name: "Ojos", href: "/zonas/ojos", x: 50, y: 11, halo: 16 },
-  { id: "labios", name: "Labios", href: "/zonas/labios", x: 50, y: 13, halo: 12 },
-  { id: "cuello", name: "Cuello", href: "/zonas/cuello", x: 50, y: 17.6, halo: 14 },
-  { id: "piel", name: "Piel", href: "/zonas/piel", x: 57, y: 28.5, halo: 22 },
-  { id: "brazos", name: "Brazos", href: "/zonas/brazos", x: 38.2, y: 35, halo: 18 },
-  { id: "abdomen", name: "Abdomen", href: "/zonas/abdomen", x: 50, y: 37.5, halo: 22 },
-  { id: "gluteos", name: "Caderas", href: "/zonas/gluteos", x: 50, y: 49.2, halo: 30 },
-  { id: "piernas", name: "Piernas", href: "/zonas/piernas", x: 45.6, y: 66, halo: 26 },
+const face = [
+  { id: "rostro", name: "Rostro", href: "/zonas/rostro", x: 50, y: 8.6, halo: 18 },
+  { id: "ojos", name: "Ojos", href: "/zonas/ojos", x: 50, y: 11, halo: 14 },
+  { id: "labios", name: "Labios", href: "/zonas/labios", x: 50, y: 13.1, halo: 12 },
 ] as const;
 
-type ZoneId = (typeof zones)[number]["id"];
+const body = [
+  { id: "cuello", name: "Cuello", href: "/zonas/cuello", x: 50, y: 17.6, halo: 14, label: "right" as const },
+  { id: "brazos", name: "Brazos", href: "/zonas/brazos", x: 38.3, y: 35, halo: 16, label: "left" as const },
+  { id: "brazos", name: "Brazos", href: "/zonas/brazos", x: 61.7, y: 35, halo: 16, label: "right" as const },
+  { id: "abdomen", name: "Abdomen", href: "/zonas/abdomen", x: 50, y: 37.5, halo: 22, label: "right" as const },
+  { id: "gluteos", name: "Caderas", href: "/zonas/gluteos", x: 50, y: 49.2, halo: 26, label: "right" as const },
+  { id: "piernas", name: "Piernas", href: "/zonas/piernas", x: 45.4, y: 66, halo: 18, label: "left" as const },
+  { id: "piernas", name: "Piernas", href: "/zonas/piernas", x: 54.6, y: 66, halo: 18, label: "right" as const },
+] as const;
+
+const chips = [
+  ...face.map(({ id, name, href }) => ({ id, name, href })),
+  { id: "cuello", name: "Cuello", href: "/zonas/cuello" },
+  { id: "piel", name: "Piel", href: "/zonas/piel" },
+  { id: "brazos", name: "Brazos", href: "/zonas/brazos" },
+  { id: "abdomen", name: "Abdomen", href: "/zonas/abdomen" },
+  { id: "gluteos", name: "Caderas", href: "/zonas/gluteos" },
+  { id: "piernas", name: "Piernas", href: "/zonas/piernas" },
+] as const;
+
+type ZoneId = (typeof chips)[number]["id"];
+type HoverId = ZoneId | "cabeza" | null;
+
+const faceIds = new Set<ZoneId>(face.map((item) => item.id));
 
 export function BodyMap() {
   const root = useRef<HTMLDivElement>(null);
   const [shown, setShown] = useState(false);
-  const [hover, setHover] = useState<ZoneId | null>(null);
+  const [hover, setHover] = useState<HoverId>(null);
   const [pinned, setPinned] = useState<ZoneId | null>(null);
-  const current = hover ?? pinned;
-  const zone = zones.find((item) => item.id === current) ?? null;
+  let current: ZoneId | null = pinned;
+  if (hover === "cabeza") current = pinned && faceIds.has(pinned) ? pinned : null;
+  else if (hover) current = hover;
+  const zone = chips.find((item) => item.id === current) ?? null;
   const treatments = current ? forZone(current) : [];
+  const showFace =
+    hover === "cabeza" ||
+    (hover !== null && faceIds.has(hover)) ||
+    (hover === null && pinned !== null && faceIds.has(pinned));
+  const halo = current ? [...face, ...body].find((item) => item.id === current) : null;
 
   useEffect(() => {
     const node = root.current;
     if (!node) return;
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduce) {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       setShown(true);
       return;
     }
@@ -54,11 +77,7 @@ export function BodyMap() {
   }
 
   return (
-    <div
-      ref={root}
-      className={`body-map ${shown ? "is-shown" : ""}`}
-      onMouseLeave={() => setHover(null)}
-    >
+    <div ref={root} className={`body-map ${shown ? "is-shown" : ""}`} onMouseLeave={() => setHover(null)}>
       <div className="body-stage">
         <div className="body-in">
           <div className="body-breathe">
@@ -66,24 +85,60 @@ export function BodyMap() {
               src="/brand/cuerpo-ilustracion.webp"
               alt="Ilustración de un cuerpo femenino de frente, en línea coral"
               fill
-              sizes="(max-width: 768px) 88vw, 440px"
+              sizes="(max-width: 768px) 100vw, 540px"
               className="body-figure object-contain"
             />
-            {zone ? (
-              <span
-                className="body-halo"
-                style={{ left: `${zone.x}%`, top: `${zone.y}%`, width: `${zone.halo}%`, height: `${zone.halo * 0.75}%` }}
-              />
+            {current === "piel" ? <span className="body-halo body-halo-skin" /> : null}
+            {current === "brazos" || current === "piernas"
+              ? body
+                  .filter((item) => item.id === current)
+                  .map((item) => (
+                    <span key={`${item.id}-${item.x}`} className="body-halo" style={{ left: `${item.x}%`, top: `${item.y}%`, width: `${item.halo}%` }} />
+                  ))
+              : halo && current !== "piel" ? (
+                  <span className="body-halo" style={{ left: `${halo.x}%`, top: `${halo.y}%`, width: `${halo.halo}%` }} />
+                ) : null}
+
+            <button
+              type="button"
+              className={`body-point is-right ${showFace ? "is-on" : ""}`}
+              style={{ left: "50%", top: "10.2%", transitionDelay: "180ms" }}
+              aria-label="Rostro, ojos y labios"
+              aria-expanded={showFace}
+              onMouseEnter={() => setHover("cabeza")}
+              onFocus={() => setHover("cabeza")}
+              onClick={() => setHover("cabeza")}
+            >
+              <span className="body-dot" />
+            </button>
+            {showFace ? (
+              <div className="body-face" onMouseEnter={() => setHover("cabeza")}>
+                {face.map((item) => (
+                  <button
+                    key={item.id}
+                    type="button"
+                    className={current === item.id ? "is-on" : ""}
+                    aria-pressed={current === item.id}
+                    onMouseEnter={() => setHover(item.id)}
+                    onFocus={() => setHover(item.id)}
+                    onClick={() => choose(item.id)}
+                  >
+                    <span className="body-line" />
+                    {item.name}
+                  </button>
+                ))}
+              </div>
             ) : null}
-            {zones.map((item, index) => {
+
+            {body.map((item, index) => {
               const on = current === item.id;
-              const side = item.x < 48 ? "is-left" : "is-right";
+              const primary = item.id === "brazos" ? item.x > 50 : item.id === "piernas" ? item.x > 50 : true;
               return (
                 <button
-                  key={item.id}
+                  key={`${item.id}-${item.x}`}
                   type="button"
-                  className={`body-point ${side} ${on ? "is-on" : ""}`}
-                  style={{ left: `${item.x}%`, top: `${item.y}%`, transitionDelay: `${180 + index * 70}ms` }}
+                  className={`body-point is-${item.label} ${on ? "is-on" : ""}`}
+                  style={{ left: `${item.x}%`, top: `${item.y}%`, transitionDelay: `${250 + index * 60}ms` }}
                   aria-label={item.name}
                   aria-pressed={on}
                   onMouseEnter={() => setHover(item.id)}
@@ -91,10 +146,12 @@ export function BodyMap() {
                   onClick={() => choose(item.id)}
                 >
                   <span className="body-dot" />
-                  <span className="body-tag">
-                    <span className="body-line" />
-                    {item.name}
-                  </span>
+                  {on && primary ? (
+                    <span className="body-tag">
+                      <span className="body-line" />
+                      {item.name}
+                    </span>
+                  ) : null}
                 </button>
               );
             })}
@@ -104,7 +161,7 @@ export function BodyMap() {
 
       <div className="body-panel">
         <div className="body-chips" aria-label="Zonas del cuerpo">
-          {zones.map((item) => (
+          {chips.map((item) => (
             <button
               key={item.id}
               type="button"
@@ -119,16 +176,16 @@ export function BodyMap() {
           ))}
         </div>
         {zone ? (
-          <div key={zone.id}>
+          <div key={zone.id} className="body-zone">
             <div className="flex items-baseline justify-between gap-3">
               <h3 className="display text-3xl">{zone.name}</h3>
               <Link href={zone.href} className="text-sm font-bold underline decoration-coral underline-offset-4">
-                Ver zona
+                Ver todos
               </Link>
             </div>
-            <ul className="mt-4 grid gap-2">
+            <ul className="body-list mt-3">
               {treatments.map((item, index) => (
-                <li key={item.slug} className="body-treat" style={{ animationDelay: `${index * 45}ms` }}>
+                <li key={item.slug} className="body-treat" style={{ animationDelay: `${index * 40}ms` }}>
                   <Link href={`/tratamientos/${item.slug}`} className="body-treat-link">
                     {item.name}
                   </Link>

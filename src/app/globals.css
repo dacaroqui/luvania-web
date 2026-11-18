@@ -507,19 +507,25 @@ body:has(dialog[open]) .sticky-cta {
   .logo-frame { width: 9.2rem; }
 }
 
+.body-section { background: #fcf8ef; }
+
 .body-map {
   display: grid;
-  align-items: center;
-  gap: 1.5rem;
+  align-items: start;
+  gap: 1.25rem;
 }
 
 @media (min-width: 1024px) {
-  .body-map { grid-template-columns: minmax(0, 0.86fr) minmax(0, 1.14fr); gap: 3rem; }
+  .body-map {
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+    align-items: stretch;
+    gap: 2.5rem;
+  }
 }
 
 .body-stage {
   margin-inline: auto;
-  width: min(100%, 28rem);
+  width: min(112%, 34rem);
 }
 
 .body-in {
@@ -536,8 +542,6 @@ body:has(dialog[open]) .sticky-cta {
 .body-breathe {
   position: relative;
   aspect-ratio: 864 / 1152;
-  border-radius: 2rem;
-  background: #fcf8ef;
 }
 
 .is-shown .body-breathe {
@@ -547,16 +551,26 @@ body:has(dialog[open]) .sticky-cta {
 
 .body-figure {
   mix-blend-mode: multiply;
+  -webkit-mask-image: radial-gradient(ellipse 72% 80% at 50% 46%, #000 58%, transparent 100%);
+  mask-image: radial-gradient(ellipse 72% 80% at 50% 46%, #000 58%, transparent 100%);
 }
 
 .body-halo {
   position: absolute;
   z-index: 1;
+  aspect-ratio: 1;
   border-radius: 50%;
-  background: radial-gradient(circle, rgb(238 135 107 / 0.55), rgb(238 135 107 / 0) 68%);
+  background: radial-gradient(circle, rgb(232 130 107 / 0.55), rgb(232 130 107 / 0) 68%);
   mix-blend-mode: multiply;
   pointer-events: none;
   transform: translate(-50%, -50%);
+}
+
+.body-halo-skin {
+  left: 50%;
+  top: 42%;
+  width: 62%;
+  background: radial-gradient(ellipse, rgb(232 130 107 / 0.38), rgb(232 130 107 / 0) 70%);
 }
 
 .body-point {
@@ -625,7 +639,55 @@ body:has(dialog[open]) .sticky-cta {
   background: #ee876b;
 }
 
-.body-panel { min-width: 0; }
+.body-face {
+  position: absolute;
+  z-index: 3;
+  left: 64%;
+  top: 6%;
+  display: grid;
+  gap: 0.35rem;
+}
+
+.body-face button {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  gap: 0.4rem;
+  border-radius: 999px;
+  background: rgb(255 255 255 / 0.94);
+  padding: 0 0.8rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  box-shadow: 0 10px 24px rgb(26 26 26 / 0.1);
+}
+
+.body-face button.is-on {
+  background: #111;
+  color: #fcf8ef;
+}
+
+.body-panel {
+  min-width: 0;
+  min-height: 0;
+}
+
+@media (min-width: 1024px) {
+  .body-panel {
+    display: flex;
+    height: 100%;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .body-zone {
+    display: flex;
+    min-height: 0;
+    flex: 1;
+    flex-direction: column;
+  }
+}
 
 .body-chips {
   display: flex;
@@ -647,13 +709,29 @@ body:has(dialog[open]) .sticky-cta {
   min-height: 44px;
   flex: none;
   border-radius: 999px;
+  border: 1px solid rgb(26 26 26 / 0.12);
   background: #fff;
   padding: 0 0.9rem;
   font-size: 0.875rem;
   font-weight: 700;
+  color: #1a1a1a;
 }
 
-.body-chip.is-on { background: #1a1a1a; color: #efecdb; }
+.body-panel button.body-chip.is-on {
+  background: #111;
+  color: #fcf8ef;
+}
+
+.body-list {
+  min-height: 0;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+  max-height: 22rem;
+}
+
+@media (min-width: 1024px) {
+  .body-list { max-height: none; flex: 1; }
+}
 
 .body-treat { animation: body-rise 0.45s cubic-bezier(0.22, 1, 0.36, 1) both; }
 

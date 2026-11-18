@@ -52,9 +52,8 @@ export default function HomePage() {
         </div>
       </div>
 
-      <section data-tone="peach" className="band-peach relative z-[1] overflow-hidden">
-        <FlorLuvania className="flor-glow flor-glow-soft" />
-        <div className="relative z-[1] mx-auto max-w-6xl px-4 py-20">
+      <section data-tone="cream" className="body-section relative z-[1]">
+        <div className="relative z-[1] mx-auto max-w-6xl px-4 py-16 sm:py-20">
           <h2 className="display text-5xl">Elige por el cuerpo</h2>
           <p className="mt-3 max-w-xl text-mute">Toca una zona del cuerpo y mira los tratamientos.</p>
           <div className="mt-8">
