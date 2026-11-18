@@ -1,7 +1,7 @@
 "use client";
 
 import { heroCopy } from "@/data/hero";
-import type { Sede } from "@/data/types";
+import type { AgendaSede } from "@/data/types";
 import { verifiedCatalog } from "@/data/catalog";
 import { agendaLink } from "@/lib/whatsapp";
 import { remember, track } from "@/lib/analytics";
@@ -13,23 +13,27 @@ const verified = verifiedCatalog();
 export function AgendaSheet({
   open,
   tratamientoInicial,
+  sedeInicial,
   sedes,
   onClose,
 }: {
   open: boolean;
   tratamientoInicial?: string;
-  sedes: Sede[];
+  sedeInicial?: string;
+  sedes: AgendaSede[];
   onClose: () => void;
 }) {
   const ref = useRef<HTMLDialogElement>(null);
   const titleId = useId();
   const [tratamiento, setTratamiento] = useState(tratamientoInicial ?? "");
+  const [sedeSlug, setSedeSlug] = useState(sedeInicial ?? "");
   const [formNote, setFormNote] = useState("");
   const [pending, setPending] = useState(false);
 
   useEffect(() => {
     setTratamiento(tratamientoInicial ?? "");
-  }, [tratamientoInicial]);
+    setSedeSlug(sedeInicial ?? "");
+  }, [tratamientoInicial, sedeInicial, open]);
 
   useEffect(() => {
     const dialog = ref.current;
@@ -55,7 +59,7 @@ export function AgendaSheet({
           {sedes.map((sede) => (
             <li key={sede.slug}>
               <a
-                className="flex min-h-12 items-center justify-between rounded-2xl bg-white px-4 font-semibold"
+                className={`flex min-h-12 items-center justify-between rounded-2xl bg-white px-4 font-semibold ${sede.slug === sedeSlug ? "ring-2 ring-coral" : ""}`}
                 href={agendaLink({
                   sede: sede.name,
                   whatsapp: sede.whatsapp,
@@ -97,7 +101,7 @@ export function AgendaSheet({
             const data = new FormData(event.currentTarget);
             const nombre = String(data.get("nombre") ?? "");
             const celular = String(data.get("celular") ?? "");
-            const sede = String(data.get("sede") ?? "");
+            const sede = String(data.get("sede") ?? sedeSlug);
             const consentimiento = data.get("consentimiento") === "on";
             setPending(true);
             setFormNote("");
@@ -121,7 +125,7 @@ export function AgendaSheet({
             }
             remember("luvania_sede", sedes.find((item) => item.slug === sede)?.name ?? sede);
             remember("luvania_tratamiento", interes);
-            track("lead_submit", { sede, tratamiento: interes });
+            track("lead_submit", { sede: sedes.find((item) => item.slug === sede)?.name ?? sede, tratamiento: interes });
             setFormNote("Recibimos tus datos. El equipo de la sede te contacta para la valoración.");
             event.currentTarget.reset();
           }}
@@ -141,7 +145,7 @@ export function AgendaSheet({
           </label>
           <label className="grid gap-1 text-sm font-semibold">
             Sede
-            <select name="sede" required defaultValue="" className="field">
+            <select name="sede" required value={sedeSlug} onChange={(event) => setSedeSlug(event.target.value)} className="field">
               <option value="" disabled>
                 Elige sede
               </option>

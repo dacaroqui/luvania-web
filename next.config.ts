@@ -2,6 +2,10 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   devIndicators: false,
+  images: {
+    deviceSizes: [384, 640, 828, 1080, 1200, 1920],
+    imageSizes: [256, 384],
+  },
   async redirects() {
     return [
       { source: "/clinicas/luvania", destination: "/", permanent: true },

@@ -16,6 +16,7 @@
 
 html {
   scroll-behavior: smooth;
+  scroll-padding-bottom: 5.5rem;
   background: #efecdb;
   transition: background-color 0.8s ease;
 }
@@ -52,6 +53,7 @@ body {
   font-family: var(--font-display);
   font-weight: 500;
   letter-spacing: -0.03em;
+  overflow-wrap: break-word;
 }
 
 .wave {
@@ -150,8 +152,7 @@ body {
 .layer {
   position: absolute;
   inset: 0;
-  transform: translate3d(calc(var(--px) * var(--d) * 16px), calc(var(--py) * var(--d) * 12px), calc(var(--d) * 20px));
-  will-change: transform;
+  transform: translate3d(calc(var(--px) * var(--d) * 16px), calc(var(--py) * var(--d) * 12px), 0);
 }
 
 .layer-a { --d: 1; border-radius: 2rem; }
@@ -251,6 +252,7 @@ body {
 
 dialog.sheet {
   width: min(34rem, calc(100% - 1.5rem));
+  max-height: calc(100dvh - 1.5rem);
   margin: auto;
   border: 0;
   border-radius: 1.5rem;
@@ -262,6 +264,10 @@ dialog.sheet {
 
 dialog.sheet::backdrop {
   background: rgb(26 26 26 / 0.46);
+}
+
+body:has(dialog[open]) .sticky-cta {
+  display: none;
 }
 
 @keyframes badge-pop {
@@ -300,6 +306,7 @@ dialog.sheet::backdrop {
   display: block;
   width: 100%;
   height: auto;
+  aspect-ratio: 600 / 247;
   -webkit-mask-image: radial-gradient(ellipse 8.6% 20% at 75.4% 25.5%, transparent 62%, #000 78%);
   mask-image: radial-gradient(ellipse 8.6% 20% at 75.4% 25.5%, transparent 62%, #000 78%);
 }

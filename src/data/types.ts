@@ -82,6 +82,13 @@ export interface Offer {
   note?: string;
 }
 
+export interface AgendaSede {
+  slug: string;
+  name: string;
+  neighborhood: string;
+  whatsapp: string;
+}
+
 export interface Sede {
   slug: string;
   name: string;

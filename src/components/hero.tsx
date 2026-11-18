@@ -1,11 +1,8 @@
-"use client";
-
 import { heroCopy } from "@/data/hero";
-import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useRef } from "react";
 import { BookButton } from "./book-button";
 import { FlorLuvania } from "./flor-luvania";
+import { HeroMotion } from "./hero-motion";
 
 const labels = [
   { href: "/zonas/rostro", name: "Rostro", style: { top: "14%", left: "4%" } },
@@ -15,50 +12,14 @@ const labels = [
 ];
 
 export function Hero() {
-  const stage = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const node = stage.current;
-    if (!node) return;
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
-    if (reduce.matches) return;
-    const fine = window.matchMedia("(pointer: fine)");
-
-    const onPointer = (event: PointerEvent) => {
-      if (!fine.matches) return;
-      const box = node.getBoundingClientRect();
-      node.style.setProperty("--px", ((event.clientX - box.left) / box.width - 0.5).toFixed(3));
-      node.style.setProperty("--py", ((event.clientY - box.top) / box.height - 0.5).toFixed(3));
-    };
-    const onLeave = () => {
-      node.style.setProperty("--px", "0");
-      node.style.setProperty("--py", "0");
-    };
-    const onScroll = () => {
-      if (fine.matches) return;
-      const box = node.getBoundingClientRect();
-      const progress = 1 - Math.min(1, Math.max(0, box.top / window.innerHeight));
-      node.style.setProperty("--py", ((progress - 0.5) * 0.8).toFixed(3));
-      node.style.setProperty("--px", "0");
-    };
-
-    node.addEventListener("pointermove", onPointer);
-    node.addEventListener("pointerleave", onLeave);
-    window.addEventListener("scroll", onScroll, { passive: true });
-    onScroll();
-    return () => {
-      node.removeEventListener("pointermove", onPointer);
-      node.removeEventListener("pointerleave", onLeave);
-      window.removeEventListener("scroll", onScroll);
-    };
-  }, []);
-
   return (
     <section data-tone="cream" className="relative z-[1]">
+      <link rel="preload" as="image" href="/brand/hero-lcp.webp" media="(max-width: 768px)" fetchPriority="high" />
+      <link rel="preload" as="image" href="/brand/hero-mujer-manual.webp" media="(min-width: 769px)" fetchPriority="high" />
       <div className="mx-auto grid max-w-6xl items-center gap-10 px-4 pt-10 pb-6 lg:grid-cols-[1.05fr_0.95fr] lg:pt-16 lg:pb-10">
         <div className="reveal relative z-[1]">
           <p className="text-xs font-bold tracking-[0.22em] text-mute">{heroCopy.eyebrow}</p>
-          <h1 className="display mt-4 max-w-xl text-5xl leading-[0.95] sm:text-7xl">{heroCopy.title}</h1>
+          <h1 className="display mt-4 max-w-xl text-[clamp(2.4rem,11vw,4.5rem)] leading-[0.95] sm:text-6xl lg:text-7xl">{heroCopy.title}</h1>
           <p className="mt-4 inline-flex rounded-full bg-white px-3 py-1 text-sm font-semibold">{heroCopy.chip}</p>
           <div className="mt-8 flex flex-wrap gap-3">
             <BookButton />
@@ -68,23 +29,24 @@ export function Hero() {
           </div>
         </div>
 
-        <div
-          ref={stage}
-          className="hero-stage relative mx-auto aspect-[1500/1083] w-full max-w-[36rem]"
-          style={{ ["--px" as string]: 0, ["--py" as string]: 0 }}
-        >
+        <HeroMotion>
           <div className="layer layer-back hero-wash" />
           <div className="layer layer-flor">
             <FlorLuvania className="flor-hero" />
           </div>
           <div className="layer layer-photo">
-            <Image
-              src="/brand/hero-mujer-manual.webp"
+            {/* ponytail: img estático para que el LCP no espere al optimizador ni a la hidratación de next/image. */}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/brand/hero-lcp.webp"
+              srcSet="/brand/hero-lcp.webp 640w, /brand/hero-mujer-manual.webp 1500w"
+              sizes="(max-width: 768px) 86vw, 32rem"
               alt="Mujer sonriente con la mano en el rostro"
-              fill
-              priority
-              sizes="(max-width: 1024px) 92vw, 36rem"
-              className="object-contain object-bottom"
+              width={1500}
+              height={1083}
+              fetchPriority="high"
+              decoding="async"
+              className="absolute inset-0 h-full w-full object-contain object-bottom"
             />
             {labels.map((label) => (
               <Link key={label.name} href={label.href} className="hotspot" style={label.style}>
@@ -104,7 +66,7 @@ export function Hero() {
               <path d="M168 118h24M180 106v24" />
             </g>
           </svg>
-        </div>
+        </HeroMotion>
       </div>
     </section>
   );

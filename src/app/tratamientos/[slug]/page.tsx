@@ -4,11 +4,12 @@ import { JsonLd } from "@/components/json-ld";
 import { TreatmentView } from "@/components/treatment-view";
 import { Valoracion } from "@/components/valoracion";
 import { getTreatment, isIndexable, relatedTreatments, treatments } from "@/data";
-import { PRICE_AS_OF, discountPercent, offerForTreatment } from "@/data/offers";
+import { discountPercent, offerForTreatment } from "@/data/offers";
 import { resolveSedes } from "@/data/sedes";
 import { site } from "@/data/site";
 import { especialidadBySlug, needById, zoneById } from "@/data/taxonomy";
 import { cop } from "@/lib/format";
+import { publicText } from "@/lib/public-copy";
 import { pageMeta } from "@/lib/seo";
 import type { Metadata } from "next";
 import Link from "next/link";
@@ -27,7 +28,10 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
   return {
     ...pageMeta({
       title: `${treatment.name} en Bogotá | Luvania`,
-      description: treatment.status === "VERIFIED" ? treatment.summary : treatment.neutralSummary || treatment.name,
+      description: publicText(
+        treatment.status === "VERIFIED" ? treatment.summary : treatment.neutralSummary,
+        treatment.name,
+      ),
       path: `/tratamientos/${treatment.slug}`,
     }),
     robots: isIndexable(treatment) ? { index: true, follow: true } : { index: false, follow: true },
@@ -35,8 +39,7 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
 }
 
 function shown(value: string) {
-  if (!value || value.includes("TODO")) return "Se define en tu valoración.";
-  return value;
+  return publicText(value, "Se define en tu valoración.");
 }
 
 export default async function TratamientoPage({ params }: { params: Promise<Params> }) {
@@ -58,8 +61,7 @@ export default async function TratamientoPage({ params }: { params: Promise<Para
         <TreatmentView name={treatment.name} />
         <Breadcrumbs items={crumbs} />
         <h1 className="display mt-6 text-5xl">{treatment.name}</h1>
-        <p className="mt-4 text-lg leading-8">{treatment.neutralSummary}</p>
-        <p className="mt-4 text-sm text-mute">Esta ficha no está en el índice mientras dirección médica no la apruebe.</p>
+        <p className="mt-4 text-lg leading-8">{publicText(treatment.neutralSummary, treatment.name)}</p>
         <div className="mt-8">
           <BookButton tratamiento={treatment.name} />
         </div>
@@ -79,7 +81,7 @@ export default async function TratamientoPage({ params }: { params: Promise<Para
           "@context": "https://schema.org",
           "@type": "MedicalProcedure",
           name: treatment.name,
-          description: treatment.summary,
+          description: publicText(treatment.summary, treatment.name),
           url: `${site.url}/tratamientos/${treatment.slug}`,
           provider: { "@type": "MedicalClinic", name: site.legalName, url: site.url },
         }}
@@ -88,21 +90,24 @@ export default async function TratamientoPage({ params }: { params: Promise<Para
         data={{
           "@context": "https://schema.org",
           "@type": "FAQPage",
-          mainEntity: treatment.faqs.map((faq) => ({
-            "@type": "Question",
-            name: faq.q,
-            acceptedAnswer: { "@type": "Answer", text: faq.a },
-          })),
+          mainEntity: treatment.faqs
+            .map((faq) => ({ q: publicText(faq.q), a: publicText(faq.a) }))
+            .filter((faq) => faq.q && faq.a)
+            .map((faq) => ({
+              "@type": "Question",
+              name: faq.q,
+              acceptedAnswer: { "@type": "Answer", text: faq.a },
+            })),
         }}
       />
       <TreatmentView name={treatment.name} />
       <Breadcrumbs items={crumbs} />
       <p className="mt-6 text-xs font-bold tracking-[0.16em] text-clay uppercase">{especialidad?.name}</p>
       <h1 className="display mt-2 text-5xl leading-none sm:text-6xl">{treatment.name}</h1>
-      <p className="mt-6 text-lg leading-8">{treatment.summary}</p>
+      <p className="mt-6 text-lg leading-8">{publicText(treatment.summary, treatment.name)}</p>
       <div className="mt-6 grid gap-3 sm:grid-cols-2">
         <Info title="Zona" value={treatment.zones.map((id) => zoneById(id)?.name ?? id).join(", ")} />
-        <Info title="Para quién" value={treatment.paraQuien} />
+        <Info title="Para quién" value={publicText(treatment.paraQuien, "Se define en tu valoración.")} />
         <Info title="Sesiones" value={shown(treatment.sesiones)} />
         <Info title="Duración" value={shown(treatment.duracion)} />
         <Info title="Recuperación" value="Se define en tu valoración." />
@@ -110,7 +115,7 @@ export default async function TratamientoPage({ params }: { params: Promise<Para
       </div>
       {offer && percent ? (
         <p className="mt-4 text-sm">
-          Precios publicados el {PRICE_AS_OF}: <span className="line-through">{cop(offer.priceBefore)}</span>{" "}
+          Precio de referencia: <span className="line-through">{cop(offer.priceBefore)}</span>{" "}
           <strong>{cop(offer.priceNow)}</strong>. Sujeto a valoración y vigencia.
         </p>
       ) : null}
@@ -118,18 +123,22 @@ export default async function TratamientoPage({ params }: { params: Promise<Para
         <BookButton tratamiento={treatment.name} />
       </div>
 
-      <details className="mt-10 rounded-3xl bg-white p-5" open>
-        <summary className="cursor-pointer text-xl font-bold">Qué es</summary>
-        <p className="mt-3 leading-7">{treatment.queEs}</p>
-      </details>
-      <details className="mt-3 rounded-3xl bg-white p-5">
-        <summary className="cursor-pointer text-xl font-bold">Beneficios</summary>
-        <ul className="mt-3 grid gap-2">
-          {treatment.beneficios.map((item) => (
-            <li key={item}>{item}</li>
-          ))}
-        </ul>
-      </details>
+      {publicText(treatment.queEs) ? (
+        <details className="mt-10 rounded-3xl bg-white p-5" open>
+          <summary className="cursor-pointer text-xl font-bold">Qué es</summary>
+          <p className="mt-3 leading-7">{publicText(treatment.queEs)}</p>
+        </details>
+      ) : null}
+      {treatment.beneficios.some((item) => publicText(item)) ? (
+        <details className="mt-3 rounded-3xl bg-white p-5">
+          <summary className="cursor-pointer text-xl font-bold">Beneficios</summary>
+          <ul className="mt-3 grid gap-2">
+            {treatment.beneficios.map((item) => publicText(item)).filter(Boolean).map((item) => (
+              <li key={item}>{item}</li>
+            ))}
+          </ul>
+        </details>
+      ) : null}
       <details className="mt-3 rounded-3xl bg-white p-5">
         <summary className="cursor-pointer text-xl font-bold">Riesgos y contraindicaciones</summary>
         <p className="mt-3 leading-7">
@@ -140,12 +149,15 @@ export default async function TratamientoPage({ params }: { params: Promise<Para
       <details className="mt-3 rounded-3xl bg-white p-5" open>
         <summary className="cursor-pointer text-xl font-bold">Preguntas frecuentes</summary>
         <div className="mt-3 grid gap-4">
-          {treatment.faqs.map((faq) => (
-            <div key={faq.q}>
-              <h2 className="font-bold">{faq.q}</h2>
-              <p className="mt-1 leading-7">{faq.a}</p>
-            </div>
-          ))}
+          {treatment.faqs
+            .map((faq) => ({ q: publicText(faq.q), a: publicText(faq.a) }))
+            .filter((faq) => faq.q && faq.a)
+            .map((faq) => (
+              <div key={faq.q}>
+                <h2 className="font-bold">{faq.q}</h2>
+                <p className="mt-1 leading-7">{faq.a}</p>
+              </div>
+            ))}
         </div>
       </details>
 

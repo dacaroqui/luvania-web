@@ -8,7 +8,7 @@ export default function Template({ children }: { children: React.ReactNode }) {
       <div className="page-bloom" aria-hidden="true">
         <FlorLuvania className="flor-loader" />
       </div>
-      <div className="reveal">{children}</div>
+      {children}
     </>
   );
 }

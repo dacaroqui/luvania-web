@@ -10,15 +10,13 @@ const pages = {
     doc: legalDocs[0],
     title: "Tratamiento de datos personales | Luvania",
     description: "Política de privacidad y tratamiento de datos personales de Luvania, en el PDF vigente de la red.",
-    intro:
-      "El sitio anterior enlazaba esta política en un PDF, con el nombre en minúsculas. No reescribimos el documento legal: aquí está el enlace al archivo publicado por Luvania.",
+    intro: "Esta es la política de privacidad vigente de Luvania.",
   },
   "cambios-y-devoluciones": {
     doc: legalDocs[1],
     title: "Cambios y devoluciones | Luvania",
     description: "Política de cambios y devoluciones de Luvania, en el PDF vigente de la red.",
-    intro:
-      "La política de cambios vive en un PDF con el nombre en mayúsculas, distinto del archivo de privacidad. El enlace apunta al mismo documento que el pie del sitio anterior.",
+    intro: "Esta es la política de cambios y devoluciones vigente de Luvania.",
   },
 } as const;
 
@@ -50,9 +48,6 @@ export default async function PoliticaPage({ params }: { params: Promise<Params>
         <a className="font-bold underline decoration-coral underline-offset-4" href={page.doc.pdf}>
           Abrir {page.doc.pdfLabel}
         </a>
-      </p>
-      <p className="mt-4 text-sm text-mute">
-        El PDF sigue alojado en luvania.com. Si esa URL cambia, hay que actualizar el enlace en los datos del sitio.
       </p>
     </main>
   );

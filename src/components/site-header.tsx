@@ -61,7 +61,7 @@ export function SiteHeader() {
     <header className={`site-header sticky top-0 z-40 border-b border-line/80 bg-cream backdrop-blur-md ${compact ? "is-compact" : ""}`}>
       <div className="header-row mx-auto flex max-w-6xl items-center justify-between gap-4 px-4">
         <Link href="/" className="logo-lockup shrink-0" aria-label="Luvania, inicio">
-          <LogoLockup priority />
+          <LogoLockup />
         </Link>
         <nav className="hidden items-center gap-6 text-sm font-semibold lg:flex" aria-label="Principal">
           <button
@@ -90,6 +90,21 @@ export function SiteHeader() {
             {menu ? "Cerrar" : "Menú"}
           </button>
         </div>
+      </div>
+
+      <div className="border-t border-line/70 px-4 py-3 lg:hidden">
+        <SearchBox compact />
+        <nav aria-label="Accesos" className="mt-3 grid grid-cols-3 gap-2 text-center text-xs font-bold">
+          <Link href="/tratamientos" className="flex min-h-11 items-center justify-center rounded-full bg-white px-2">
+            Tratamientos
+          </Link>
+          <Link href="/sedes" className="flex min-h-11 items-center justify-center rounded-full bg-white px-2">
+            Sedes
+          </Link>
+          <Link href="/promociones" className="flex min-h-11 items-center justify-center rounded-full bg-white px-2">
+            Promociones
+          </Link>
+        </nav>
       </div>
 
       {mega ? (
@@ -122,13 +137,16 @@ export function SiteHeader() {
       ) : null}
 
       {menu ? (
-        <nav id="menu-movil" className="grid max-h-[80vh] gap-4 overflow-auto border-t border-line px-4 py-4 lg:hidden" aria-label="Móvil">
+        <nav id="menu-movil" className="grid max-h-[70vh] gap-4 overflow-auto border-t border-line px-4 py-4 pb-28 lg:hidden" aria-label="Móvil">
           <SearchBox autoFocus onNavigate={() => setMenu(false)} />
-          <Link href="/promociones" onClick={() => setMenu(false)} className="min-h-11 font-semibold">
-            Promociones
+          <Link href="/tratamientos" onClick={() => setMenu(false)} className="min-h-11 font-semibold">
+            Tratamientos
           </Link>
           <Link href="/sedes" onClick={() => setMenu(false)} className="min-h-11 font-semibold">
             Sedes
+          </Link>
+          <Link href="/promociones" onClick={() => setMenu(false)} className="min-h-11 font-semibold">
+            Promociones
           </Link>
           <details>
             <summary className="min-h-11 cursor-pointer font-semibold">Por necesidad</summary>

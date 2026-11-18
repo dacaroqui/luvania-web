@@ -7,20 +7,30 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useAgenda } from "./providers";
 
-export function SearchBox({ autoFocus = false, onNavigate }: { autoFocus?: boolean; onNavigate?: () => void }) {
+const published = catalog.filter((item) => item.status === "VERIFIED");
+
+export function SearchBox({
+  autoFocus = false,
+  compact = false,
+  onNavigate,
+}: {
+  autoFocus?: boolean;
+  compact?: boolean;
+  onNavigate?: () => void;
+}) {
   const [query, setQuery] = useState("");
   const { openAgenda } = useAgenda();
-  const results = query.trim().length < 2 ? [] : matchCatalog(catalog, query).slice(0, 8);
+  const results = query.trim().length < 2 ? [] : matchCatalog(published, query).slice(0, 8);
 
   useEffect(() => {
     if (query.trim().length < 2) return;
-    if (matchCatalog(catalog, query).length === 0) track("search_no_results", { query });
+    if (matchCatalog(published, query).length === 0) track("search_no_results", { query });
   }, [query]);
 
   return (
-    <div>
+    <div className="relative">
       <label className="grid gap-1 text-sm font-bold">
-        Buscar un tratamiento
+        <span className={compact ? "sr-only" : undefined}>Buscar un tratamiento</span>
         <input
           value={query}
           autoFocus={autoFocus}
@@ -30,7 +40,7 @@ export function SearchBox({ autoFocus = false, onNavigate }: { autoFocus?: boole
         />
       </label>
       {query.trim().length >= 2 ? (
-        <ul className="mt-2 grid gap-1">
+        <ul className={`grid gap-1 ${compact ? "absolute z-30 mt-2 w-full rounded-2xl border border-line bg-cream p-2 shadow-lg" : "mt-2"}`}>
           {results.length === 0 ? (
             <li>
               <button type="button" className="btn-coral min-h-11 w-full" onClick={() => openAgenda()}>
@@ -46,7 +56,6 @@ export function SearchBox({ autoFocus = false, onNavigate }: { autoFocus?: boole
                   onClick={onNavigate}
                 >
                   <span className="font-semibold">{item.name}</span>
-                  {item.status === "NEEDS_REVIEW" ? <span className="text-xs text-mute">En revisión</span> : null}
                 </Link>
               </li>
             ))

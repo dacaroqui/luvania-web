@@ -1,6 +1,7 @@
 import { Breadcrumbs, breadcrumbLd } from "@/components/breadcrumbs";
 import { JsonLd } from "@/components/json-ld";
 import { sedes } from "@/data/sedes";
+import { isInternal } from "@/lib/public-copy";
 import { pageMeta } from "@/lib/seo";
 import Link from "next/link";
 
@@ -27,7 +28,9 @@ export default function SedesPage() {
             <Link href={`/sedes/${sede.slug}`} className="block rounded-3xl bg-white p-6 hover:-translate-y-1">
               <h2 className="display text-4xl">{sede.name}</h2>
               <p className="mt-2">{sede.address}</p>
-              <p className="mt-2 text-sm text-mute">{sede.phoneDisplay}</p>
+              {sede.phoneDisplay && !isInternal(sede.phoneDisplay) ? (
+                <p className="mt-2 text-sm text-mute">{sede.phoneDisplay}</p>
+              ) : null}
             </Link>
           </li>
         ))}

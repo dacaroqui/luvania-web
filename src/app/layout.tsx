@@ -21,7 +21,7 @@ const display = Bodoni_Moda({
   subsets: ["latin"],
   variable: "--font-bodoni",
   display: "swap",
-  style: ["normal", "italic"],
+  style: ["normal"],
 });
 
 export const metadata: Metadata = {
@@ -47,7 +47,14 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         >
           Saltar al contenido
         </a>
-        <Providers sedes={resolveSedes()}>
+        <Providers
+          sedes={resolveSedes().map(({ slug, name, neighborhood, whatsapp }) => ({
+            slug,
+            name,
+            neighborhood,
+            whatsapp,
+          }))}
+        >
           <SiteHeader />
           <div id="contenido">{children}</div>
           <SiteFooter />
