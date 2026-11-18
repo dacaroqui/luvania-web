@@ -56,7 +56,7 @@ export default function HomePage() {
         <FlorLuvania className="flor-glow flor-glow-soft" />
         <div className="relative z-[1] mx-auto max-w-6xl px-4 py-20">
           <h2 className="display text-5xl">Elige por el cuerpo</h2>
-          <p className="mt-3 max-w-xl text-mute">La silueta y la lista llevan al mismo lugar.</p>
+          <p className="mt-3 max-w-xl text-mute">Toca una zona del cuerpo y mira los tratamientos.</p>
           <div className="mt-8">
             <BodyMap />
           </div>
