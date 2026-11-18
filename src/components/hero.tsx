@@ -13,7 +13,7 @@ export function Hero() {
   return (
     <section className="hero-shell">
       <div className="hero-stage">
-        {/* provisional: stock. Sustituir con sesión propia. public/stock/CREDITOS.md */}
+        {/* provisional: ilustración. Sustituir con sesión propia. Sin filtro de color. public/stock/CREDITOS.md */}
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img className="hero-bleed" src="/stock/hero.webp" alt="" />
         {/* eslint-disable-next-line @next/next/no-img-element */}
