@@ -6,8 +6,8 @@ Licencia: [Pexels License](https://www.pexels.com/license/).
 
 | Archivo | Uso | Autor | Foto |
 | --- | --- | --- | --- |
-| `hero.webp` | Retrato del hero | Carlos de Jesus | https://www.pexels.com/photo/a-woman-with-her-hand-on-her-cheek-5924178/ |
-| `faciales.webp` | Tarjeta Faciales | KoolShooters | https://www.pexels.com/photo/a-woman-with-facial-cream-on-her-cheek-8946864/ |
+| `hero.webp` | Retrato del hero | Inna Mykytas | https://www.pexels.com/photo/sensual-woman-with-bare-shoulders-looking-at-camera-against-light-background-6233439/ |
+| `faciales.webp` | Tarjeta Faciales | Polina | https://www.pexels.com/photo/a-woman-looking-down-while-applying-a-cream-on-her-face-using-her-hand-6543614/ |
 | `corporales.webp` | Tarjeta Corporales | Anna Tarazevich | https://www.pexels.com/photo/a-person-massaging-a-client-s-bare-back-6560289/ |
 | `depilacion.webp` | Tarjeta Depilación láser | Paolo Ortega | https://www.pexels.com/photo/person-getting-a-massage-10893344/ |
 | `wellness.webp` | Tarjeta Wellness | Kaboompics | https://www.pexels.com/photo/topless-woman-applying-a-skin-care-product-on-neck-5240617/ |

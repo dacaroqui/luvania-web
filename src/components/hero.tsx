@@ -20,10 +20,13 @@ export function Hero() {
         <img className="petal petal-right" src="/stock/petalo-b.webp" alt="" />
       </div>
       <HeroPetals />
-      <div className="hero-grid mx-auto grid max-w-6xl items-center px-4">
+      <div className="hero-grid mx-auto px-4">
         <div className="hero-copy">
           <p className="hero-eyebrow">{heroCopy.eyebrow}</p>
-          <h1 className="display hero-title">{heroCopy.title}</h1>
+          <h1 className="display hero-title">
+            <span>Realza tu</span>
+            <span>belleza natural</span>
+          </h1>
           <p className="hero-lead">{heroCopy.lead}</p>
           <div className="hero-actions">
             <BookButton />
