@@ -16,7 +16,8 @@ const body = [
   { id: "brazos", name: "Brazos", href: "/zonas/brazos", x: 38.3, y: 35, halo: 16, label: "left" as const },
   { id: "brazos", name: "Brazos", href: "/zonas/brazos", x: 61.7, y: 35, halo: 16, label: "right" as const },
   { id: "abdomen", name: "Abdomen", href: "/zonas/abdomen", x: 50, y: 37.5, halo: 22, label: "right" as const },
-  { id: "gluteos", name: "Caderas", href: "/zonas/gluteos", x: 50, y: 49.2, halo: 26, label: "right" as const },
+  { id: "gluteos", name: "Caderas", href: "/zonas/gluteos", x: 37, y: 46.2, halo: 16, label: "left" as const },
+  { id: "gluteos", name: "Caderas", href: "/zonas/gluteos", x: 63, y: 46.2, halo: 16, label: "right" as const },
   { id: "piernas", name: "Piernas", href: "/zonas/piernas", x: 45.4, y: 66, halo: 18, label: "left" as const },
   { id: "piernas", name: "Piernas", href: "/zonas/piernas", x: 54.6, y: 66, halo: 18, label: "right" as const },
 ] as const;
@@ -89,7 +90,7 @@ export function BodyMap() {
               className="body-figure object-contain"
             />
             {current === "piel" ? <span className="body-halo body-halo-skin" /> : null}
-            {current === "brazos" || current === "piernas"
+            {current === "brazos" || current === "piernas" || current === "gluteos"
               ? body
                   .filter((item) => item.id === current)
                   .map((item) => (
@@ -132,7 +133,7 @@ export function BodyMap() {
 
             {body.map((item, index) => {
               const on = current === item.id;
-              const primary = item.id === "brazos" ? item.x > 50 : item.id === "piernas" ? item.x > 50 : true;
+              const primary = item.x > 50 || (item.id !== "brazos" && item.id !== "piernas" && item.id !== "gluteos");
               return (
                 <button
                   key={`${item.id}-${item.x}`}
