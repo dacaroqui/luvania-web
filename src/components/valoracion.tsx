@@ -18,7 +18,7 @@ export function Valoracion() {
       <ol className="grid gap-4">
         {steps.map(([n, title, copy], index) => (
           <li key={n} className="reveal rounded-3xl bg-white p-6" style={{ animationDelay: `${index * 80}ms` }}>
-            <p className="display text-3xl text-coral">{n}</p>
+            <p className="display text-3xl text-clay">{n}</p>
             <h3 className="mt-2 text-xl font-bold">{title}</h3>
             <p className="mt-2 text-mute">{copy}</p>
           </li>

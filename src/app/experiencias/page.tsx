@@ -24,7 +24,7 @@ export default function ExperienciasPage() {
       <ul className="mt-8 grid gap-4">
         {testimonials.map((item) => (
           <li key={item.name} className="rounded-3xl border border-dashed border-salmon p-6">
-            <p className="text-xs font-bold tracking-[0.14em] text-coral uppercase">Placeholder</p>
+            <p className="text-xs font-bold tracking-[0.14em] text-clay uppercase">Placeholder</p>
             <p className="mt-3 text-xl leading-8">“{item.quote}”</p>
             <p className="mt-4 font-bold">{item.name}</p>
             <p className="text-sm text-mute">{item.treatment}</p>

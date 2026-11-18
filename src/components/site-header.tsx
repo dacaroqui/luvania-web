@@ -104,7 +104,7 @@ export function SiteHeader() {
               <ul className="mt-3 max-h-48 overflow-auto text-sm">
                 {letters.map((item) => (
                   <li key={item.slug}>
-                    <Link href={`/tratamientos/${item.slug}`} className="block py-1 hover:text-coral" onClick={() => setMega(false)}>
+                    <Link href={`/tratamientos/${item.slug}`} className="block py-1 hover:text-clay" onClick={() => setMega(false)}>
                       {item.name}
                     </Link>
                   </li>
@@ -167,7 +167,7 @@ function Column({
       <ul className={title ? "mt-3 grid gap-2" : "grid gap-2 pb-2"}>
         {links.map((link) => (
           <li key={link.href}>
-            <Link href={link.href} className="text-sm font-semibold hover:text-coral" onClick={onPick}>
+            <Link href={link.href} className="text-sm font-semibold hover:text-clay" onClick={onPick}>
               {link.name}
             </Link>
           </li>

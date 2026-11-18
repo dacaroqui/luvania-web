@@ -97,7 +97,7 @@ export default async function TratamientoPage({ params }: { params: Promise<Para
       />
       <TreatmentView name={treatment.name} />
       <Breadcrumbs items={crumbs} />
-      <p className="mt-6 text-xs font-bold tracking-[0.16em] text-coral uppercase">{especialidad?.name}</p>
+      <p className="mt-6 text-xs font-bold tracking-[0.16em] text-clay uppercase">{especialidad?.name}</p>
       <h1 className="display mt-2 text-5xl leading-none sm:text-6xl">{treatment.name}</h1>
       <p className="mt-6 text-lg leading-8">{treatment.summary}</p>
       <div className="mt-6 grid gap-3 sm:grid-cols-2">

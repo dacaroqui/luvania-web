@@ -55,7 +55,7 @@ export default async function RecorridoPage({ params }: { params: Promise<Params
       <ol className="mt-8 grid gap-4">
         {journey.steps.map(([title, href, copy], index) => (
           <li key={title} className="rounded-3xl bg-white p-5">
-            <p className="text-sm font-bold text-coral">Paso {index + 1}</p>
+            <p className="text-sm font-bold text-clay">Paso {index + 1}</p>
             <h2 className="mt-1 text-2xl font-bold">
               {href.startsWith("#") ? title : <Link href={href}>{title}</Link>}
             </h2>

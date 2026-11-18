@@ -62,7 +62,7 @@ export function TreatmentBrowser() {
           {visible.map((item) => (
             <li key={item.slug}>
               <Link href={`/tratamientos/${item.slug}`} className="tilt-card flex h-full flex-col rounded-3xl bg-white p-5">
-                <p className="text-xs font-bold tracking-[0.14em] text-coral uppercase">
+                <p className="text-xs font-bold tracking-[0.14em] text-clay uppercase">
                   {especialidades.find((esp) => esp.slug === item.especialidad)?.name}
                 </p>
                 <h2 className="display mt-2 text-3xl leading-none">{item.name}</h2>

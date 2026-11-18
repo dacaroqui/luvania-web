@@ -60,7 +60,7 @@ export default async function SedePage({ params }: { params: Promise<Params> }) 
         }}
       />
       <Breadcrumbs items={crumbs} />
-      <p className="mt-6 text-xs font-bold tracking-[0.16em] text-coral uppercase">{sede.neighborhood}, Bogotá</p>
+      <p className="mt-6 text-xs font-bold tracking-[0.16em] text-clay uppercase">{sede.neighborhood}, Bogotá</p>
       <h1 className="display mt-2 text-5xl sm:text-6xl">Luvania {sede.name}</h1>
       <p className="mt-4 text-lg">{sede.address}</p>
       {sede.addressNote ? <p className="mt-2 text-sm text-mute">{sede.addressNote}</p> : null}

@@ -17,7 +17,7 @@ export default function FranquiciasPage() {
     <main className="mx-auto max-w-3xl px-4 py-10">
       <JsonLd data={breadcrumbLd(crumbs)} />
       <Breadcrumbs items={crumbs} />
-      <p className="mt-6 text-xs font-bold tracking-[0.16em] text-coral uppercase">Marca de {site.brandOf}</p>
+      <p className="mt-6 text-xs font-bold tracking-[0.16em] text-clay uppercase">Marca de {site.brandOf}</p>
       <h1 className="display mt-2 text-5xl sm:text-6xl">Franquicias</h1>
       <p className="mt-4 text-lg leading-8">
         El sitio anterior no tenía página: el botón «Franquíciate» abría un WhatsApp. Esta ficha existe para

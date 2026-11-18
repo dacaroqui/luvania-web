@@ -82,7 +82,7 @@ export default function HomePage() {
             const percent = discountPercent(offer);
             return (
               <li key={offer.slug} className="rounded-3xl bg-white p-5">
-                {percent ? <p className="display text-4xl text-coral">-{percent}%</p> : null}
+                {percent ? <p className="display text-4xl text-clay">-{percent}%</p> : null}
                 <h3 className="mt-2 font-bold">{offer.name}</h3>
                 <p className="mt-2 text-sm">
                   <span className="line-through">{cop(offer.priceBefore)}</span> {cop(offer.priceNow)}
