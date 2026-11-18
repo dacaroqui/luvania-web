@@ -1,48 +1,76 @@
-import { heroCopy } from "@/data/hero";
 import Link from "next/link";
+import { heroCopy } from "@/data/hero";
 import { BookButton } from "./book-button";
-import { HeroBlooms } from "./hero-blooms";
-import { HeroParticles } from "./hero-particles";
-import { HeroStage } from "./hero-stage";
+import { HeroPetals } from "./hero-petals";
+
+const benefits = [
+  { name: "Tecnología avanzada", icon: "spark" },
+  { name: "Acompañamiento personalizado", icon: "person" },
+  { name: "Resultados naturales", icon: "shield" },
+] as const;
 
 export function Hero() {
   return (
-    <section data-tone="cream" className="hero-shell relative z-[1]">
-      <link rel="preload" as="image" href="/brand/hero-lcp.webp" fetchPriority="high" />
-      <div className="hero-grid relative z-[1] mx-auto grid max-w-6xl items-center gap-4 px-4 pt-6 pb-8 lg:grid-cols-[1.05fr_0.95fr] lg:gap-10 lg:pt-16 lg:pb-20">
+    <section className="hero-shell">
+      <div className="hero-stage">
+        {/* provisional: stock. Sustituir con sesión propia. public/stock/CREDITOS.md */}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img className="hero-bleed" src="/stock/hero.webp" alt="" />
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img className="petal petal-right" src="/stock/petalo-b.webp" alt="" />
+      </div>
+      <HeroPetals />
+      <div className="hero-grid mx-auto grid max-w-6xl items-center px-4">
         <div className="hero-copy">
-          <p className="text-xs font-bold tracking-[0.22em] text-clay uppercase">{heroCopy.eyebrow}</p>
-          <h1 className="display hero-title mt-4">{heroCopy.title}</h1>
-          <p className="hero-lead mt-5 max-w-md text-base leading-relaxed text-mute sm:text-lg">{heroCopy.lead}</p>
-          <div className="mt-7 flex flex-wrap items-center gap-x-5 gap-y-3">
+          <p className="hero-eyebrow">{heroCopy.eyebrow}</p>
+          <h1 className="display hero-title">{heroCopy.title}</h1>
+          <p className="hero-lead">{heroCopy.lead}</p>
+          <div className="hero-actions">
             <BookButton />
-            <Link href="/tratamientos" className="hero-secondary">
+            <Link href="/sobre-luvania" className="btn-line hero-outline">
+              <i aria-hidden="true">
+                <svg viewBox="0 0 16 16">
+                  <path d="M6.2 4.4v7.2L12 8 6.2 4.4Z" fill="currentColor" />
+                </svg>
+              </i>
               {heroCopy.secondary}
             </Link>
           </div>
         </div>
-
-        <HeroStage>
-          <div className="hero-halo" aria-hidden="true" />
-          <div className="hero-contact" aria-hidden="true" />
-          <HeroParticles />
-          <div className="hero-frame">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/brand/hero-lcp.webp"
-              srcSet="/brand/hero-lcp.webp 1200w, /brand/hero-mujer-manual.webp 1500w"
-              sizes="(max-width: 1024px) 46vw, 34rem"
-              alt="Retrato editorial de Luvania"
-              width={1500}
-              height={1083}
-              fetchPriority="high"
-              decoding="async"
-              className="hero-portrait"
-            />
-          </div>
-          <HeroBlooms />
-        </HeroStage>
+        <ul className="hero-benefits">
+          {benefits.map((item) => (
+            <li key={item.name}>
+              <BenefitIcon name={item.icon} />
+              <span>{item.name}</span>
+            </li>
+          ))}
+        </ul>
       </div>
     </section>
+  );
+}
+
+function BenefitIcon({ name }: { name: (typeof benefits)[number]["icon"] }) {
+  if (name === "person") {
+    return (
+      <svg viewBox="0 0 32 32" aria-hidden="true">
+        <circle cx="16" cy="11" r="4" />
+        <path d="M8 25c1.2-4 4-6 8-6s6.8 2 8 6" />
+      </svg>
+    );
+  }
+  if (name === "shield") {
+    return (
+      <svg viewBox="0 0 32 32" aria-hidden="true">
+        <path d="M16 5 26 9v7c0 6-4 10-10 12C10 26 6 22 6 16V9l10-4Z" />
+        <path d="M12 16.5 15 19.5 20.5 13" />
+      </svg>
+    );
+  }
+  return (
+    <svg viewBox="0 0 32 32" aria-hidden="true">
+      <path d="M16 6v4M16 22v4M6 16h4M22 16h4M9 9l2.6 2.6M20.4 20.4 23 23M23 9l-2.6 2.6M11.6 20.4 9 23" />
+      <circle cx="16" cy="16" r="3.2" />
+    </svg>
   );
 }

@@ -8,7 +8,6 @@ import { BookButton } from "@/components/book-button";
 import { Valoracion } from "@/components/valoracion";
 import { benefitLines } from "@/data/hero";
 import { offers } from "@/data/offers";
-import { resolveSedes } from "@/data/sedes";
 import { site } from "@/data/site";
 import { pageMeta } from "@/lib/seo";
 import Link from "next/link";
@@ -20,33 +19,16 @@ export const metadata = pageMeta({
   path: "/",
 });
 
-const categories = [
-  {
-    href: "/especialidades/estetica-facial",
-    name: "Faciales",
-    text: "Luminosidad, textura y rasgos, sin dejar de ser tú.",
-    image: "/brand/hero-lcp.webp",
-  },
-  {
-    href: "/especialidades/estetica-corporal",
-    name: "Corporales",
-    text: "Firmeza y contorno, con valoración previa.",
-  },
-  {
-    href: "/especialidades/nutricion-capilar",
-    name: "Capilar",
-    text: "Cuando la caída preocupa, el diagnóstico va primero.",
-  },
-  {
-    href: "/especialidades/rejuvenecimiento-facial",
-    name: "Rejuvenecimiento",
-    text: "Descanso en el rostro, sin promesa de quirófano.",
-  },
+/** Fotos provisionales de stock. Sustituir con sesión propia. public/stock/CREDITOS.md */
+const shots = [
+  { href: "/especialidades/estetica-facial", name: "Faciales", image: "/stock/faciales.webp" },
+  { href: "/especialidades/estetica-corporal", name: "Corporales", image: "/stock/corporales.webp" },
+  { href: "/tratamientos/depilacion-laser", name: "Depilación láser", image: "/stock/depilacion.webp" },
+  { href: "/especialidades/medicina-estetica", name: "Wellness", image: "/stock/wellness.webp" },
 ];
 
 export default function HomePage() {
   const featured = offers.filter(isPublishedOffer).slice(0, 3);
-  const sedes = resolveSedes();
 
   return (
     <main>
@@ -63,35 +45,28 @@ export default function HomePage() {
         }}
       />
       <Hero />
-      <Encuentra />
 
       <section data-tone="cream" className="relative z-[1] bg-cream">
         <div className="mx-auto max-w-6xl px-4 py-16 sm:py-20">
-          <div className="flex flex-wrap items-end justify-between gap-4">
+          <div className="shot-head">
+            <h2 className="display text-4xl sm:text-6xl">Tratamientos diseñados para ti</h2>
             <div>
-              <h2 className="display text-5xl sm:text-6xl">Tratamientos diseñados para ti</h2>
-              <p className="mt-3 max-w-xl text-mute">
-                Cuatro caminos del catálogo publicado. El resto se encuentra por nombre, zona o necesidad.
+              <p className="text-mute">
+                Soluciones faciales y corporales que se adaptan a tus necesidades, con un enfoque natural y armónico.
               </p>
+              <Link href="/tratamientos" className="shot-more">
+                Explorar tratamientos
+                <Arrow />
+              </Link>
             </div>
-            <Link href="/tratamientos" className="hero-secondary">
-              Ver todo el catálogo
-            </Link>
           </div>
-          <ul className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {categories.map((item) => (
+          <ul className="shot-grid">
+            {shots.map((item) => (
               <li key={item.href}>
-                <Link href={item.href} className="catalog-tile tilt-card">
-                  {item.image ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img src={item.image} alt="" />
-                  ) : (
-                    <div className="treatment-frame">
-                      <FlorLuvania />
-                      <span>{item.name}</span>
-                    </div>
-                  )}
-                  <span className="catalog-tile-name">
+                <Link href={item.href} className="shot-card">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={item.image} alt="" />
+                  <span className="shot-label">
                     {item.name}
                     <Arrow />
                   </span>
@@ -99,15 +74,37 @@ export default function HomePage() {
               </li>
             ))}
           </ul>
-          <p className="mt-5 text-sm text-mute">
-            También está{" "}
-            <Link href="/especialidades/medicina-estetica" className="font-bold text-clay underline decoration-coral underline-offset-4">
-              medicina estética
-            </Link>
-            .
-          </p>
         </div>
       </section>
+
+      <section data-tone="cream" className="experience-band relative z-[1]">
+        <div className="experience-layout mx-auto max-w-6xl px-4 py-16 sm:py-20">
+          <div className="experience-arch">
+            {/* provisional: stock. Sustituir con sesión propia. public/stock/CREDITOS.md */}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/stock/experiencia.webp" alt="" />
+          </div>
+          <div className="experience-copy">
+            <h2 className="display text-5xl sm:text-6xl">
+              Vive la experiencia
+              <br />
+              Luvania
+            </h2>
+            <p className="mt-4 max-w-md text-lg leading-8 text-mute">
+              Espacios modernos, profesionales expertos y una atención que te hace sentir en confianza.
+            </p>
+            <Link href="/sedes" className="btn-line mt-8 w-fit">
+              Conoce nuestras sedes
+              <Arrow />
+            </Link>
+          </div>
+        </div>
+        {/* provisional: ilustración. Sustituir con sesión propia. public/stock/CREDITOS.md */}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img className="petal petal-experience" src="/stock/petalo-a.webp" alt="" />
+      </section>
+
+      <Encuentra />
 
       <section data-tone="cream" className="body-section relative z-[1]">
         <div className="relative z-[1] mx-auto max-w-6xl px-4 py-16 sm:py-20">
@@ -115,37 +112,6 @@ export default function HomePage() {
           <p className="mt-3 max-w-xl text-mute">Toca una zona y mira los tratamientos publicados.</p>
           <div className="mt-8">
             <BodyMap />
-          </div>
-        </div>
-      </section>
-
-      <section data-tone="peach" className="relative z-[1] bg-[#f1ceb3]">
-        <div className="mx-auto max-w-6xl px-4 py-16 sm:py-20">
-          <div className="experience-panel">
-            <div className="treatment-media">
-              <div className="treatment-frame">
-                <FlorLuvania />
-                <span>Cinco sedes</span>
-              </div>
-            </div>
-            <div className="flex flex-col justify-center px-6 py-8 sm:px-10">
-              <h2 className="display text-5xl sm:text-6xl">Vive la experiencia Luvania</h2>
-              <p className="mt-4 max-w-md text-lg leading-8 text-mute">
-                Una valoración tranquila, con el equipo de la sede que elijas.
-              </p>
-              <ul className="mt-6 flex flex-wrap gap-2">
-                {sedes.map((sede) => (
-                  <li key={sede.slug}>
-                    <Link href={`/sedes/${sede.slug}`} className="inline-flex min-h-11 items-center rounded-full bg-cream px-4 text-sm font-bold">
-                      {sede.name}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-              <Link href="/sedes" className="hero-secondary mt-6 w-fit">
-                Conoce nuestras sedes
-              </Link>
-            </div>
           </div>
         </div>
       </section>
@@ -215,8 +181,8 @@ export default function HomePage() {
 
 function Arrow() {
   return (
-    <svg className="h-5 w-5 shrink-0" viewBox="0 0 16 16" aria-hidden="true">
-      <path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+    <svg className="h-4 w-4 shrink-0" viewBox="0 0 16 16" aria-hidden="true">
+      <path d="M5 11 11 5M6.5 5H11v4.5" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
 }

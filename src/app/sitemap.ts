@@ -9,6 +9,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
   const paths = [
     "",
+    "/sobre-luvania",
+    "/blog",
     "/tratamientos",
     "/promociones",
     "/sedes",

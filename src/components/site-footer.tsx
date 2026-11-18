@@ -34,6 +34,12 @@ export function SiteFooter() {
               <Link href="/tratamientos">Tratamientos</Link>
             </li>
             <li>
+              <Link href="/sobre-luvania">Sobre Luvania</Link>
+            </li>
+            <li>
+              <Link href="/blog">Blog</Link>
+            </li>
+            <li>
               <Link href="/promociones">Promociones</Link>
             </li>
             <li>

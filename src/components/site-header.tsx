@@ -66,38 +66,33 @@ export function SiteHeader() {
         <nav className="hidden items-center gap-6 text-sm font-semibold lg:flex" aria-label="Principal">
           <button
             type="button"
-            className="min-h-11"
+            className={`nav-drop ${mega ? "is-open" : ""}`}
             aria-expanded={mega}
             aria-controls="mega-tratamientos"
             onClick={() => setMega((value) => !value)}
           >
             Tratamientos
+            <svg className="nav-chevron" viewBox="0 0 12 12" aria-hidden="true">
+              <path d="M2.2 4.3 6 8l3.8-3.7" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
           </button>
           <Link href="/sedes">Sedes</Link>
-          <details className="nav-more">
-            <summary>
-              Más
-              <svg className="nav-chevron" viewBox="0 0 12 12" aria-hidden="true">
-                <path d="M2.2 4.3 6 8l3.8-3.7" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </summary>
-            <div className="nav-more-panel">
-              <Link href="/promociones">Promociones</Link>
-              <Link href="/franquicias">Franquicias</Link>
-              <Link href="/pqrs">PQRS</Link>
-            </div>
-          </details>
+          <Link href="/sobre-luvania">Sobre Luvania</Link>
+          <Link href="/blog">Blog</Link>
         </nav>
         <div className="flex items-center gap-2">
           <BookButton className="btn-coral magnetic max-md:!hidden" />
           <button
             type="button"
-            className="min-h-11 rounded-full border border-ink/15 px-3 text-sm font-bold lg:hidden"
+            className="menu-toggle lg:hidden"
             aria-expanded={menu}
             aria-controls="menu-movil"
+            aria-label={menu ? "Cerrar menú" : "Abrir menú"}
             onClick={() => setMenu((value) => !value)}
           >
-            {menu ? "Cerrar" : "Menú"}
+            <span />
+            <span />
+            <span />
           </button>
         </div>
       </div>
@@ -126,6 +121,16 @@ export function SiteHeader() {
                   </li>
                 ))}
               </ul>
+              <p className="mt-4 text-xs font-bold tracking-[0.16em] text-mute uppercase">También</p>
+              <Link href="/promociones" className="mt-2 block text-sm" onClick={() => setMega(false)}>
+                Promociones
+              </Link>
+              <Link href="/franquicias" className="mt-1 block text-sm" onClick={() => setMega(false)}>
+                Franquicias
+              </Link>
+              <Link href="/pqrs" className="mt-1 block text-sm" onClick={() => setMega(false)}>
+                PQRS
+              </Link>
             </div>
           </div>
         </div>
@@ -139,6 +144,12 @@ export function SiteHeader() {
           </Link>
           <Link href="/sedes" onClick={() => setMenu(false)} className="min-h-11 font-semibold">
             Sedes
+          </Link>
+          <Link href="/sobre-luvania" onClick={() => setMenu(false)} className="min-h-11 font-semibold">
+            Sobre Luvania
+          </Link>
+          <Link href="/blog" onClick={() => setMenu(false)} className="min-h-11 font-semibold">
+            Blog
           </Link>
           <Link href="/promociones" onClick={() => setMenu(false)} className="min-h-11 font-semibold">
             Promociones
