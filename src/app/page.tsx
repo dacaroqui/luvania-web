@@ -4,12 +4,11 @@ import { FlorLuvania } from "@/components/flor-luvania";
 import { FlorRule } from "@/components/flor-rule";
 import { Hero } from "@/components/hero";
 import { JsonLd } from "@/components/json-ld";
+import { OfferCard, isPublishedOffer } from "@/components/offer-card";
 import { Valoracion } from "@/components/valoracion";
-import { verifiedCatalog } from "@/data/catalog";
-import { discountPercent, offers } from "@/data/offers";
+import { offers } from "@/data/offers";
 import { resolveSedes } from "@/data/sedes";
 import { site } from "@/data/site";
-import { cop } from "@/lib/format";
 import { pageMeta } from "@/lib/seo";
 import Link from "next/link";
 
@@ -21,9 +20,7 @@ export const metadata = pageMeta({
 });
 
 export default function HomePage() {
-  const names = verifiedCatalog().map((item) => item.name);
-  const loop = [...names, ...names];
-  const featured = offers.filter((offer) => !offer.priceBeforeSuspicious).slice(0, 3);
+  const featured = offers.filter(isPublishedOffer).slice(0, 3);
   const sedes = resolveSedes();
 
   return (
@@ -43,14 +40,6 @@ export default function HomePage() {
       <Hero />
       <Encuentra />
       <FlorRule />
-
-      <div className="marquee relative z-[1] border-y border-line bg-cream py-4" data-tone="cream" aria-hidden="true">
-        <div className="marquee-track text-sm font-semibold tracking-[0.14em] uppercase">
-          {loop.map((name, index) => (
-            <span key={`${name}-${index}`}>{name}</span>
-          ))}
-        </div>
-      </div>
 
       <section data-tone="cream" className="body-section relative z-[1]">
         <div className="relative z-[1] mx-auto max-w-6xl px-4 py-16 sm:py-20">
@@ -87,19 +76,9 @@ export default function HomePage() {
             </Link>
           </div>
           <ul className="mt-6 grid gap-4 md:grid-cols-3">
-            {featured.map((offer) => {
-              const percent = discountPercent(offer);
-              return (
-                <li key={offer.slug} className="rounded-3xl border border-white/10 bg-white/5 p-5">
-                  {percent ? <p className="display text-4xl text-salmon">-{percent}%</p> : null}
-                  <h3 className="mt-2 font-bold">{offer.name}</h3>
-                  <p className="mt-2 text-sm">
-                    <span className="line-through opacity-70">{cop(offer.priceBefore)}</span> {cop(offer.priceNow)}
-                  </p>
-                  <p className="mt-2 text-xs text-peach">Sujeto a valoración y vigencia.</p>
-                </li>
-              );
-            })}
+            {featured.map((offer) => (
+              <OfferCard key={offer.slug} offer={offer} />
+            ))}
           </ul>
         </div>
       </section>

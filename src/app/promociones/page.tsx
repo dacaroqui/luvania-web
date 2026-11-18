@@ -1,11 +1,9 @@
 import { BookButton } from "@/components/book-button";
 import { Breadcrumbs, breadcrumbLd } from "@/components/breadcrumbs";
-import { DiscountBadge } from "@/components/discount-badge";
 import { JsonLd } from "@/components/json-ld";
-import { discountPercent, offers } from "@/data/offers";
-import { cop } from "@/lib/format";
+import { OfferCard, isPublishedOffer } from "@/components/offer-card";
+import { offers } from "@/data/offers";
 import { pageMeta } from "@/lib/seo";
-import Link from "next/link";
 
 export const metadata = pageMeta({
   title: "Promociones de tratamientos estéticos | Luvania",
@@ -24,24 +22,10 @@ export default function PromocionesPage() {
       <p className="mt-4 max-w-2xl text-lg leading-8 text-mute">
         Precios de referencia. Sujetos a valoración y vigencia.
       </p>
-      <ul className="mt-8 grid gap-4 md:grid-cols-2">
-        {offers.map((offer) => {
-          const percent = offer.priceBeforeSuspicious ? null : discountPercent(offer);
-          return (
-            <li key={offer.slug} className="flex gap-4 rounded-3xl bg-white p-5">
-              {percent ? <DiscountBadge percent={percent} /> : null}
-              <div>
-                <h2 className="display text-3xl">
-                  <Link href={`/tratamientos/${offer.treatmentSlug}`}>{offer.name}</Link>
-                </h2>
-                <p className="mt-2 text-sm">
-                  {percent ? <span className="line-through">{cop(offer.priceBefore)}</span> : null}{" "}
-                  <strong>{cop(offer.priceNow)}</strong>
-                </p>
-              </div>
-            </li>
-          );
-        })}
+      <ul className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {offers.filter(isPublishedOffer).map((offer) => (
+          <OfferCard key={offer.slug} offer={offer} />
+        ))}
       </ul>
       <BookButton className="mt-10 min-h-12 rounded-full bg-coral px-5 text-sm font-bold">
         Agendar valoración

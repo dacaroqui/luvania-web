@@ -92,21 +92,6 @@ export function SiteHeader() {
         </div>
       </div>
 
-      <div className="border-t border-line/70 px-4 py-3 lg:hidden">
-        <SearchBox compact />
-        <nav aria-label="Accesos" className="mt-3 grid grid-cols-3 gap-2 text-center text-xs font-bold">
-          <Link href="/tratamientos" className="flex min-h-11 items-center justify-center rounded-full bg-white px-2">
-            Tratamientos
-          </Link>
-          <Link href="/sedes" className="flex min-h-11 items-center justify-center rounded-full bg-white px-2">
-            Sedes
-          </Link>
-          <Link href="/promociones" className="flex min-h-11 items-center justify-center rounded-full bg-white px-2">
-            Promociones
-          </Link>
-        </nav>
-      </div>
-
       {mega ? (
         <div id="mega-tratamientos" className="hidden border-t border-line bg-paper lg:block">
           <div className="mx-auto grid max-w-6xl gap-8 px-4 py-8 lg:grid-cols-4">

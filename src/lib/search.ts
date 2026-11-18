@@ -1,4 +1,5 @@
-import type { CatalogItem } from "@/data/types";
+import type { CatalogItem, ZoneId } from "@/data/types";
+import { zoneById } from "@/data/taxonomy";
 
 export const searchAliases: { keys: string[]; slug: string }[] = [
   { keys: ["hidroxipatita", "hidroxiapatita"], slug: "hidroxiapatita-de-calcio" },
@@ -13,6 +14,14 @@ function norm(value: string) {
     .toLocaleLowerCase("es")
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "");
+}
+
+export function zoneLabel(zones: string[]) {
+  return zones
+    .map((id) => zoneById(id as ZoneId)?.name)
+    .filter((name): name is string => Boolean(name))
+    .slice(0, 2)
+    .join(" · ");
 }
 
 export function matchCatalog(items: CatalogItem[], query: string) {

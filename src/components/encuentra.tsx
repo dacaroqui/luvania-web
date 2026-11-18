@@ -5,7 +5,8 @@ import { track } from "@/lib/analytics";
 import { matchCatalog } from "@/lib/search";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { BookButton } from "./book-button";
+import { SearchResults } from "./search-box";
+import { useAgenda } from "./providers";
 
 const gates = [
   { href: "/tratamientos#necesidad", name: "Por necesidad", icon: "need" },
@@ -44,6 +45,7 @@ export function Encuentra() {
 
 function Finder() {
   const [query, setQuery] = useState("");
+  const { openAgenda } = useAgenda();
   const results = query.trim().length < 2 ? [] : matchCatalog(catalog, query).filter((item) => item.status === "VERIFIED").slice(0, 6);
 
   useEffect(() => {
@@ -54,7 +56,7 @@ function Finder() {
   }, [query]);
 
   return (
-    <div className="relative w-full lg:max-w-sm" role="search">
+    <div className="relative w-full lg:max-w-md" role="search">
       <label className="grid gap-1 text-sm font-bold">
         <span className="sr-only">¿Qué te gustaría explorar?</span>
         <input
@@ -65,24 +67,7 @@ function Finder() {
           role="searchbox"
         />
       </label>
-      {query.trim().length >= 2 ? (
-        <ul className="absolute z-20 mt-2 w-full overflow-hidden rounded-2xl border border-line bg-white shadow-lg">
-          {results.length === 0 ? (
-            <li className="p-3">
-              <p className="mb-2 text-sm text-mute">Ningún protocolo publicado coincide.</p>
-              <BookButton className="btn-coral min-h-11 w-full" />
-            </li>
-          ) : (
-            results.map((item) => (
-              <li key={item.slug}>
-                <Link href={`/tratamientos/${item.slug}`} className="block min-h-11 px-3 py-2 text-sm font-semibold hover:bg-cream">
-                  {item.name}
-                </Link>
-              </li>
-            ))
-          )}
-        </ul>
-      ) : null}
+      {query.trim().length >= 2 ? <SearchResults items={results} onAgenda={() => openAgenda()} /> : null}
     </div>
   );
 }

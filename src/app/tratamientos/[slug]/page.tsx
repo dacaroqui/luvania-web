@@ -1,6 +1,8 @@
 import { BookButton } from "@/components/book-button";
 import { Breadcrumbs, breadcrumbLd } from "@/components/breadcrumbs";
 import { JsonLd } from "@/components/json-ld";
+import { TreatmentCard } from "@/components/treatment-card";
+import { TreatmentMedia } from "@/components/treatment-media";
 import { TreatmentView } from "@/components/treatment-view";
 import { Valoracion } from "@/components/valoracion";
 import { getTreatment, isIndexable, relatedTreatments, treatments } from "@/data";
@@ -38,8 +40,8 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
   };
 }
 
-function shown(value: string) {
-  return publicText(value, "Se define en tu valoración.");
+function clean(value: string | undefined) {
+  return publicText(value);
 }
 
 export default async function TratamientoPage({ params }: { params: Promise<Params> }) {
@@ -60,6 +62,9 @@ export default async function TratamientoPage({ params }: { params: Promise<Para
         <JsonLd data={breadcrumbLd(crumbs)} />
         <TreatmentView name={treatment.name} />
         <Breadcrumbs items={crumbs} />
+        <div className="ficha-media">
+          <TreatmentMedia name={treatment.name} image={treatment.image} />
+        </div>
         <h1 className="display mt-6 text-5xl">{treatment.name}</h1>
         <p className="mt-4 text-lg leading-8">{publicText(treatment.neutralSummary, treatment.name)}</p>
         <div className="mt-8">
@@ -72,6 +77,19 @@ export default async function TratamientoPage({ params }: { params: Promise<Para
   const offer = offerForTreatment(treatment.slug);
   const percent = offer && !offer.priceBeforeSuspicious ? discountPercent(offer) : null;
   const related = relatedTreatments(treatment).filter((item) => item.status === "VERIFIED");
+  const sesiones = clean(treatment.sesiones);
+  const duracion = clean(treatment.duracion);
+  const paraQuien = clean(treatment.paraQuien);
+  const queEs = clean(treatment.queEs);
+  const beneficios = treatment.beneficios.map((item) => clean(item)).filter(Boolean);
+  const faqs = treatment.faqs.map((faq) => ({ q: clean(faq.q), a: clean(faq.a) })).filter((faq) => faq.q && faq.a);
+  const facts = [
+    ["Zona", treatment.zones.map((id) => zoneById(id)?.name ?? id).join(", ")],
+    ["Necesidad", treatment.needs.map((id) => needById(id)?.name ?? id).join(", ")],
+    paraQuien ? ["Para quién", paraQuien] : null,
+    sesiones ? ["Sesiones", sesiones] : null,
+    duracion ? ["Duración", duracion] : null,
+  ].filter((item): item is [string, string] => Boolean(item));
 
   return (
     <main className="mx-auto max-w-3xl px-4 py-12">
@@ -90,9 +108,7 @@ export default async function TratamientoPage({ params }: { params: Promise<Para
         data={{
           "@context": "https://schema.org",
           "@type": "FAQPage",
-          mainEntity: treatment.faqs
-            .map((faq) => ({ q: publicText(faq.q), a: publicText(faq.a) }))
-            .filter((faq) => faq.q && faq.a)
+          mainEntity: faqs
             .map((faq) => ({
               "@type": "Question",
               name: faq.q,
@@ -102,64 +118,72 @@ export default async function TratamientoPage({ params }: { params: Promise<Para
       />
       <TreatmentView name={treatment.name} />
       <Breadcrumbs items={crumbs} />
+      <div className="ficha-media">
+        <TreatmentMedia name={treatment.name} image={treatment.image} />
+      </div>
       <p className="mt-6 text-xs font-bold tracking-[0.16em] text-clay uppercase">{especialidad?.name}</p>
       <h1 className="display mt-2 text-5xl leading-none sm:text-6xl">{treatment.name}</h1>
-      <p className="mt-6 text-lg leading-8">{publicText(treatment.summary, treatment.name)}</p>
-      <div className="mt-6 grid gap-3 sm:grid-cols-2">
-        <Info title="Zona" value={treatment.zones.map((id) => zoneById(id)?.name ?? id).join(", ")} />
-        <Info title="Para quién" value={publicText(treatment.paraQuien, "Se define en tu valoración.")} />
-        <Info title="Sesiones" value={shown(treatment.sesiones)} />
-        <Info title="Duración" value={shown(treatment.duracion)} />
-        <Info title="Recuperación" value="Se define en tu valoración." />
-        <Info title="Necesidad" value={treatment.needs.map((id) => needById(id)?.name ?? id).join(", ")} />
-      </div>
-      {offer && percent ? (
-        <p className="mt-4 text-sm">
-          Precio de referencia: <span className="line-through">{cop(offer.priceBefore)}</span>{" "}
-          <strong>{cop(offer.priceNow)}</strong>. Sujeto a valoración y vigencia.
+      <p className="mt-5 max-w-2xl text-lg leading-8">{publicText(treatment.summary, treatment.name)}</p>
+      <dl className="ficha-facts">
+        {facts.map(([title, value]) => (
+          <div key={title}>
+            <dt>{title}</dt>
+            <dd>{value}</dd>
+          </div>
+        ))}
+      </dl>
+      {!sesiones || !duracion ? (
+        <p className="ficha-note">
+          Las sesiones y el tiempo se acuerdan en tu valoración, con lo que el equipo vea ese día.
+        </p>
+      ) : null}
+      {offer ? (
+        <p className="mt-6 text-sm">
+          {percent ? <span className="mr-2 text-xs font-bold tracking-[0.12em] text-clay uppercase">{percent}% de descuento</span> : null}
+          <strong className="display text-3xl">{cop(offer.priceNow)}</strong>
+          <span className="mt-1 block text-mute">Sujeto a valoración y vigencia.</span>
         </p>
       ) : null}
       <div className="mt-6">
         <BookButton tratamiento={treatment.name} />
       </div>
 
-      {publicText(treatment.queEs) ? (
-        <details className="mt-10 rounded-3xl bg-white p-5" open>
-          <summary className="cursor-pointer text-xl font-bold">Qué es</summary>
-          <p className="mt-3 leading-7">{publicText(treatment.queEs)}</p>
-        </details>
+      {queEs ? (
+        <section className="mt-12">
+          <h2 className="display text-4xl">Qué es</h2>
+          <p className="mt-4 max-w-2xl text-lg leading-8">{queEs}</p>
+        </section>
       ) : null}
-      {treatment.beneficios.some((item) => publicText(item)) ? (
-        <details className="mt-3 rounded-3xl bg-white p-5">
-          <summary className="cursor-pointer text-xl font-bold">Beneficios</summary>
-          <ul className="mt-3 grid gap-2">
-            {treatment.beneficios.map((item) => publicText(item)).filter(Boolean).map((item) => (
+      {beneficios.length ? (
+        <section className="mt-10">
+          <h2 className="display text-4xl">Beneficios</h2>
+          <ul className="mt-4 grid max-w-2xl gap-2">
+            {beneficios.map((item) => (
               <li key={item}>{item}</li>
             ))}
           </ul>
-        </details>
+        </section>
       ) : null}
-      <details className="mt-3 rounded-3xl bg-white p-5">
-        <summary className="cursor-pointer text-xl font-bold">Riesgos y contraindicaciones</summary>
-        <p className="mt-3 leading-7">
+      <section className="mt-10 max-w-2xl">
+        <h2 className="display text-4xl">Riesgos y contraindicaciones</h2>
+        <p className="mt-4 leading-8">
           Embarazo, infección activa en la zona y la expectativa de un resultado de cirugía se conversan antes.
           El equipo dice si este protocolo cabe. No es una promesa de resultado.
         </p>
-      </details>
-      <details className="mt-3 rounded-3xl bg-white p-5" open>
-        <summary className="cursor-pointer text-xl font-bold">Preguntas frecuentes</summary>
-        <div className="mt-3 grid gap-4">
-          {treatment.faqs
-            .map((faq) => ({ q: publicText(faq.q), a: publicText(faq.a) }))
-            .filter((faq) => faq.q && faq.a)
-            .map((faq) => (
+      </section>
+      {faqs.length ? (
+        <section className="mt-10">
+          <h2 className="display text-4xl">Preguntas frecuentes</h2>
+          <div className="mt-4 grid max-w-2xl gap-5">
+            {faqs.map((faq) => (
               <div key={faq.q}>
-                <h2 className="font-bold">{faq.q}</h2>
+                <h3 className="font-bold">{faq.q}</h3>
                 <p className="mt-1 leading-7">{faq.a}</p>
               </div>
             ))}
-        </div>
-      </details>
+          </div>
+        </section>
+      ) : null}
 
       <section className="mt-10">
         <h2 className="display text-3xl">Sedes</h2>
@@ -183,9 +207,7 @@ export default async function TratamientoPage({ params }: { params: Promise<Para
           <ul className="mt-4 grid gap-3 sm:grid-cols-3">
             {related.map((item) => (
               <li key={item.slug}>
-                <Link href={`/tratamientos/${item.slug}`} className="tilt-card block rounded-2xl bg-ink p-4 text-cream">
-                  <span className="display text-2xl">{item.name}</span>
-                </Link>
+                <TreatmentCard slug={item.slug} name={item.name} summary={item.summary} />
               </li>
             ))}
           </ul>
@@ -198,11 +220,3 @@ export default async function TratamientoPage({ params }: { params: Promise<Para
   );
 }
 
-function Info({ title, value }: { title: string; value: string }) {
-  return (
-    <div className="rounded-3xl bg-white p-4">
-      <dt className="text-xs font-bold tracking-[0.14em] text-mute uppercase">{title}</dt>
-      <dd className="mt-2 text-sm leading-6">{value}</dd>
-    </div>
-  );
-}

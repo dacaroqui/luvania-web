@@ -58,6 +58,11 @@ export interface Treatment {
   placeholderNote?: string;
   /** Pertenece a las 44 páginas de tratamiento del inventario (incluye la página basura "x"). */
   inAudit44: boolean;
+  /**
+   * Foto opcional. Ruta pública, por ejemplo `/tratamientos/hidrolipoclasia.webp`.
+   * Si no está, la interfaz muestra un marco de marca. No es un antes/después.
+   */
+  image?: string;
 }
 
 export interface CatalogItem {
