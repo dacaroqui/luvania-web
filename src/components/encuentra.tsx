@@ -16,14 +16,16 @@ const gates = [
 ] as const;
 
 export function Encuentra() {
+  const [query, setQuery] = useState("");
+  const searching = query.trim().length >= 2;
   return (
     <section data-tone="white" className="band-white relative z-[1]">
       <div className="mx-auto max-w-6xl px-4 py-8 sm:py-10">
         <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
           <h2 className="display text-4xl sm:text-5xl">Encuentra tu tratamiento</h2>
-          <Finder />
+          <Finder query={query} setQuery={setQuery} />
         </div>
-        <ul className="mt-6 grid sm:grid-cols-2 lg:grid-cols-4">
+        <ul className={`mt-6 grid sm:grid-cols-2 lg:grid-cols-4 ${searching ? "hidden" : ""}`}>
           {gates.map((gate, index) => (
             <li key={gate.href} className={index < gates.length - 1 ? "lg:border-r lg:border-line" : undefined}>
               <Link
@@ -43,8 +45,7 @@ export function Encuentra() {
   );
 }
 
-function Finder() {
-  const [query, setQuery] = useState("");
+function Finder({ query, setQuery }: { query: string; setQuery: (value: string) => void }) {
   const { openAgenda } = useAgenda();
   const results = query.trim().length < 2 ? [] : matchCatalog(catalog, query).filter((item) => item.status === "VERIFIED").slice(0, 6);
 
@@ -67,7 +68,7 @@ function Finder() {
           role="searchbox"
         />
       </label>
-      {query.trim().length >= 2 ? <SearchResults items={results} onAgenda={() => openAgenda()} /> : null}
+      {query.trim().length >= 2 ? <SearchResults items={results} onAgenda={() => openAgenda()} className="is-flow" /> : null}
     </div>
   );
 }

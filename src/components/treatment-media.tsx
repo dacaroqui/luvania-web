@@ -1,7 +1,15 @@
 import { FlorLuvania } from "./flor-luvania";
 
 /** Foto del tratamiento si existe. Si no, un marco de marca: nunca un antes/después inventado. */
-export function TreatmentMedia({ name, image }: { name: string; image?: string }) {
+export function TreatmentMedia({
+  name,
+  image,
+  caption = false,
+}: {
+  name: string;
+  image?: string;
+  caption?: boolean;
+}) {
   return (
     <div className="treatment-media">
       {image ? (
@@ -10,7 +18,7 @@ export function TreatmentMedia({ name, image }: { name: string; image?: string }
       ) : (
         <div className="treatment-frame" aria-hidden="true">
           <FlorLuvania />
-          <span>{name}</span>
+          {caption ? <span>{name}</span> : null}
         </div>
       )}
     </div>

@@ -125,7 +125,7 @@ export default function HomePage() {
             <div className="treatment-media">
               <div className="treatment-frame">
                 <FlorLuvania />
-                <span>Cinco sedes en Bogotá</span>
+                <span>Cinco sedes</span>
               </div>
             </div>
             <div className="flex flex-col justify-center px-6 py-8 sm:px-10">

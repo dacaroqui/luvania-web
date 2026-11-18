@@ -49,14 +49,16 @@ export function SearchResults({
   items,
   onNavigate,
   onAgenda,
+  className = "",
 }: {
   items: CatalogItem[];
   onNavigate?: () => void;
   onAgenda: () => void;
+  className?: string;
 }) {
   if (items.length === 0) {
     return (
-      <div className="search-panel">
+      <div className={`search-panel ${className}`}>
         <p className="px-3 py-3 text-sm text-mute">Ningún protocolo publicado coincide.</p>
         <button type="button" className="btn-coral min-h-11 w-full" onClick={onAgenda}>
           Agendar valoración
@@ -66,7 +68,7 @@ export function SearchResults({
   }
 
   return (
-    <ul className="search-panel">
+    <ul className={`search-panel ${className}`}>
       {items.map((item) => (
         <li key={item.slug}>
           <Link href={`/tratamientos/${item.slug}`} className="search-hit" onClick={onNavigate}>

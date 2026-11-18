@@ -356,9 +356,9 @@ body {
 .bloom { position: absolute; transform-origin: center; }
 
 .bloom-a {
-  width: 48%;
-  right: -10%;
-  bottom: -8%;
+  width: 42%;
+  right: -2%;
+  bottom: 2%;
   animation: bloom-drift 10s ease-in-out infinite alternate;
 }
 
@@ -452,6 +452,11 @@ body {
   16% { opacity: 1; transform: translateY(0); }
   22% { opacity: 0; transform: translateY(-0.4em); }
   100% { opacity: 0; transform: translateY(-0.4em); }
+}
+
+.search-panel.is-flow {
+  position: static;
+  margin-top: 0.55rem;
 }
 
 .search-panel {
@@ -1053,6 +1058,13 @@ body:has(dialog[open]) .sticky-cta {
   .flor-hero {
     width: min(46%, 12rem);
     opacity: 0.58;
+  }
+
+  .hero-copy .btn-coral {
+    min-height: 2.75rem;
+    padding-inline: 0.85rem;
+    font-size: 0.78rem;
+    white-space: nowrap;
   }
 
   .hero-title {
