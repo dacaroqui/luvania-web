@@ -3,7 +3,7 @@ export const site = {
   legalName: "Luvania Innovación Estética",
   url: "https://luvania.com",
   description:
-    "Clínica estética en Bogotá. Tratamientos faciales y corporales en cinco sedes, con valoración sin costo y financiación sin intereses.",
+    "Clínica estética en Bogotá. Tratamientos faciales y corporales en cinco sedes. Agenda tu valoración.",
   email: "servicioalcliente@luvania.com",
   phoneDisplay: "(601) 744 8989 ext. 601",
   phoneTel: "+576017448989",

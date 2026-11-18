@@ -1,0 +1,122 @@
+[
+  {
+    "slug": "manchas",
+    "name": "Manchas",
+    "status": "NEEDS_REVIEW",
+    "motivo": "Estaba publicado, pero la ficha era casi vacía o el nombre no está confirmado."
+  },
+  {
+    "slug": "porcelanizacion",
+    "name": "Porcelanización",
+    "status": "NEEDS_REVIEW",
+    "motivo": "Estaba publicado, pero la ficha era casi vacía o el nombre no está confirmado."
+  },
+  {
+    "slug": "acido-hialuronico",
+    "name": "Ácido hialurónico",
+    "status": "NEEDS_REVIEW",
+    "motivo": "No está en las 44 del inventario. Falta aprobación de dirección médica."
+  },
+  {
+    "slug": "lipo-sin-cirugia",
+    "name": "Lipo sin cirugía",
+    "status": "NEEDS_REVIEW",
+    "motivo": "No está en las 44 del inventario. Falta aprobación de dirección médica."
+  },
+  {
+    "slug": "liporeductor",
+    "name": "Liporeductor",
+    "status": "NEEDS_REVIEW",
+    "motivo": "No está en las 44 del inventario. Falta aprobación de dirección médica."
+  },
+  {
+    "slug": "shock-therapy-bronce",
+    "name": "Shock Therapy Bronce",
+    "status": "NEEDS_REVIEW",
+    "motivo": "No está en las 44 del inventario. Falta aprobación de dirección médica."
+  },
+  {
+    "slug": "detox-reductor",
+    "name": "Detox-Reductor",
+    "status": "NEEDS_REVIEW",
+    "motivo": "No está en las 44 del inventario. Falta aprobación de dirección médica."
+  },
+  {
+    "slug": "autosanguis",
+    "name": "Autosanguis",
+    "status": "NEEDS_REVIEW",
+    "motivo": "No está en las 44 del inventario. Falta aprobación de dirección médica."
+  },
+  {
+    "slug": "dercelu",
+    "name": "Dercelu",
+    "status": "NEEDS_REVIEW",
+    "motivo": "No está en las 44 del inventario. Falta aprobación de dirección médica."
+  },
+  {
+    "slug": "rinomodelacion",
+    "name": "Rinomodelación",
+    "status": "NEEDS_REVIEW",
+    "motivo": "No está en las 44 del inventario. Falta aprobación de dirección médica."
+  },
+  {
+    "slug": "cavitacion",
+    "name": "Cavitación",
+    "status": "NEEDS_REVIEW",
+    "motivo": "No está en las 44 del inventario. Falta aprobación de dirección médica."
+  },
+  {
+    "slug": "criolipolisis",
+    "name": "Criolipólisis",
+    "status": "NEEDS_REVIEW",
+    "motivo": "No está en las 44 del inventario. Falta aprobación de dirección médica."
+  },
+  {
+    "slug": "cicatrices",
+    "name": "Cicatrices",
+    "status": "NEEDS_REVIEW",
+    "motivo": "No está en las 44 del inventario. Falta aprobación de dirección médica."
+  },
+  {
+    "slug": "bruxismo",
+    "name": "Bruxismo",
+    "status": "NEEDS_REVIEW",
+    "motivo": "No está en las 44 del inventario. Falta aprobación de dirección médica."
+  },
+  {
+    "slug": "varices-en-las-piernas",
+    "name": "Várices en las piernas",
+    "status": "NEEDS_REVIEW",
+    "motivo": "No está en las 44 del inventario. Falta aprobación de dirección médica."
+  },
+  {
+    "slug": "eliminar-estrias",
+    "name": "Estrías",
+    "status": "NEEDS_REVIEW",
+    "motivo": "No está en las 44 del inventario. Falta aprobación de dirección médica."
+  },
+  {
+    "slug": "laser-co2-fraccionado",
+    "name": "Láser de CO₂ fraccionado",
+    "status": "NEEDS_REVIEW",
+    "motivo": "No está en las 44 del inventario. Falta aprobación de dirección médica."
+  },
+  {
+    "slug": "depilacion-laser",
+    "name": "Depilación láser",
+    "status": "NEEDS_REVIEW",
+    "motivo": "No está en las 44 del inventario. Falta aprobación de dirección médica."
+  },
+  {
+    "slug": "eliminacion-de-tatuajes",
+    "name": "Eliminación de tatuajes",
+    "status": "NEEDS_REVIEW",
+    "motivo": "No está en las 44 del inventario. Falta aprobación de dirección médica."
+  },
+  {
+    "slug": "x",
+    "name": "x",
+    "status": "ARCHIVED",
+    "motivo": "Página basura del menú. Responde 410 y no entra al sitemap."
+  }
+]

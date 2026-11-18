@@ -5,6 +5,12 @@ const treatments = JSON.parse(readFileSync(new URL("../src/data/treatments.json"
 const slugs = treatments.map((item) => item.slug);
 assert.equal(new Set(slugs).size, slugs.length, "slugs únicos");
 assert.equal(treatments.filter((item) => item.inAudit44).length, 43);
+assert.equal(treatments.filter((item) => item.status === "VERIFIED").length, 41);
+assert.equal(treatments.filter((item) => item.status === "NEEDS_REVIEW").length, 19);
+assert.equal(treatments.find((item) => item.slug === "manchas").status, "NEEDS_REVIEW");
+assert.equal(treatments.find((item) => item.slug === "porcelanizacion").status, "NEEDS_REVIEW");
+assert.equal(treatments.find((item) => item.slug === "plasma-virtual").status, "VERIFIED");
+assert.equal(treatments.find((item) => item.slug === "acido-hialuronico").status, "NEEDS_REVIEW");
 assert.ok(!slugs.includes("x"), "la página basura x no se publica");
 
 const required = [

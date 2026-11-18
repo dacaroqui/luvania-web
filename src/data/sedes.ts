@@ -127,5 +127,20 @@ export const sedes: Sede[] = [
 ];
 
 export function getSede(slug: string) {
-  return sedes.find((sede) => sede.slug === slug);
+  return resolveSedes().find((sede) => sede.slug === slug);
+}
+
+/** Números publicados como fallback. LUVANIA_WA_* y LUVANIA_PHONE_* los reemplazan. */
+export function resolveSedes(): Sede[] {
+  return sedes.map((sede) => {
+    const key = sede.slug.toUpperCase();
+    const phone = process.env[`LUVANIA_PHONE_${key}`];
+    const whatsapp = process.env[`LUVANIA_WA_${key}`]?.replace(/\D/g, "");
+    return {
+      ...sede,
+      phoneDisplay: phone || sede.phoneDisplay,
+      phoneTel: phone ? `+57${phone.replace(/\D/g, "")}` : sede.phoneTel,
+      whatsapp: whatsapp || sede.whatsapp,
+    };
+  });
 }

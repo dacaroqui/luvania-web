@@ -36,13 +36,17 @@ export interface Faq {
   a: string;
 }
 
+export type TreatmentStatus = "VERIFIED" | "NEEDS_REVIEW" | "DRAFT" | "ARCHIVED";
+
 export interface Treatment {
   slug: string;
   name: string;
+  status: TreatmentStatus;
   especialidad: string;
   zones: ZoneId[];
   needs: NeedId[];
   summary: string;
+  neutralSummary?: string;
   queEs: string;
   beneficios: string[];
   paraQuien: string;
@@ -50,11 +54,20 @@ export interface Treatment {
   duracion: string;
   faqs: Faq[];
   related: string[];
-  /** Texto redactado porque la página de origen no existía, estaba vacía o era un borrador. */
   placeholder: boolean;
   placeholderNote?: string;
-  /** Pertenece a las 44 páginas de tratamiento del inventario (incluye la página basura "x", que no se publica). */
+  /** Pertenece a las 44 páginas de tratamiento del inventario (incluye la página basura "x"). */
   inAudit44: boolean;
+}
+
+export interface CatalogItem {
+  slug: string;
+  name: string;
+  status: TreatmentStatus;
+  especialidad: string;
+  zones: string[];
+  needs: string[];
+  summary: string;
 }
 
 export interface Offer {

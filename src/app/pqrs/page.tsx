@@ -23,7 +23,7 @@ export default function PqrsPage() {
         <a className="font-bold underline" href={`mailto:${site.email}`}>
           {site.email}
         </a>
-        . Cedritos no está en la lista: esa sede ya no opera.
+        .
       </p>
       <PqrsForm />
     </main>

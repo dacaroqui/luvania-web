@@ -2,11 +2,16 @@ import type { Treatment } from "./types";
 import raw from "./treatments.json";
 
 export const treatments = raw as Treatment[];
+export { catalog, verifiedCatalog } from "./catalog";
 
 const bySlug = new Map(treatments.map((treatment) => [treatment.slug, treatment]));
 
 export function getTreatment(slug: string) {
   return bySlug.get(slug);
+}
+
+export function isIndexable(treatment: Pick<Treatment, "status">) {
+  return treatment.status === "VERIFIED";
 }
 
 export function relatedTreatments(treatment: Treatment) {

@@ -1,5 +1,4 @@
 @import "tailwindcss";
-@import "lenis/dist/lenis.css";
 
 @theme {
   --color-cream: #efecdb;
@@ -79,7 +78,7 @@ body {
 .hotspot {
   position: absolute;
   z-index: 2;
-  display: none;
+  display: flex;
   min-height: 44px;
   min-width: 44px;
   align-items: center;
@@ -96,10 +95,122 @@ body {
   backdrop-filter: blur(8px);
 }
 
-@media (min-width: 768px) {
-  .hotspot {
-    display: flex;
-  }
+.btn-coral {
+  display: inline-flex;
+  min-height: 3rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: #ee876b;
+  padding: 0 1.25rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+.btn-ghost {
+  display: inline-flex;
+  min-height: 3rem;
+  align-items: center;
+  border-radius: 999px;
+  border: 1px solid rgb(26 26 26 / 0.15);
+  padding: 0 1.25rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+.field {
+  min-height: 3rem;
+  width: 100%;
+  border-radius: 1rem;
+  border: 1px solid #e4d5c6;
+  background: #fff;
+  padding: 0 1rem;
+  font-weight: 400;
+}
+
+.hero-wash {
+  background:
+    linear-gradient(160deg, #efecdb 0%, #f1ceb3 42%, #f0a486 72%, #ee876b 100%);
+}
+
+.layer {
+  position: absolute;
+  inset: 0;
+  transform: translate3d(calc(var(--px) * var(--d) * 16px), calc(var(--py) * var(--d) * 12px), calc(var(--d) * 20px));
+  will-change: transform;
+}
+
+.layer-a { --d: 1; border-radius: 2rem; }
+.layer-b { --d: 2.2; pointer-events: none; }
+
+.tilt-card {
+  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.tilt-card:hover {
+  transform: translateY(-6px) rotate(-0.35deg);
+}
+
+.marquee {
+  overflow: hidden;
+}
+
+.marquee-track {
+  display: flex;
+  width: max-content;
+  gap: 2rem;
+  animation: marquee 42s linear infinite;
+}
+
+.reveal {
+  animation: rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.wash-shift {
+  position: relative;
+}
+
+.wash-shift::before,
+.wash-shift::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.wash-shift::before {
+  background: radial-gradient(600px 240px at 10% 0%, rgb(241 206 179 / 0.7), transparent 70%);
+}
+
+.wash-shift::after {
+  background: radial-gradient(520px 220px at 90% 20%, rgb(238 135 107 / 0.28), transparent 70%);
+  animation: wash 10s ease-in-out infinite alternate;
+}
+
+.wave path {
+  stroke-dasharray: 1600;
+  stroke-dashoffset: 1600;
+  animation: draw 1.6s ease forwards;
+}
+
+@keyframes rise {
+  from { transform: translateY(18px); }
+  to { transform: none; }
+}
+
+@keyframes marquee {
+  to { transform: translateX(-50%); }
+}
+
+@keyframes wash {
+  from { opacity: 0.45; }
+  to { opacity: 1; }
+}
+
+@keyframes draw {
+  to { stroke-dashoffset: 0; }
 }
 
 .hotspot i {
@@ -159,6 +270,10 @@ dialog.sheet::backdrop {
   100% {
     opacity: 0;
   }
+}
+
+@view-transition {
+  navigation: auto;
 }
 
 @media (prefers-reduced-motion: reduce) {

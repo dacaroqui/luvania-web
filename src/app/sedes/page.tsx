@@ -19,8 +19,7 @@ export default function SedesPage() {
       <Breadcrumbs items={crumbs} />
       <h1 className="display mt-6 text-5xl sm:text-6xl">Sedes en Bogotá</h1>
       <p className="mt-4 max-w-2xl text-lg leading-8 text-mute">
-        Cinco sedes activas. Cedritos no existe en esta red. Galerías aparece en formularios viejos y no tiene
-        tarjeta en la home: no se publica hasta que la confirmen.
+        Restrepo, Modelia, Chicó, Venecia y Colina.
       </p>
       <ul className="mt-8 grid gap-4 md:grid-cols-2">
         {sedes.map((sede) => (

@@ -28,7 +28,7 @@ export default async function EspecialidadPage({ params }: { params: Promise<Par
   const { slug } = await params;
   const item = especialidadBySlug(slug);
   if (!item) notFound();
-  const list = treatments.filter((treatment) => treatment.especialidad === item.slug);
+  const list = treatments.filter((treatment) => treatment.especialidad === item.slug && treatment.status === "VERIFIED");
   const crumbs = [
     { name: "Tratamientos", href: "/tratamientos" },
     { name: item.name, href: `/especialidades/${item.slug}` },

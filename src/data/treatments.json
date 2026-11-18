@@ -46,7 +46,8 @@
     ],
     "placeholder": false,
     "placeholderNote": "",
-    "inAudit44": true
+    "inAudit44": true,
+    "status": "VERIFIED"
   },
   {
     "slug": "dermapen",
@@ -98,7 +99,8 @@
     ],
     "placeholder": false,
     "placeholderNote": "",
-    "inAudit44": true
+    "inAudit44": true,
+    "status": "VERIFIED"
   },
   {
     "slug": "hidrolipoclasia",
@@ -147,7 +149,8 @@
     ],
     "placeholder": false,
     "placeholderNote": "",
-    "inAudit44": true
+    "inAudit44": true,
+    "status": "VERIFIED"
   },
   {
     "slug": "drenaje-linfatico",
@@ -197,7 +200,8 @@
     ],
     "placeholder": false,
     "placeholderNote": "",
-    "inAudit44": true
+    "inAudit44": true,
+    "status": "VERIFIED"
   },
   {
     "slug": "lipomax",
@@ -245,7 +249,8 @@
     ],
     "placeholder": true,
     "placeholderNote": "Página de origen delgada. El mecanismo del equipo queda por confirmar.",
-    "inAudit44": true
+    "inAudit44": true,
+    "status": "VERIFIED"
   },
   {
     "slug": "velanova",
@@ -293,7 +298,8 @@
     ],
     "placeholder": true,
     "placeholderNote": "Página de origen delgada y con promesa de pérdida de peso rápida, que no se replica.",
-    "inAudit44": true
+    "inAudit44": true,
+    "status": "VERIFIED"
   },
   {
     "slug": "electroporacion",
@@ -343,7 +349,8 @@
     ],
     "placeholder": true,
     "placeholderNote": "Página de origen delgada. No se publican parámetros del equipo.",
-    "inAudit44": true
+    "inAudit44": true,
+    "status": "VERIFIED"
   },
   {
     "slug": "toxina-botulinica-tipo-a",
@@ -389,7 +396,8 @@
     ],
     "placeholder": false,
     "placeholderNote": "",
-    "inAudit44": true
+    "inAudit44": true,
+    "status": "VERIFIED"
   },
   {
     "slug": "hidroxiapatita-de-calcio",
@@ -438,7 +446,8 @@
     ],
     "placeholder": false,
     "placeholderNote": "",
-    "inAudit44": true
+    "inAudit44": true,
+    "status": "VERIFIED"
   },
   {
     "slug": "aumento-y-o-perfilamiento-de-labios",
@@ -484,7 +493,8 @@
     ],
     "placeholder": false,
     "placeholderNote": "",
-    "inAudit44": true
+    "inAudit44": true,
+    "status": "VERIFIED"
   },
   {
     "slug": "aumento-y-o-perfilamiento-de-pomulos",
@@ -530,7 +540,8 @@
     ],
     "placeholder": false,
     "placeholderNote": "",
-    "inAudit44": true
+    "inAudit44": true,
+    "status": "VERIFIED"
   },
   {
     "slug": "aumento-y-o-perfilamiento-de-menton",
@@ -577,7 +588,8 @@
     ],
     "placeholder": false,
     "placeholderNote": "",
-    "inAudit44": true
+    "inAudit44": true,
+    "status": "VERIFIED"
   },
   {
     "slug": "acne",
@@ -623,7 +635,8 @@
     ],
     "placeholder": false,
     "placeholderNote": "",
-    "inAudit44": true
+    "inAudit44": true,
+    "status": "VERIFIED"
   },
   {
     "slug": "eliminar-ojeras",
@@ -669,7 +682,8 @@
     ],
     "placeholder": false,
     "placeholderNote": "",
-    "inAudit44": true
+    "inAudit44": true,
+    "status": "VERIFIED"
   },
   {
     "slug": "bolsas-en-los-ojos",
@@ -715,7 +729,8 @@
     ],
     "placeholder": false,
     "placeholderNote": "",
-    "inAudit44": true
+    "inAudit44": true,
+    "status": "VERIFIED"
   },
   {
     "slug": "lifting-facial",
@@ -762,7 +777,8 @@
     ],
     "placeholder": false,
     "placeholderNote": "",
-    "inAudit44": true
+    "inAudit44": true,
+    "status": "VERIFIED"
   },
   {
     "slug": "manchas",
@@ -809,7 +825,9 @@
     ],
     "placeholder": true,
     "placeholderNote": "La página original tenía unas 345 palabras y ningún subtítulo. Este texto es un placeholder editorial.",
-    "inAudit44": true
+    "inAudit44": true,
+    "status": "NEEDS_REVIEW",
+    "neutralSummary": "Protocolo en revisión con dirección médica. Puedes agendar una valoración y el equipo te orienta, sin un precio ni un número de sesiones publicados aquí."
   },
   {
     "slug": "perfilamiento-maxilar-hombres",
@@ -856,7 +874,8 @@
     ],
     "placeholder": true,
     "placeholderNote": "La página original no tenía secciones y mezclaba el nombre con un slug «hombres».",
-    "inAudit44": true
+    "inAudit44": true,
+    "status": "VERIFIED"
   },
   {
     "slug": "hilos-tensores",
@@ -904,7 +923,8 @@
     ],
     "placeholder": false,
     "placeholderNote": "",
-    "inAudit44": true
+    "inAudit44": true,
+    "status": "VERIFIED"
   },
   {
     "slug": "dewlap-lipopapada-sin-cirugia",
@@ -951,7 +971,8 @@
     ],
     "placeholder": false,
     "placeholderNote": "",
-    "inAudit44": true
+    "inAudit44": true,
+    "status": "VERIFIED"
   },
   {
     "slug": "limpieza-facial-profunda",
@@ -997,7 +1018,8 @@
     ],
     "placeholder": false,
     "placeholderNote": "",
-    "inAudit44": true
+    "inAudit44": true,
+    "status": "VERIFIED"
   },
   {
     "slug": "electroplasma",
@@ -1044,7 +1066,8 @@
     ],
     "placeholder": false,
     "placeholderNote": "",
-    "inAudit44": true
+    "inAudit44": true,
+    "status": "VERIFIED"
   },
   {
     "slug": "biorevitalizacion",
@@ -1093,7 +1116,8 @@
     ],
     "placeholder": false,
     "placeholderNote": "",
-    "inAudit44": true
+    "inAudit44": true,
+    "status": "VERIFIED"
   },
   {
     "slug": "microdermoabrasion",
@@ -1140,7 +1164,8 @@
     ],
     "placeholder": true,
     "placeholderNote": "Página de origen delgada. El tipo de equipo no estaba especificado.",
-    "inAudit44": true
+    "inAudit44": true,
+    "status": "VERIFIED"
   },
   {
     "slug": "diatermia",
@@ -1188,7 +1213,8 @@
     ],
     "placeholder": false,
     "placeholderNote": "",
-    "inAudit44": true
+    "inAudit44": true,
+    "status": "VERIFIED"
   },
   {
     "slug": "porcelanizacion",
@@ -1234,7 +1260,9 @@
     ],
     "placeholder": true,
     "placeholderNote": "Nombre de origen con errata. Falta confirmar activos y número de sesiones.",
-    "inAudit44": true
+    "inAudit44": true,
+    "status": "NEEDS_REVIEW",
+    "neutralSummary": "Protocolo en revisión con dirección médica. Puedes agendar una valoración y el equipo te orienta, sin un precio ni un número de sesiones publicados aquí."
   },
   {
     "slug": "cromoterapia",
@@ -1281,7 +1309,8 @@
     ],
     "placeholder": false,
     "placeholderNote": "",
-    "inAudit44": true
+    "inAudit44": true,
+    "status": "VERIFIED"
   },
   {
     "slug": "factores-de-crecimiento",
@@ -1329,7 +1358,8 @@
     ],
     "placeholder": true,
     "placeholderNote": "Se solapa con Plasma virtual y Electroplasma. Falta la distinción oficial del protocolo.",
-    "inAudit44": true
+    "inAudit44": true,
+    "status": "VERIFIED"
   },
   {
     "slug": "collagen-therapy",
@@ -1377,7 +1407,8 @@
     ],
     "placeholder": false,
     "placeholderNote": "",
-    "inAudit44": true
+    "inAudit44": true,
+    "status": "VERIFIED"
   },
   {
     "slug": "peeling-ultrasonico",
@@ -1424,7 +1455,8 @@
     ],
     "placeholder": false,
     "placeholderNote": "",
-    "inAudit44": true
+    "inAudit44": true,
+    "status": "VERIFIED"
   },
   {
     "slug": "proface",
@@ -1470,7 +1502,8 @@
     ],
     "placeholder": true,
     "placeholderNote": "Protocolo de marca con ficha delgada. Falta la secuencia oficial.",
-    "inAudit44": true
+    "inAudit44": true,
+    "status": "VERIFIED"
   },
   {
     "slug": "lipolisis-de-diodo-laser",
@@ -1519,7 +1552,8 @@
     ],
     "placeholder": false,
     "placeholderNote": "",
-    "inAudit44": true
+    "inAudit44": true,
+    "status": "VERIFIED"
   },
   {
     "slug": "celulitis",
@@ -1567,7 +1601,8 @@
     ],
     "placeholder": false,
     "placeholderNote": "",
-    "inAudit44": true
+    "inAudit44": true,
+    "status": "VERIFIED"
   },
   {
     "slug": "levantamiento-de-gluteos",
@@ -1614,7 +1649,8 @@
     ],
     "placeholder": false,
     "placeholderNote": "",
-    "inAudit44": true
+    "inAudit44": true,
+    "status": "VERIFIED"
   },
   {
     "slug": "rejuvenecimiento-vaginal",
@@ -1660,7 +1696,8 @@
     ],
     "placeholder": false,
     "placeholderNote": "",
-    "inAudit44": true
+    "inAudit44": true,
+    "status": "VERIFIED"
   },
   {
     "slug": "detoxificacion",
@@ -1706,7 +1743,8 @@
     ],
     "placeholder": false,
     "placeholderNote": "",
-    "inAudit44": true
+    "inAudit44": true,
+    "status": "VERIFIED"
   },
   {
     "slug": "moldeo-corporal",
@@ -1757,7 +1795,8 @@
     ],
     "placeholder": true,
     "placeholderNote": "Página de origen delgada. Falta el protocolo escrito de la metaloterapia.",
-    "inAudit44": true
+    "inAudit44": true,
+    "status": "VERIFIED"
   },
   {
     "slug": "corrientes-rusas",
@@ -1806,7 +1845,8 @@
     ],
     "placeholder": true,
     "placeholderNote": "Página de origen delgada.",
-    "inAudit44": true
+    "inAudit44": true,
+    "status": "VERIFIED"
   },
   {
     "slug": "detox-therapy",
@@ -1853,7 +1893,8 @@
     ],
     "placeholder": true,
     "placeholderNote": "Solape de nombres con Detoxificación y Detox-Reductor.",
-    "inAudit44": true
+    "inAudit44": true,
+    "status": "VERIFIED"
   },
   {
     "slug": "ems-garden-sculpt",
@@ -1902,7 +1943,8 @@
     ],
     "placeholder": false,
     "placeholderNote": "",
-    "inAudit44": true
+    "inAudit44": true,
+    "status": "VERIFIED"
   },
   {
     "slug": "hair-loss",
@@ -1947,7 +1989,8 @@
     ],
     "placeholder": false,
     "placeholderNote": "",
-    "inAudit44": true
+    "inAudit44": true,
+    "status": "VERIFIED"
   },
   {
     "slug": "hiperhidrosis",
@@ -1994,7 +2037,8 @@
     ],
     "placeholder": false,
     "placeholderNote": "",
-    "inAudit44": true
+    "inAudit44": true,
+    "status": "VERIFIED"
   },
   {
     "slug": "sueroterapia",
@@ -2039,7 +2083,8 @@
     ],
     "placeholder": false,
     "placeholderNote": "",
-    "inAudit44": true
+    "inAudit44": true,
+    "status": "VERIFIED"
   },
   {
     "slug": "acido-hialuronico",
@@ -2088,7 +2133,9 @@
     ],
     "placeholder": true,
     "placeholderNote": "Ficha creada porque la auditoría la lista como ausente. Texto inferido.",
-    "inAudit44": false
+    "inAudit44": false,
+    "status": "NEEDS_REVIEW",
+    "neutralSummary": "Protocolo en revisión con dirección médica. Puedes agendar una valoración y el equipo te orienta, sin un precio ni un número de sesiones publicados aquí."
   },
   {
     "slug": "lipo-sin-cirugia",
@@ -2136,7 +2183,9 @@
     ],
     "placeholder": true,
     "placeholderNote": "Pieza de marca sin página de origen. Texto inferido y enlazado a protocolos existentes.",
-    "inAudit44": false
+    "inAudit44": false,
+    "status": "NEEDS_REVIEW",
+    "neutralSummary": "Protocolo en revisión con dirección médica. Puedes agendar una valoración y el equipo te orienta, sin un precio ni un número de sesiones publicados aquí."
   },
   {
     "slug": "liporeductor",
@@ -2182,7 +2231,9 @@
     ],
     "placeholder": true,
     "placeholderNote": "Oferta sin página. Texto mínimo a propósito.",
-    "inAudit44": false
+    "inAudit44": false,
+    "status": "NEEDS_REVIEW",
+    "neutralSummary": "Protocolo en revisión con dirección médica. Puedes agendar una valoración y el equipo te orienta, sin un precio ni un número de sesiones publicados aquí."
   },
   {
     "slug": "shock-therapy-bronce",
@@ -2229,7 +2280,9 @@
     ],
     "placeholder": true,
     "placeholderNote": "Oferta sin página.",
-    "inAudit44": false
+    "inAudit44": false,
+    "status": "NEEDS_REVIEW",
+    "neutralSummary": "Protocolo en revisión con dirección médica. Puedes agendar una valoración y el equipo te orienta, sin un precio ni un número de sesiones publicados aquí."
   },
   {
     "slug": "detox-reductor",
@@ -2276,7 +2329,9 @@
     ],
     "placeholder": true,
     "placeholderNote": "Oferta sin página. Solape de nombres por resolver.",
-    "inAudit44": false
+    "inAudit44": false,
+    "status": "NEEDS_REVIEW",
+    "neutralSummary": "Protocolo en revisión con dirección médica. Puedes agendar una valoración y el equipo te orienta, sin un precio ni un número de sesiones publicados aquí."
   },
   {
     "slug": "autosanguis",
@@ -2322,7 +2377,9 @@
     ],
     "placeholder": true,
     "placeholderNote": "Oferta sin página. Definición clínica pendiente.",
-    "inAudit44": false
+    "inAudit44": false,
+    "status": "NEEDS_REVIEW",
+    "neutralSummary": "Protocolo en revisión con dirección médica. Puedes agendar una valoración y el equipo te orienta, sin un precio ni un número de sesiones publicados aquí."
   },
   {
     "slug": "dercelu",
@@ -2368,7 +2425,9 @@
     ],
     "placeholder": true,
     "placeholderNote": "Oferta sin página.",
-    "inAudit44": false
+    "inAudit44": false,
+    "status": "NEEDS_REVIEW",
+    "neutralSummary": "Protocolo en revisión con dirección médica. Puedes agendar una valoración y el equipo te orienta, sin un precio ni un número de sesiones publicados aquí."
   },
   {
     "slug": "rinomodelacion",
@@ -2413,7 +2472,9 @@
     ],
     "placeholder": true,
     "placeholderNote": "Borrador del gestor y oferta publicada, sin página pública. Texto inferido.",
-    "inAudit44": false
+    "inAudit44": false,
+    "status": "NEEDS_REVIEW",
+    "neutralSummary": "Protocolo en revisión con dirección médica. Puedes agendar una valoración y el equipo te orienta, sin un precio ni un número de sesiones publicados aquí."
   },
   {
     "slug": "cavitacion",
@@ -2460,7 +2521,9 @@
     ],
     "placeholder": true,
     "placeholderNote": "Borrador del gestor. Texto inferido. Confirmar vigencia.",
-    "inAudit44": false
+    "inAudit44": false,
+    "status": "NEEDS_REVIEW",
+    "neutralSummary": "Protocolo en revisión con dirección médica. Puedes agendar una valoración y el equipo te orienta, sin un precio ni un número de sesiones publicados aquí."
   },
   {
     "slug": "criolipolisis",
@@ -2507,7 +2570,9 @@
     ],
     "placeholder": true,
     "placeholderNote": "Borrador. Texto inferido.",
-    "inAudit44": false
+    "inAudit44": false,
+    "status": "NEEDS_REVIEW",
+    "neutralSummary": "Protocolo en revisión con dirección médica. Puedes agendar una valoración y el equipo te orienta, sin un precio ni un número de sesiones publicados aquí."
   },
   {
     "slug": "cicatrices",
@@ -2554,7 +2619,9 @@
     ],
     "placeholder": true,
     "placeholderNote": "Borrador. Texto inferido.",
-    "inAudit44": false
+    "inAudit44": false,
+    "status": "NEEDS_REVIEW",
+    "neutralSummary": "Protocolo en revisión con dirección médica. Puedes agendar una valoración y el equipo te orienta, sin un precio ni un número de sesiones publicados aquí."
   },
   {
     "slug": "bruxismo",
@@ -2599,7 +2666,9 @@
     ],
     "placeholder": true,
     "placeholderNote": "Borrador. Texto inferido. Confirmar si se ofrece.",
-    "inAudit44": false
+    "inAudit44": false,
+    "status": "NEEDS_REVIEW",
+    "neutralSummary": "Protocolo en revisión con dirección médica. Puedes agendar una valoración y el equipo te orienta, sin un precio ni un número de sesiones publicados aquí."
   },
   {
     "slug": "varices-en-las-piernas",
@@ -2644,7 +2713,9 @@
     ],
     "placeholder": true,
     "placeholderNote": "Borrador de una condición vascular. Texto deliberadamente prudente.",
-    "inAudit44": false
+    "inAudit44": false,
+    "status": "NEEDS_REVIEW",
+    "neutralSummary": "Protocolo en revisión con dirección médica. Puedes agendar una valoración y el equipo te orienta, sin un precio ni un número de sesiones publicados aquí."
   },
   {
     "slug": "eliminar-estrias",
@@ -2692,7 +2763,9 @@
     ],
     "placeholder": true,
     "placeholderNote": "Borrador. Texto inferido. El nombre comercial «eliminar» se suaviza.",
-    "inAudit44": false
+    "inAudit44": false,
+    "status": "NEEDS_REVIEW",
+    "neutralSummary": "Protocolo en revisión con dirección médica. Puedes agendar una valoración y el equipo te orienta, sin un precio ni un número de sesiones publicados aquí."
   },
   {
     "slug": "laser-co2-fraccionado",
@@ -2740,7 +2813,9 @@
     ],
     "placeholder": true,
     "placeholderNote": "Borrador. Texto inferido. Confirmar equipo y sedes.",
-    "inAudit44": false
+    "inAudit44": false,
+    "status": "NEEDS_REVIEW",
+    "neutralSummary": "Protocolo en revisión con dirección médica. Puedes agendar una valoración y el equipo te orienta, sin un precio ni un número de sesiones publicados aquí."
   },
   {
     "slug": "depilacion-laser",
@@ -2789,7 +2864,9 @@
     ],
     "placeholder": true,
     "placeholderNote": "Solo aparecía en el filtro de ofertas. Texto mínimo.",
-    "inAudit44": false
+    "inAudit44": false,
+    "status": "NEEDS_REVIEW",
+    "neutralSummary": "Protocolo en revisión con dirección médica. Puedes agendar una valoración y el equipo te orienta, sin un precio ni un número de sesiones publicados aquí."
   },
   {
     "slug": "eliminacion-de-tatuajes",
@@ -2836,6 +2913,8 @@
     ],
     "placeholder": true,
     "placeholderNote": "Solo filtro de ofertas. Pendiente de retirar o de completar.",
-    "inAudit44": false
+    "inAudit44": false,
+    "status": "NEEDS_REVIEW",
+    "neutralSummary": "Protocolo en revisión con dirección médica. Puedes agendar una valoración y el equipo te orienta, sin un precio ni un número de sesiones publicados aquí."
   }
 ]

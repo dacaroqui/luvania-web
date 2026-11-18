@@ -10,11 +10,10 @@
     "check": "node scripts/check-catalog.mjs"
   },
   "dependencies": {
-    "framer-motion": "^14.14.0",
-    "lenis": "^1.3.27",
     "next": "^15.5.29",
     "react": "19.1.0",
-    "react-dom": "19.1.0"
+    "react-dom": "19.1.0",
+    "zod": "^4.6.7"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

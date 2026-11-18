@@ -1,44 +1,52 @@
 "use client";
 
-import { MotionConfig } from "framer-motion";
-import { createContext, useCallback, useContext, useMemo, useState } from "react";
-import { BookingDialog } from "./booking-dialog";
-import { SmoothScroll } from "./smooth-scroll";
+import type { Sede } from "@/data/types";
+import { captureUtm, remember, track } from "@/lib/analytics";
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { AgendaSheet } from "./agenda-sheet";
 
-type BookingApi = {
-  openBooking: (tratamiento?: string) => void;
+type AgendaApi = {
+  openAgenda: (tratamiento?: string) => void;
+  sedes: Sede[];
 };
 
-const BookingContext = createContext<BookingApi>({
-  openBooking: () => undefined,
+const AgendaContext = createContext<AgendaApi>({
+  openAgenda: () => undefined,
+  sedes: [],
 });
 
-export function useBooking() {
-  return useContext(BookingContext);
+export function useAgenda() {
+  return useContext(AgendaContext);
 }
 
-export function Providers({ children }: { children: React.ReactNode }) {
+export function Providers({ children, sedes }: { children: React.ReactNode; sedes: Sede[] }) {
   const [open, setOpen] = useState(false);
   const [tratamiento, setTratamiento] = useState<string | undefined>();
 
-  const openBooking = useCallback((next?: string) => {
+  const openAgenda = useCallback((next?: string) => {
     setTratamiento(next);
     setOpen(true);
+    remember("luvania_origen", window.location.href);
+    if (next) remember("luvania_tratamiento", next);
+    track("cta_click", { tratamiento: next, origen: window.location.href });
   }, []);
 
-  const api = useMemo(() => ({ openBooking }), [openBooking]);
+  useEffect(() => {
+    captureUtm();
+    const sync = () => {
+      if (window.location.hash === "#agendar") openAgenda();
+    };
+    sync();
+    window.addEventListener("hashchange", sync);
+    return () => window.removeEventListener("hashchange", sync);
+  }, [openAgenda]);
+
+  const api = useMemo(() => ({ openAgenda, sedes }), [openAgenda, sedes]);
 
   return (
-    <BookingContext.Provider value={api}>
-      <MotionConfig reducedMotion="user">
-        <SmoothScroll />
-        {children}
-        <BookingDialog
-          open={open}
-          tratamientoInicial={tratamiento}
-          onClose={() => setOpen(false)}
-        />
-      </MotionConfig>
-    </BookingContext.Provider>
+    <AgendaContext.Provider value={api}>
+      {children}
+      <AgendaSheet open={open} tratamientoInicial={tratamiento} sedes={sedes} onClose={() => setOpen(false)} />
+    </AgendaContext.Provider>
   );
 }

@@ -3,7 +3,7 @@ import { Breadcrumbs, breadcrumbLd } from "@/components/breadcrumbs";
 import { JsonLd } from "@/components/json-ld";
 import { getSede, sedes } from "@/data/sedes";
 import { site } from "@/data/site";
-import { waLink } from "@/lib/format";
+import { agendaLink } from "@/lib/whatsapp";
 import { pageMeta } from "@/lib/seo";
 import type { Metadata } from "next";
 import Link from "next/link";
@@ -21,7 +21,7 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
   if (!sede) return {};
   return pageMeta({
     title: `Luvania ${sede.name}: clínica estética en ${sede.neighborhood}`,
-    description: `Luvania ${sede.name}, ${sede.address}, Bogotá. Horario, WhatsApp y valoración sin costo.`,
+    description: `Luvania ${sede.name}, ${sede.address}, Bogotá. Horario, WhatsApp y valoración.`,
     path: `/sedes/${sede.slug}`,
   });
 }
@@ -75,7 +75,7 @@ export default async function SedePage({ params }: { params: Promise<Params> }) 
         <div className="rounded-3xl bg-white p-5">
           <dt className="text-xs font-bold tracking-[0.14em] uppercase">WhatsApp</dt>
           <dd className="mt-2">
-            <a href={waLink(sede.whatsapp, `Hola, quiero una valoración sin costo en la sede ${sede.name}.`)}>
+            <a href={agendaLink({ sede: sede.name, whatsapp: sede.whatsapp, tratamiento: "una valoración", url: `https://luvania.com/sedes/${sede.slug}` })}>
               Escribir a {sede.name}
             </a>
           </dd>
@@ -123,7 +123,7 @@ export default async function SedePage({ params }: { params: Promise<Params> }) 
         .
       </p>
       <BookButton className="mt-6 min-h-12 rounded-full bg-coral px-5 text-sm font-bold">
-        Agenda tu valoración sin costo
+        Agendar valoración
       </BookButton>
     </main>
   );

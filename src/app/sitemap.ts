@@ -1,7 +1,8 @@
-import { treatments } from "@/data";
-import { sedes } from "@/data/sedes";
-import { site, legalDocs } from "@/data/site";
+import { catalog } from "@/data/catalog";
+import { resolveSedes } from "@/data/sedes";
+import { legalDocs, site } from "@/data/site";
 import { especialidades } from "@/data/taxonomy";
+import { needPages, zonePages } from "@/lib/hubs";
 import type { MetadataRoute } from "next";
 
 export default function sitemap(): MetadataRoute.Sitemap {
@@ -14,9 +15,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/franquicias",
     "/pqrs",
     "/experiencias",
-    ...sedes.map((sede) => `/sedes/${sede.slug}`),
+    "/recorridos/caida-del-cabello",
+    "/recorridos/abdomen",
+    ...resolveSedes().map((sede) => `/sedes/${sede.slug}`),
     ...especialidades.map((item) => `/especialidades/${item.slug}`),
-    ...treatments.map((treatment) => `/tratamientos/${treatment.slug}`),
+    ...zonePages.map((zone) => `/zonas/${zone.slug}`),
+    ...needPages.map((need) => `/necesidades/${need.slug}`),
+    ...catalog.filter((item) => item.status === "VERIFIED").map((item) => `/tratamientos/${item.slug}`),
     ...legalDocs.map((doc) => doc.href),
   ];
   return paths.map((path) => ({

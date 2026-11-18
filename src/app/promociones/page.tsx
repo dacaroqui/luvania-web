@@ -22,8 +22,8 @@ export default function PromocionesPage() {
       <Breadcrumbs items={crumbs} />
       <h1 className="display mt-6 text-5xl sm:text-6xl">Promociones</h1>
       <p className="mt-4 max-w-2xl text-lg leading-8 text-mute">
-        El sitio anterior rotulaba las {offers.length} ofertas como -30%. El descuento que sale de los precios es
-        otro. Cifras del {PRICE_AS_OF}. TODO: confirmar vigencia antes de cobrarlas.
+        Precios publicados en luvania.com el {PRICE_AS_OF}. El porcentaje es la diferencia entre esas dos cifras.
+        Sujeto a valoración y vigencia.
       </p>
       <ul className="mt-8 grid gap-4 md:grid-cols-2">
         {offers.map((offer) => {
@@ -52,7 +52,7 @@ export default function PromocionesPage() {
         })}
       </ul>
       <BookButton className="mt-10 min-h-12 rounded-full bg-coral px-5 text-sm font-bold">
-        Agenda tu valoración sin costo
+        Agendar valoración
       </BookButton>
     </main>
   );

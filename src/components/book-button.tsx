@@ -1,20 +1,23 @@
 "use client";
 
-import { useBooking } from "./providers";
+import { heroCopy } from "@/data/hero";
+import { useMagnetic } from "./magnetic";
+import { useAgenda } from "./providers";
 
 export function BookButton({
   tratamiento,
   children,
-  className,
+  className = "btn-coral",
 }: {
   tratamiento?: string;
-  children: React.ReactNode;
+  children?: React.ReactNode;
   className?: string;
 }) {
-  const { openBooking } = useBooking();
+  const { openAgenda } = useAgenda();
+  const ref = useMagnetic<HTMLButtonElement>();
   return (
-    <button type="button" className={className} onClick={() => openBooking(tratamiento)}>
-      {children}
+    <button ref={ref} type="button" className={className} onClick={() => openAgenda(tratamiento)}>
+      {children ?? heroCopy.cta}
     </button>
   );
 }

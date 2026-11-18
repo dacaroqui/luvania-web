@@ -18,6 +18,8 @@ npx next dev -p 43123
 
 ## Datos
 
-Los tratamientos, sedes, ofertas y textos viven en `src/data`. Lo que el equipo médico o comercial debe confirmar está marcado con `TODO` en `src/data/site.ts` (`clientTodos`) y en cada sede (`todo`).
+Los tratamientos, sedes, ofertas y textos viven en `src/data`. Cada ficha tiene `status`: `VERIFIED` (publicado en luvania.com), `NEEDS_REVIEW` (fuera del inventario o ficha incompleta; `noindex` y fuera del sitemap) o, en el caso de `x`, `ARCHIVED` con respuesta 410. La matriz está en `src/data/revision.json`.
+
+Teléfonos y WhatsApp por sede, el webhook de leads y GA4 se configuran en `.env.example`. Si no hay variable, se usa el número ya publicado.
 
 Las 18 ofertas usan los precios del rastreo del 17 de noviembre de 2026. No hay backend: el formulario abre WhatsApp con el mensaje armado.
