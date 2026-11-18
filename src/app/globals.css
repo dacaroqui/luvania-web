@@ -16,16 +16,26 @@
 
 html {
   scroll-behavior: smooth;
+  background: #efecdb;
+  transition: background-color 0.8s ease;
 }
 
+html[data-tone="cream"] { background-color: #efecdb; }
+html[data-tone="peach"] { background-color: #f1ceb3; }
+html[data-tone="white"] { background-color: #fff; }
+html[data-tone="dark"] { background-color: #111; }
+html[data-tone="ink"] { background-color: #000; }
+
 body {
-  background:
-    radial-gradient(1200px 500px at 90% -10%, rgb(241 206 179 / 0.65), transparent 55%),
-    radial-gradient(900px 420px at -10% 20%, rgb(240 164 134 / 0.28), transparent 50%),
-    var(--color-cream);
+  background: transparent;
   color: var(--color-ink);
   font-family: var(--font-sans);
   text-rendering: optimizeLegibility;
+}
+
+#contenido {
+  position: relative;
+  z-index: 1;
 }
 
 ::selection {
@@ -69,6 +79,8 @@ body {
 
 .hero-stage {
   perspective: 1400px;
+  overflow: hidden;
+  border-radius: 2rem;
 }
 
 .hero-card {
@@ -144,6 +156,10 @@ body {
 
 .layer-a { --d: 1; border-radius: 2rem; }
 .layer-b { --d: 2.2; pointer-events: none; }
+.layer-back { --d: 0.45; z-index: 0; border-radius: 2rem; }
+.layer-flor { --d: 1.25; z-index: 1; display: grid; place-items: center; pointer-events: none; }
+.layer-photo { --d: 2; z-index: 2; }
+.layer-grid { --d: 3.15; z-index: 3; pointer-events: none; }
 
 .tilt-card {
   transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
@@ -259,6 +275,186 @@ dialog.sheet::backdrop {
   }
 }
 
+.band-cream { background: #efecdb; color: #1a1a1a; }
+.band-peach { background: #f1ceb3; color: #1a1a1a; }
+.band-white { background: #fff; color: #1a1a1a; }
+.band-dark { background: #111; color: #efecdb; }
+.band-ink { background: #000; color: #efecdb; }
+
+.band-dark nav[aria-label="Miga de pan"],
+.band-ink nav[aria-label="Miga de pan"] {
+  color: #f1ceb3;
+}
+
+/* ponytail: the hole tracks the flower in public/brand/luvania-logo.png (600×247). Retune if that file changes. */
+.logo-frame {
+  position: relative;
+  display: block;
+  width: 11.4rem;
+  transition: width 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.logo-frame-footer { width: 12.5rem; }
+
+.logo-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  -webkit-mask-image: radial-gradient(ellipse 8.6% 20% at 75.4% 25.5%, transparent 62%, #000 78%);
+  mask-image: radial-gradient(ellipse 8.6% 20% at 75.4% 25.5%, transparent 62%, #000 78%);
+}
+
+.logo-flor {
+  position: absolute;
+  left: 68.2%;
+  top: 8.2%;
+  width: 14.4%;
+  height: auto;
+}
+
+.site-header .header-row {
+  padding-block: 0.65rem;
+  transition: padding 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.site-header.is-compact .header-row { padding-block: 0.25rem; }
+.site-header.is-compact .logo-frame { width: 8.35rem; }
+.site-header.is-compact {
+  box-shadow: 0 12px 28px rgb(17 17 17 / 0.06);
+}
+
+.flor { display: block; }
+.flor-spin,
+.flor-breathe,
+.flor-petal {
+  transform-box: view-box;
+  transform-origin: 50% 50%;
+}
+
+.flor-spin { animation: flor-turn 1.15s cubic-bezier(0.22, 1, 0.36, 1) both; }
+
+.flor-petal {
+  animation: petal-open 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.flor-cta { width: 1.45rem; height: 1.45rem; flex: none; }
+.flor-hero { width: min(78%, 26rem); height: auto; }
+.flor-rule-mark { width: 1.75rem; height: 1.75rem; }
+.flor-loader { width: 2.4rem; height: 2.4rem; }
+
+.flor-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.flor-bg {
+  position: absolute;
+  width: min(44vw, 32rem);
+  opacity: 0.18;
+  transform: translate3d(calc(var(--mx, 0) * -34px), calc(var(--sx, 0) * -0.055px + var(--my, 0) * -18px), 0);
+}
+
+.flor-bg .flor { width: 100%; height: auto; }
+.flor-bg-a { top: 8vh; right: -7vw; }
+.flor-bg-b {
+  width: min(32vw, 24rem);
+  bottom: 6vh;
+  left: -7vw;
+  opacity: 0.13;
+  transform: translate3d(calc(var(--mx, 0) * 26px), calc(var(--sx, 0) * 0.04px + var(--my, 0) * 14px), 0);
+}
+
+.flor-glow {
+  position: absolute;
+  z-index: 0;
+  top: -6%;
+  right: -8%;
+  width: min(24rem, 62vw);
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.flor-glow-left { right: auto; left: -10%; top: auto; bottom: -18%; }
+.flor-glow-soft { top: auto; bottom: -20%; left: -8%; right: auto; width: min(22rem, 70vw); opacity: 0.34; }
+
+.flor-rule {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0.35rem 8vw;
+  color: #ee876b;
+}
+
+.flor-rule span {
+  height: 1px;
+  flex: 1;
+  background: currentColor;
+  opacity: 0.55;
+}
+
+.page-bloom {
+  position: fixed;
+  z-index: 30;
+  top: 5.1rem;
+  left: 50%;
+  width: 2.4rem;
+  pointer-events: none;
+  animation: bloom-fade 0.95s ease forwards;
+}
+
+.gate { animation: rise 0.65s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.gate-arrow { transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1); }
+.gate:hover .gate-arrow,
+.gate:focus-visible .gate-arrow { transform: translateX(6px); }
+
+.flor-bg .flor-spin,
+.flor-glow .flor-spin,
+.flor-rule-mark .flor-spin { animation: flor-rotate 36s linear infinite; }
+.flor-bg-b .flor-spin { animation-duration: 54s; animation-direction: reverse; }
+.flor-loader .flor-spin { animation: flor-rotate 0.95s linear infinite; }
+.site-header.is-compact .logo-flor .flor-spin { animation: flor-rotate 16s linear infinite; }
+
+.logo-lockup:hover .flor-spin,
+.logo-lockup:focus-visible .flor-spin,
+.site-header.is-compact .logo-lockup:hover .flor-spin,
+.site-header.is-compact .logo-lockup:focus-visible .flor-spin { animation: flor-rotate 2.6s linear infinite; }
+
+.logo-lockup:hover .flor-breathe,
+.logo-lockup:focus-visible .flor-breathe,
+.btn-coral:hover .flor-breathe,
+.btn-coral:focus-visible .flor-breathe { animation: flor-breathe 2.1s ease-in-out infinite; }
+
+.btn-coral:hover .flor-spin,
+.btn-coral:focus-visible .flor-spin { animation: flor-rotate 1.7s linear infinite; }
+
+@keyframes flor-turn {
+  from { transform: rotate(-26deg); }
+  to { transform: rotate(0deg); }
+}
+
+@keyframes flor-rotate { to { transform: rotate(360deg); } }
+
+@keyframes flor-breathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+}
+
+@keyframes petal-open {
+  from { opacity: 0; transform: scale(0.08); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes bloom-fade {
+  0% { opacity: 0; transform: translate3d(-50%, 8px, 0) scale(0.7); }
+  28% { opacity: 1; transform: translate3d(-50%, 0, 0) scale(1); }
+  100% { opacity: 0; transform: translate3d(-50%, -8px, 0) scale(1); }
+}
+
 @keyframes ping {
   0% {
     transform: scale(1);
@@ -291,7 +487,15 @@ dialog.sheet::backdrop {
     scroll-behavior: auto !important;
   }
 
-  .hotspot i::after {
+  .hotspot i::after,
+  .page-bloom {
     animation: none;
   }
+
+  .page-bloom { opacity: 0; }
+}
+
+@media (max-width: 1023px) {
+  .flor-bg-a { top: 46vh; opacity: 0.12; }
+  .logo-frame { width: 9.2rem; }
 }

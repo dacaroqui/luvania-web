@@ -1,14 +1,17 @@
+import { LogoLockup } from "./logo-lockup";
 import { legalDocs, site } from "@/data/site";
 import { sedes } from "@/data/sedes";
 import Link from "next/link";
 
 export function SiteFooter() {
   return (
-    <footer className="mt-20 border-t border-line bg-ink text-cream">
+    <footer className="site-footer relative z-[1] mt-20 border-t border-line bg-ink text-cream">
       <div className="mx-auto grid max-w-6xl gap-10 px-4 py-14 md:grid-cols-4">
         <div className="md:col-span-1">
-          <p className="display text-4xl">Luvania</p>
-          <p className="mt-3 text-sm leading-6 text-peach">
+          <Link href="/" aria-label="Luvania, inicio" className="inline-block rounded-2xl bg-cream px-3 py-2">
+            <LogoLockup className="logo-frame-footer" />
+          </Link>
+          <p className="mt-4 text-sm leading-6 text-peach">
             Red de clínicas estéticas en Bogotá. Marca de {site.brandOf}.
           </p>
         </div>

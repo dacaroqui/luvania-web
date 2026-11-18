@@ -1,6 +1,7 @@
 "use client";
 
 import { heroCopy } from "@/data/hero";
+import { FlorLuvania } from "./flor-luvania";
 import { useMagnetic } from "./magnetic";
 import { useAgenda } from "./providers";
 
@@ -16,7 +17,8 @@ export function BookButton({
   const { openAgenda } = useAgenda();
   const ref = useMagnetic<HTMLButtonElement>();
   return (
-    <button ref={ref} type="button" className={className} onClick={() => openAgenda(tratamiento)}>
+    <button ref={ref} type="button" className={`inline-flex items-center justify-center gap-2 ${className}`} onClick={() => openAgenda(tratamiento)}>
+      <FlorLuvania className="flor-cta" tone="light" />
       {children ?? heroCopy.cta}
     </button>
   );

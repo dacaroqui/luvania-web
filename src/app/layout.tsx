@@ -1,7 +1,9 @@
+import { FlorBackdrop } from "@/components/flor-backdrop";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { Providers } from "@/components/providers";
 import { StickyCta } from "@/components/sticky-cta";
+import { ToneField } from "@/components/tone-field";
 import { resolveSedes } from "@/data/sedes";
 import { site } from "@/data/site";
 import type { Metadata } from "next";
@@ -37,6 +39,8 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="es-CO" className={`${sans.variable} ${display.variable}`}>
       <body className="pb-24 md:pb-0">
+        <FlorBackdrop />
+        <ToneField />
         <a
           href="#contenido"
           className="sr-only focus:not-sr-only focus:absolute focus:top-3 focus:left-3 focus:z-50 focus:rounded-full focus:bg-ink focus:px-4 focus:py-2 focus:text-cream"

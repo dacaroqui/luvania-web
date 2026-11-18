@@ -17,19 +17,22 @@ export function TreatmentBrowser() {
   const [zona, setZona] = useState(params.get("zona") ?? "");
   const [necesidad, setNecesidad] = useState(params.get("necesidad") ?? "");
 
+  const az = params.get("orden") === "az";
   const visible = useMemo(() => {
     const base = matchCatalog(catalog, query).filter((item) => item.status === "VERIFIED");
-    return base.filter((item) => {
+    const filtered = base.filter((item) => {
       if (especialidad && item.especialidad !== especialidad) return false;
       if (zona && !item.zones.includes(zona)) return false;
       if (necesidad && !item.needs.includes(necesidad)) return false;
       return true;
     });
-  }, [query, especialidad, zona, necesidad]);
+    if (!az) return filtered;
+    return filtered.slice().sort((a, b) => a.name.localeCompare(b.name, "es"));
+  }, [query, especialidad, zona, necesidad, az]);
 
   return (
     <div>
-      <label className="block text-sm font-bold">
+      <label id="nombre" className="block scroll-mt-28 text-sm font-bold">
         Buscar
         <input
           value={query}
@@ -44,9 +47,9 @@ export function TreatmentBrowser() {
           className="field mt-2"
         />
       </label>
-      <Filter label="Especialidad" value={especialidad} onChange={setEspecialidad} kind="especialidad" options={especialidades.map((item) => ({ id: item.slug, name: item.name }))} />
-      <Filter label="Zona" value={zona} onChange={setZona} kind="zona" options={zones.map((item) => ({ id: item.id, name: item.name }))} />
-      <Filter label="Necesidad" value={necesidad} onChange={setNecesidad} kind="necesidad" options={needs.map((item) => ({ id: item.id, name: item.name }))} />
+      <Filter id="especialidad" label="Especialidad" value={especialidad} onChange={setEspecialidad} kind="especialidad" options={especialidades.map((item) => ({ id: item.slug, name: item.name }))} />
+      <Filter id="zona" label="Zona" value={zona} onChange={setZona} kind="zona" options={zones.map((item) => ({ id: item.id, name: item.name }))} />
+      <Filter id="necesidad" label="Necesidad" value={necesidad} onChange={setNecesidad} kind="necesidad" options={needs.map((item) => ({ id: item.id, name: item.name }))} />
       <p className="mt-6 text-sm text-mute" aria-live="polite">
         {visible.length} {visible.length === 1 ? "tratamiento" : "tratamientos"}
       </p>
@@ -78,12 +81,14 @@ export function TreatmentBrowser() {
 }
 
 function Filter({
+  id,
   label,
   value,
   onChange,
   kind,
   options,
 }: {
+  id: string;
   label: string;
   value: string;
   onChange: (value: string) => void;
@@ -91,7 +96,7 @@ function Filter({
   options: { id: string; name: string }[];
 }) {
   return (
-    <fieldset className="mt-5">
+    <fieldset id={id} className="mt-5 scroll-mt-28">
       <legend className="text-sm font-bold">{label}</legend>
       <div className="mt-2 flex gap-2 overflow-x-auto pb-1">
         <Chip

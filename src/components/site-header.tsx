@@ -1,10 +1,9 @@
 "use client";
 
 import { verifiedCatalog } from "@/data/catalog";
-import { heroCopy } from "@/data/hero";
 import { especialidades, zones } from "@/data/taxonomy";
-import { useMagnetic } from "./magnetic";
-import { useAgenda } from "./providers";
+import { BookButton } from "./book-button";
+import { LogoLockup } from "./logo-lockup";
 import { SearchBox } from "./search-box";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -13,6 +12,7 @@ const zoneLinks = [
   { href: "/zonas/rostro", name: "Rostro" },
   { href: "/zonas/ojos", name: "Ojos" },
   { href: "/zonas/labios", name: "Labios" },
+  { href: "/zonas/piel", name: "Piel" },
   { href: "/zonas/cuerpo", name: "Cuerpo" },
   ...zones
     .filter((zone) => !["rostro", "corporal"].includes(zone.id))
@@ -32,10 +32,9 @@ const needLinks = [
 ].map(([id, name]) => ({ href: `/necesidades/${id}`, name }));
 
 export function SiteHeader() {
-  const { openAgenda } = useAgenda();
-  const magnet = useMagnetic<HTMLButtonElement>();
   const [menu, setMenu] = useState(false);
   const [mega, setMega] = useState(false);
+  const [compact, setCompact] = useState(false);
   const letters = verifiedCatalog().slice().sort((a, b) => a.name.localeCompare(b.name, "es"));
 
   useEffect(() => {
@@ -48,12 +47,21 @@ export function SiteHeader() {
     return () => window.removeEventListener("hashchange", open);
   }, []);
 
+  useEffect(() => {
+    const onScroll = () => {
+      const next = window.scrollY > 28;
+      setCompact((value) => (value === next ? value : next));
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   return (
-    <header className="sticky top-0 z-40 border-b border-line/80 bg-cream/90 backdrop-blur-md">
-      <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3">
-        <Link href="/" className="shrink-0" aria-label="Luvania, inicio">
-          <span className="display block text-2xl leading-none">Luvania</span>
-          <span className="text-[0.65rem] font-semibold tracking-[0.18em] text-mute uppercase">Innovación estética</span>
+    <header className={`site-header sticky top-0 z-40 border-b border-line/80 bg-cream backdrop-blur-md ${compact ? "is-compact" : ""}`}>
+      <div className="header-row mx-auto flex max-w-6xl items-center justify-between gap-4 px-4">
+        <Link href="/" className="logo-lockup shrink-0" aria-label="Luvania, inicio">
+          <LogoLockup priority />
         </Link>
         <nav className="hidden items-center gap-6 text-sm font-semibold lg:flex" aria-label="Principal">
           <button
@@ -71,9 +79,7 @@ export function SiteHeader() {
           <Link href="/pqrs">PQRS</Link>
         </nav>
         <div className="flex items-center gap-2">
-          <button ref={magnet} type="button" onClick={() => openAgenda()} className="btn-coral magnetic hidden md:inline-flex">
-            {heroCopy.cta}
-          </button>
+          <BookButton className="btn-coral magnetic max-md:!hidden" />
           <button
             type="button"
             className="min-h-11 rounded-full border border-ink/15 px-3 text-sm font-bold lg:hidden"
