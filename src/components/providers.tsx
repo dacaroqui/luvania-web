@@ -4,6 +4,7 @@ import type { AgendaSede } from "@/data/types";
 import { captureUtm, remember, track } from "@/lib/analytics";
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { AgendaSheet } from "./agenda-sheet";
+import { CartProvider } from "./cart-store";
 
 type AgendaApi = {
   openAgenda: (tratamiento?: string, sede?: string) => void;
@@ -49,8 +50,10 @@ export function Providers({ children, sedes }: { children: React.ReactNode; sede
 
   return (
     <AgendaContext.Provider value={api}>
-      {children}
-      <AgendaSheet open={open} tratamientoInicial={tratamiento} sedeInicial={sede} sedes={sedes} onClose={() => setOpen(false)} />
+      <CartProvider>
+        {children}
+        <AgendaSheet open={open} tratamientoInicial={tratamiento} sedeInicial={sede} sedes={sedes} onClose={() => setOpen(false)} />
+      </CartProvider>
     </AgendaContext.Provider>
   );
 }

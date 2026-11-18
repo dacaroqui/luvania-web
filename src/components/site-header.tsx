@@ -2,11 +2,14 @@
 
 import { verifiedCatalog } from "@/data/catalog";
 import { especialidades, zones } from "@/data/taxonomy";
+import { flags } from "@/lib/flags";
 import { BookButton } from "./book-button";
+import { useCart } from "./cart-store";
 import { LogoLockup } from "./logo-lockup";
 import { SearchBox } from "./search-box";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
 
 const zoneLinks = [
   { href: "/zonas/rostro", name: "Rostro" },
@@ -32,19 +35,26 @@ const needLinks = [
 ].map(([id, name]) => ({ href: `/necesidades/${id}`, name }));
 
 export function SiteHeader() {
+  const header = useRef<HTMLElement>(null);
+  const closeTimer = useRef<number>(0);
   const [menu, setMenu] = useState(false);
   const [mega, setMega] = useState(false);
   const [compact, setCompact] = useState(false);
+  const [hoverable, setHoverable] = useState(false);
+  const pathname = usePathname();
   const letters = verifiedCatalog().slice().sort((a, b) => a.name.localeCompare(b.name, "es"));
 
   useEffect(() => {
-    const open = () => {
-      if (window.location.hash === "#menu") setMenu(true);
-      if (window.location.hash === "#mega") setMega(true);
-    };
-    open();
-    window.addEventListener("hashchange", open);
-    return () => window.removeEventListener("hashchange", open);
+    setMenu(false);
+    setMega(false);
+  }, [pathname]);
+
+  useEffect(() => {
+    const fine = window.matchMedia("(hover: hover) and (pointer: fine)");
+    const sync = () => setHoverable(fine.matches);
+    sync();
+    fine.addEventListener("change", sync);
+    return () => fine.removeEventListener("change", sync);
   }, []);
 
   useEffect(() => {
@@ -52,13 +62,41 @@ export function SiteHeader() {
       const next = window.scrollY > 28;
       setCompact((value) => (value === next ? value : next));
     };
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setMenu(false);
+        setMega(false);
+      }
+    };
+    const onPointer = (event: PointerEvent) => {
+      if (!header.current?.contains(event.target as Node)) {
+        setMenu(false);
+        setMega(false);
+      }
+    };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    document.addEventListener("keydown", onKey);
+    document.addEventListener("pointerdown", onPointer);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      document.removeEventListener("keydown", onKey);
+      document.removeEventListener("pointerdown", onPointer);
+    };
   }, []);
 
+  const openMega = () => {
+    window.clearTimeout(closeTimer.current);
+    setMega(true);
+  };
+  const scheduleClose = () => {
+    if (!hoverable) return;
+    window.clearTimeout(closeTimer.current);
+    closeTimer.current = window.setTimeout(() => setMega(false), 160);
+  };
+
   return (
-    <header className={`site-header sticky top-0 z-40 border-b border-line/80 bg-cream backdrop-blur-md ${compact ? "is-compact" : ""}`}>
+    <header ref={header} className={`site-header sticky top-0 z-50 border-b border-line/80 bg-cream backdrop-blur-md ${compact ? "is-compact" : ""}`}>
       <div className="header-row mx-auto flex max-w-6xl items-center justify-between gap-4 px-4">
         <Link href="/" className="logo-lockup shrink-0" aria-label="Luvania, inicio">
           <LogoLockup />
@@ -70,17 +108,20 @@ export function SiteHeader() {
             aria-expanded={mega}
             aria-controls="mega-tratamientos"
             onClick={() => setMega((value) => !value)}
+            onMouseEnter={() => { if (hoverable) openMega(); }}
+            onMouseLeave={scheduleClose}
           >
             Tratamientos
             <svg className="nav-chevron" viewBox="0 0 12 12" aria-hidden="true">
               <path d="M2.2 4.3 6 8l3.8-3.7" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </button>
-          <Link href="/sedes">Sedes</Link>
-          <Link href="/sobre-luvania">Sobre Luvania</Link>
-          <Link href="/blog">Blog</Link>
+          <Link href="/sedes" onClick={() => setMega(false)}>Sedes</Link>
+          <Link href="/sobre-luvania" onClick={() => setMega(false)}>Sobre Luvania</Link>
+          <Link href="/blog" onClick={() => setMega(false)}>Blog</Link>
         </nav>
         <div className="flex items-center gap-2">
+          <CartSlot />
           <BookButton className="btn-coral magnetic max-md:!hidden" />
           <button
             type="button"
@@ -98,7 +139,7 @@ export function SiteHeader() {
       </div>
 
       {mega ? (
-        <div id="mega-tratamientos" className="hidden border-t border-line bg-paper lg:block">
+        <div id="mega-tratamientos" className="mega-panel hidden border-t border-line bg-paper lg:block" onMouseEnter={openMega} onMouseLeave={scheduleClose}>
           <div className="mx-auto grid max-w-6xl gap-8 px-4 py-8 lg:grid-cols-4">
             <Column title="Por necesidad" links={needLinks} onPick={() => setMega(false)} />
             <Column title="Por zona" links={zoneLinks} onPick={() => setMega(false)} />
@@ -137,7 +178,7 @@ export function SiteHeader() {
       ) : null}
 
       {menu ? (
-        <nav id="menu-movil" className="grid max-h-[70vh] gap-4 overflow-auto border-t border-line px-4 py-4 pb-28 lg:hidden" aria-label="Móvil">
+        <nav id="menu-movil" className="mobile-nav grid max-h-[70vh] gap-4 overflow-auto border-t border-line bg-cream px-4 py-4 pb-8 lg:hidden" aria-label="Móvil">
           <SearchBox autoFocus onNavigate={() => setMenu(false)} />
           <Link href="/tratamientos" onClick={() => setMenu(false)} className="min-h-11 font-semibold">
             Tratamientos
@@ -179,6 +220,21 @@ export function SiteHeader() {
         </nav>
       ) : null}
     </header>
+  );
+}
+
+function CartSlot() {
+  const cart = useCart();
+  if (!flags.cart) return null;
+  return (
+    <button type="button" className="cart-slot" disabled aria-disabled="true">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M6 8h12l-1 11H7L6 8Z" />
+        <path d="M9 8V7a3 3 0 0 1 6 0v1" />
+      </svg>
+      <span className="cart-count">{cart.count}</span>
+      <span className="sr-only">Carrito, aún no disponible</span>
+    </button>
   );
 }
 
