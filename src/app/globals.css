@@ -657,11 +657,15 @@ body:has(dialog[open]) .sticky-cta {
   }
 
   .hero-title {
-    font-size: clamp(2rem, 9vw, 2.7rem);
+    font-size: clamp(2rem, 8.4vw, 2.55rem);
   }
 
   .hero-rotator {
-    min-height: 3.5em;
+    min-height: 2.45em;
+  }
+
+  .hero-frame {
+    aspect-ratio: 5 / 4;
   }
 }
 

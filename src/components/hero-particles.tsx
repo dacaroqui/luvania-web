@@ -25,14 +25,14 @@ function makeParticle(wide: boolean): Particle {
   return {
     x: nearFigure ? 0.34 + Math.random() * 0.7 : Math.random(),
     y: 0.02 + Math.random() * 0.96,
-    speed: wide ? 0.035 + Math.random() * 0.11 : 0.05 + Math.random() * 0.14,
-    amp: (nearFigure ? 0.028 : 0.012) + Math.random() * 0.05,
+    speed: wide ? 0.055 + Math.random() * 0.16 : 0.07 + Math.random() * 0.18,
+    amp: (nearFigure ? 0.04 : 0.02) + Math.random() * 0.07,
     phase: Math.random() * Math.PI * 2,
-    freq: 0.7 + Math.random() * 1.5,
-    size: 1.15 + Math.random() * (nearFigure ? 3.4 : 2.1),
+    freq: 0.85 + Math.random() * 1.6,
+    size: 2.4 + Math.random() * (nearFigure ? 7.2 : 4.2),
     spin: Math.random() * Math.PI * 2,
     spinSpeed: (Math.random() - 0.5) * 2.2,
-    alpha: 0.55 + Math.random() * 0.45,
+    alpha: 0.78 + Math.random() * 0.22,
     tri: Math.random() > 0.28,
   };
 }
@@ -58,7 +58,7 @@ export function HeroParticles() {
 
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
     const mobile = window.matchMedia("(max-width: 760px)");
-    let groups = seed(mobile.matches ? 380 : 920);
+    let groups = seed(mobile.matches ? 520 : 1500);
     let viewW = 0;
     let viewH = 0;
     let raf = 0;
@@ -77,7 +77,7 @@ export function HeroParticles() {
     const draw = (now: number) => {
       ctx.clearRect(0, 0, viewW, viewH);
       const t = now / 1000;
-      const sway = Math.sin(t * 0.7) * viewW * 0.045;
+      const sway = Math.sin(t * 0.85) * viewW * 0.07;
 
       for (const group of groups) {
         ctx.fillStyle = group.color;
@@ -128,7 +128,7 @@ export function HeroParticles() {
     };
 
     const onResize = () => {
-      const nextCount = mobile.matches ? 380 : 920;
+      const nextCount = mobile.matches ? 520 : 1500;
       const current = groups.reduce((sum, group) => sum + group.items.length, 0);
       if (current !== nextCount) groups = seed(nextCount);
       resize();

@@ -15,7 +15,7 @@ export function Hero() {
     <section data-tone="cream" className="hero-shell relative z-[1]">
       <link rel="preload" as="image" href="/brand/hero-lcp.webp" fetchPriority="high" />
       <HeroParticles />
-      <div className="relative z-[1] mx-auto grid max-w-6xl items-center gap-10 px-4 pt-12 pb-14 lg:grid-cols-[1.05fr_0.95fr] lg:gap-8 lg:pt-16 lg:pb-20">
+      <div className="relative z-[1] mx-auto grid max-w-6xl items-center gap-6 px-4 pt-6 pb-10 lg:grid-cols-[1.05fr_0.95fr] lg:gap-8 lg:pt-14 lg:pb-16">
         <div className="reveal max-w-xl">
           <p className="text-xs font-bold tracking-[0.22em] text-clay">{heroCopy.eyebrow}</p>
           <h1 className="display hero-title mt-5">
