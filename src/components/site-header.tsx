@@ -226,14 +226,14 @@ export function SiteHeader() {
 function CartSlot() {
   const cart = useCart();
   if (!flags.cart) return null;
+  const label = cart.count > 0 ? `Carrito, ${cart.count} ${cart.count === 1 ? "producto" : "productos"}` : "Carrito";
   return (
-    <button type="button" className="cart-slot" disabled aria-disabled="true">
+    <button type="button" className="cart-slot" onClick={() => cart.setOpen(true)} aria-label={label}>
       <svg viewBox="0 0 24 24" aria-hidden="true">
         <path d="M6 8h12l-1 11H7L6 8Z" />
         <path d="M9 8V7a3 3 0 0 1 6 0v1" />
       </svg>
-      <span className="cart-count">{cart.count}</span>
-      <span className="sr-only">Carrito, aún no disponible</span>
+      {cart.count > 0 ? <span className="cart-count">{cart.count}</span> : null}
     </button>
   );
 }

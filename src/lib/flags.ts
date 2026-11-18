@@ -1,9 +1,9 @@
 /**
- * La compra en línea sigue apagada. El carrito y el filtro de precio
- * existen en el código, pero no se muestran hasta que el cliente
- * confirme qué se vende y con qué precios validados.
+ * El carrito se puede usar en el preview. No hay pasarela:
+ * el cierre del pedido sale por WhatsApp.
+ * El filtro de precio sigue oculto hasta tener un rango validado.
  */
 export const flags = {
-  cart: false,
+  cart: true,
   priceFilter: false,
 } as const;

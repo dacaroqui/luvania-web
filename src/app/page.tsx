@@ -157,7 +157,7 @@ export default function HomePage() {
               Ver todas
             </Link>
           </div>
-          <ul className="mt-6 grid gap-4 md:grid-cols-3">
+          <ul className="shop-grid shop-grid-home mt-6">
             {featured.map((offer) => (
               <OfferCard key={offer.slug} offer={offer} />
             ))}

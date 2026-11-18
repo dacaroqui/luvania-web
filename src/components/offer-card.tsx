@@ -1,28 +1,23 @@
 import { getTreatment } from "@/data";
-import { discountPercent } from "@/data/offers";
+import { shopProduct } from "@/data/shop";
 import type { Offer } from "@/data/types";
-import { cop } from "@/lib/format";
-import Link from "next/link";
-import { TreatmentMedia } from "./treatment-media";
+import { publicText } from "@/lib/public-copy";
+import { ShopCard } from "./shop-card";
 
 export function isPublishedOffer(offer: Offer) {
   return getTreatment(offer.treatmentSlug)?.status === "VERIFIED";
 }
 
+function sessionLabel(value: string | undefined) {
+  const text = publicText(value);
+  const match = text.match(/\b(\d+)\s+sesiones\b/i);
+  if (!match) return null;
+  return Number(match[1]) === 1 ? "1 sesión" : `${match[1]} sesiones`;
+}
+
 export function OfferCard({ offer }: { offer: Offer }) {
-  const treatment = getTreatment(offer.treatmentSlug);
-  const percent = discountPercent(offer);
-  return (
-    <li className="promo-card">
-      <Link href={`/tratamientos/${offer.treatmentSlug}`} className="promo-link">
-        <TreatmentMedia name={offer.name} image={treatment?.image} />
-        <div className="promo-copy">
-          <h2 className="display promo-name">{offer.name}</h2>
-          {percent ? <p className="promo-off">{percent}% de descuento</p> : null}
-          <p className="promo-price">{cop(offer.priceNow)}</p>
-          <p className="promo-fine">Sujeto a valoración y vigencia.</p>
-        </div>
-      </Link>
-    </li>
-  );
+  const product = shopProduct(offer.treatmentSlug);
+  if (!product) return null;
+  const sesiones = sessionLabel(getTreatment(offer.treatmentSlug)?.sesiones);
+  return <ShopCard product={product} sesiones={sesiones} />;
 }

@@ -1,3 +1,4 @@
+import { getTreatment } from "./index";
 import { verifiedCatalog } from "./catalog";
 import { offerForTreatment } from "./offers";
 import { sedes } from "./sedes";
@@ -49,6 +50,7 @@ export function commerceCatalog(): CommerceProduct[] {
       necesidadNombres: item.needs.map((id) => needById(id)?.name ?? id),
       zonas: item.zones,
       zonaNombres: item.zones.map((id) => zoneById(id)?.name ?? id),
+      imagen: getTreatment(item.slug)?.image,
       precio: money.precio,
       moneda: "COP",
       precioPromocional: money.precioPromocional,

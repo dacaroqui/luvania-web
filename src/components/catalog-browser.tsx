@@ -11,7 +11,6 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { BookButton } from "./book-button";
-import { useCart } from "./cart-store";
 import { TreatmentMedia } from "./treatment-media";
 
 const VISIBLE = 6;
@@ -294,7 +293,6 @@ function PriceRangeFilter() {
 }
 
 function CatalogCard({ product }: { product: CommerceProduct }) {
-  const cart = useCart();
   const summary = publicText(product.descripcion);
   const amount = product.precioPromocional ?? product.precio;
   return (
@@ -307,18 +305,13 @@ function CatalogCard({ product }: { product: CommerceProduct }) {
         <h2 className="display catalog-name">
           <Link href={`/tratamientos/${product.slug}`}>{product.nombre}</Link>
         </h2>
-        {summary ? <p className="catalog-summary">{summary}</p> : null}
-        {amount != null ? <p className="catalog-price">Desde {cop(amount)}</p> : null}
+        <p className="catalog-summary">{summary}</p>
+        <p className="catalog-price">{amount != null ? `Desde ${cop(amount)}` : ""}</p>
         <div className="catalog-actions">
           <Link href={`/tratamientos/${product.slug}`} className="catalog-primary">
             Ver tratamiento
           </Link>
           {product.requiereValoracion ? <BookButton className="catalog-agenda">Agendar valoración</BookButton> : null}
-          {flags.cart && product.disponibleOnline ? (
-            <button type="button" className="catalog-cart" onClick={() => cart.add(product.slug)}>
-              Agregar al carrito
-            </button>
-          ) : null}
         </div>
       </div>
     </article>
