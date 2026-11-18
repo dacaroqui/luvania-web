@@ -1,0 +1,181 @@
+@import "tailwindcss";
+@import "lenis/dist/lenis.css";
+
+@theme {
+  --color-cream: #efecdb;
+  --color-peach: #f1ceb3;
+  --color-salmon: #f0a486;
+  --color-coral: #ee876b;
+  --color-ink: #1a1a1a;
+  --color-mute: #3d4445;
+  --color-line: #e4d5c6;
+  --color-paper: #f7f4ea;
+  --font-sans: var(--font-nunito), "Nunito Sans", sans-serif;
+  --font-display: var(--font-bodoni), "Bodoni Moda", Georgia, serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background:
+    radial-gradient(1200px 500px at 90% -10%, rgb(241 206 179 / 0.65), transparent 55%),
+    radial-gradient(900px 420px at -10% 20%, rgb(240 164 134 / 0.28), transparent 50%),
+    var(--color-cream);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: #f0a486;
+  color: #1a1a1a;
+}
+
+:focus-visible {
+  outline: 2px solid #1a1a1a;
+  outline-offset: 3px;
+}
+
+.display {
+  font-family: var(--font-display);
+  font-weight: 500;
+  letter-spacing: -0.03em;
+}
+
+.wave {
+  display: block;
+  width: 100%;
+  height: 28px;
+  color: var(--color-coral);
+}
+
+.discount-badge {
+  display: grid;
+  width: 4.6rem;
+  height: 4.6rem;
+  place-items: center;
+  border-radius: 999px;
+  background: radial-gradient(circle at 32% 28%, #fff6ee 0%, #f0a486 38%, #ee876b 100%);
+  color: #1a1a1a;
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  line-height: 1;
+  box-shadow: 0 12px 28px rgb(238 135 107 / 0.35);
+  transform: rotate(-8deg);
+  animation: badge-pop 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.hero-stage {
+  perspective: 1400px;
+}
+
+.hero-card {
+  transform-style: preserve-3d;
+  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.hotspot {
+  position: absolute;
+  z-index: 2;
+  display: none;
+  min-height: 44px;
+  min-width: 44px;
+  align-items: center;
+  gap: 0.4rem;
+  border-radius: 999px;
+  background: rgb(255 255 255 / 0.88);
+  padding: 0.35rem 0.75rem 0.35rem 0.35rem;
+  color: #1a1a1a;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  box-shadow: 0 10px 24px rgb(26 26 26 / 0.12);
+  backdrop-filter: blur(8px);
+}
+
+@media (min-width: 768px) {
+  .hotspot {
+    display: flex;
+  }
+}
+
+.hotspot i {
+  display: grid;
+  width: 1.7rem;
+  height: 1.7rem;
+  place-items: center;
+  border-radius: 999px;
+  background: #ee876b;
+  font-style: normal;
+}
+
+.hotspot i::after {
+  content: "";
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 999px;
+  background: #1a1a1a;
+  animation: ping 2.4s ease-out infinite;
+}
+
+dialog.sheet {
+  width: min(34rem, calc(100% - 1.5rem));
+  margin: auto;
+  border: 0;
+  border-radius: 1.5rem;
+  background: #f7f4ea;
+  color: #1a1a1a;
+  padding: 0;
+  box-shadow: 0 30px 80px rgb(26 26 26 / 0.28);
+}
+
+dialog.sheet::backdrop {
+  background: rgb(26 26 26 / 0.46);
+}
+
+@keyframes badge-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.7) rotate(-18deg);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) rotate(-8deg);
+  }
+}
+
+@keyframes ping {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  70% {
+    transform: scale(1.8);
+    opacity: 0;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .hotspot i::after {
+    animation: none;
+  }
+}

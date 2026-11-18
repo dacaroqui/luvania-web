@@ -1,0 +1,2841 @@
+[
+  {
+    "slug": "plasma-virtual",
+    "name": "Plasma virtual",
+    "especialidad": "rejuvenecimiento-facial",
+    "zones": [
+      "rostro",
+      "capilar",
+      "manos"
+    ],
+    "needs": [
+      "rejuvenecimiento",
+      "flacidez",
+      "cicatrices",
+      "caida-cabello"
+    ],
+    "summary": "Protocolo con plasma rico en plaquetas obtenido de tu propia sangre, para piel y cuero cabelludo.",
+    "queEs": "El plasma virtual de Luvania trabaja con plasma rico en plaquetas: una fracción de tu sangre, separada en centrífuga, que se aplica para acompañar la regeneración de la piel o del cuero cabelludo. Al ser material autólogo, el rechazo alérgico es poco habitual, pero igual exige valoración médica y técnica estéril.",
+    "beneficios": [
+      "Busca mejorar textura y luminosidad del rostro, cuello o manos.",
+      "Se usa también como apoyo en caída del cabello.",
+      "No es cirugía y la recuperación social suele ser corta.",
+      "El plan se arma según la zona y el estado de la piel."
+    ],
+    "paraQuien": "Personas que quieren un estímulo biológico de su propia sangre y no tienen contraindicación para una toma de muestra. No reemplaza el tratamiento de una enfermedad de la piel.",
+    "sesiones": "TODO: confirmar con el equipo médico el número de sesiones, el intervalo y la duración del resultado.",
+    "duracion": "La página anterior describía la toma de muestra y el centrifugado, sin un número cerrado de sesiones.",
+    "faqs": [
+      {
+        "q": "¿Duele?",
+        "a": "La toma de sangre es la de un examen habitual. En la aplicación puede haber sensibilidad breve. Se explica antes de empezar."
+      },
+      {
+        "q": "¿Sirve para el cabello?",
+        "a": "Puede formar parte de un plan capilar. La causa de la caída se valora aparte: no toda caída responde igual."
+      },
+      {
+        "q": "¿Cuándo se ven cambios?",
+        "a": "La piel no cambia en un día. El equipo define controles y fotos de seguimiento."
+      }
+    ],
+    "related": [
+      "dermapen",
+      "factores-de-crecimiento",
+      "hair-loss"
+    ],
+    "placeholder": false,
+    "placeholderNote": "",
+    "inAudit44": true
+  },
+  {
+    "slug": "dermapen",
+    "name": "Dermapen",
+    "especialidad": "rejuvenecimiento-facial",
+    "zones": [
+      "rostro",
+      "cuello",
+      "manos",
+      "corporal"
+    ],
+    "needs": [
+      "rejuvenecimiento",
+      "manchas",
+      "acne",
+      "cicatrices",
+      "lineas-de-expresion",
+      "estrias"
+    ],
+    "summary": "Micropunciones controladas para que los principios activos penetren y la piel renueve textura.",
+    "queEs": "Dermapen es un dispositivo de micropunción. Trabaja a una profundidad regulada según la zona y el tipo de piel, y se combina con principios activos elegidos en la valoración: hidratación, luminosidad o apoyo en marcas. No es un rodillo casero ni un tratamiento para hacerse en casa.",
+    "beneficios": [
+      "Apoya textura, poros y aspecto de líneas finas.",
+      "Facilita la entrada de activos elegidos para tu piel.",
+      "Se puede orientar a marcas de acné, manchas o estrías, según el caso.",
+      "Las agujas son desechables."
+    ],
+    "paraQuien": "Quien busca mejorar textura sin cirugía y puede pausar el sol fuerte y el maquillaje el día del procedimiento. Piel infectada, brote activo o embarazo se revisan antes.",
+    "sesiones": "TODO: confirmar el número de sesiones. La profundidad citada en la web anterior iba de 0,25 a 2,5 mm, siempre a criterio del profesional.",
+    "duracion": "El cuidado posterior incluye fotoprotección. El tiempo exacto de recuperación social depende de la profundidad.",
+    "faqs": [
+      {
+        "q": "¿Quedo rojo?",
+        "a": "Es habitual un enrojecimiento temporal. Te dicen qué evitar, incluido el maquillaje en las primeras horas."
+      },
+      {
+        "q": "¿Borra las manchas?",
+        "a": "Puede ayudar a unificar el tono junto con activos despigmentantes. No promete borrar una mancha en una sesión."
+      },
+      {
+        "q": "¿Se combina con plasma?",
+        "a": "A menudo sí. La combinación se decide en la valoración, no en la publicidad."
+      }
+    ],
+    "related": [
+      "microdermoabrasion",
+      "plasma-virtual",
+      "manchas"
+    ],
+    "placeholder": false,
+    "placeholderNote": "",
+    "inAudit44": true
+  },
+  {
+    "slug": "hidrolipoclasia",
+    "name": "Hidrolipoclasia",
+    "especialidad": "obesidad-y-sobrepeso",
+    "zones": [
+      "abdomen",
+      "piernas",
+      "brazos",
+      "gluteos"
+    ],
+    "needs": [
+      "grasa-localizada",
+      "contorno",
+      "celulitis"
+    ],
+    "summary": "Técnica para grasa localizada, con solución y apoyo de aparatología. No es una liposucción ni un plan de adelgazamiento.",
+    "queEs": "La hidrolipoclasia busca actuar sobre depósitos localizados de grasa, no sobre el peso de todo el cuerpo. En Luvania se presenta como un protocolo de contorno, con valoración de la zona y controles. El resultado depende del depósito, de los hábitos y del plan completo.",
+    "beneficios": [
+      "Orientada a cintura, flancos, brazos o muslos, según el caso.",
+      "No es cirugía abierta.",
+      "Se acompaña de medidas e indicaciones, no solo de la sesión.",
+      "Puede conversar con drenaje u otros protocolos de contorno."
+    ],
+    "paraQuien": "Personas con grasa localizada y estado de salud compatible. No está pensada como tratamiento de obesidad mórbida ni como sustituto de nutrición.",
+    "sesiones": "TODO: confirmar con el equipo médico el número de sesiones, el intervalo y la duración del resultado.",
+    "duracion": "La página anterior no fijaba un número único de sesiones ni centímetros garantizados.",
+    "faqs": [
+      {
+        "q": "¿Bajo de peso?",
+        "a": "El objetivo es el depósito localizado, no la báscula. Las medidas se toman en la valoración."
+      },
+      {
+        "q": "¿Duele?",
+        "a": "Puede haber molestia. Se explica el procedimiento y los cuidados antes de agendar."
+      },
+      {
+        "q": "¿Quedo listo el mismo día?",
+        "a": "La mayoría retoma actividades suaves. Ejercicio intenso y sol se pautan con el equipo."
+      }
+    ],
+    "related": [
+      "lipolisis-de-diodo-laser",
+      "drenaje-linfatico",
+      "lipomax"
+    ],
+    "placeholder": false,
+    "placeholderNote": "",
+    "inAudit44": true
+  },
+  {
+    "slug": "drenaje-linfatico",
+    "name": "Drenaje linfático",
+    "especialidad": "obesidad-y-sobrepeso",
+    "zones": [
+      "corporal",
+      "piernas",
+      "abdomen",
+      "brazos"
+    ],
+    "needs": [
+      "contorno",
+      "celulitis",
+      "bienestar",
+      "flacidez"
+    ],
+    "summary": "Maniobras para favorecer la circulación linfática, la sensación de ligereza y el apoyo de otros protocolos.",
+    "queEs": "El drenaje linfático es una técnica manual, rítmica, que acompaña el retorno de líquidos. En la red se usa solo o como cierre de protocolos de contorno. No diagnostica edemas médicos: si hay hinchazón de causa desconocida, primero va el criterio de salud.",
+    "beneficios": [
+      "Sensación de piernas más ligeras en muchos pacientes.",
+      "Apoya planes de celulitis y post-procedimiento.",
+      "No es un masaje de tejido profundo.",
+      "Se adapta al ritmo de cada persona."
+    ],
+    "paraQuien": "Quien retiene líquidos de forma estética o quiere completar un protocolo corporal. Infecciones, trombosis reciente o fiebre se descartan antes.",
+    "sesiones": "TODO: confirmar con el equipo médico el número de sesiones, el intervalo y la duración del resultado.",
+    "duracion": "La duración de cada cita se confirma al agendar. No hay un paquete único publicado.",
+    "faqs": [
+      {
+        "q": "¿Sirve para adelgazar?",
+        "a": "Ayuda a la sensación de volumen por líquido. No quema grasa por sí solo."
+      },
+      {
+        "q": "¿Cada cuánto?",
+        "a": "Depende de si es un plan de mantenimiento o el apoyo de otro tratamiento."
+      },
+      {
+        "q": "¿Puedo venir en el periodo?",
+        "a": "Se puede valorar. Si hay dolor pélvico intenso o un cuadro médico, se reprograma."
+      }
+    ],
+    "related": [
+      "celulitis",
+      "moldeo-corporal",
+      "detoxificacion"
+    ],
+    "placeholder": false,
+    "placeholderNote": "",
+    "inAudit44": true
+  },
+  {
+    "slug": "lipomax",
+    "name": "Lipomax",
+    "especialidad": "obesidad-y-sobrepeso",
+    "zones": [
+      "abdomen",
+      "piernas",
+      "brazos",
+      "gluteos"
+    ],
+    "needs": [
+      "grasa-localizada",
+      "contorno"
+    ],
+    "summary": "Protocolo de contorno no quirúrgico de la red, orientado a depósitos de grasa.",
+    "queEs": "Lipomax es un nombre de protocolo de Luvania para reducir depósitos de grasa sin cirugía. La web anterior lo describía como una aplicación de energía sobre el tejido adiposo localizado. La ficha técnica exacta del equipo no estaba publicada con claridad: por eso esta página resume la intención y deja el mecanismo fino para el equipo médico.",
+    "beneficios": [
+      "Pensado para zonas concretas, no para bajar de peso global.",
+      "Sin quirófano ni anestesia general.",
+      "Se mide y se fotografía el proceso, según el protocolo de la red.",
+      "Se combina, si hace falta, con hábitos y otros protocolos."
+    ],
+    "paraQuien": "Personas con un depósito localizado que ya intentaron ordenar alimentación y movimiento, y quieren una opción no quirúrgica.",
+    "sesiones": "TODO: confirmar con el equipo médico el número de sesiones, el intervalo y la duración del resultado.",
+    "duracion": "La web anterior hablaba de cambios desde la primera sesión. Esa promesa no se reproduce aquí: el plazo se define en la valoración.",
+    "faqs": [
+      {
+        "q": "¿Es liposucción?",
+        "a": "No. Es un protocolo de consultorio. Si la indicación es quirúrgica, se dice con claridad."
+      },
+      {
+        "q": "¿En qué zonas?",
+        "a": "Abdomen, flancos y otras zonas con depósito, si la valoración lo permite."
+      },
+      {
+        "q": "¿Qué equipo usan?",
+        "a": "TODO: el nombre comercial del equipo y los parámetros no estaban verificados en la auditoría."
+      }
+    ],
+    "related": [
+      "velanova",
+      "hidrolipoclasia",
+      "electroporacion"
+    ],
+    "placeholder": true,
+    "placeholderNote": "Página de origen delgada. El mecanismo del equipo queda por confirmar.",
+    "inAudit44": true
+  },
+  {
+    "slug": "velanova",
+    "name": "Velanova",
+    "especialidad": "obesidad-y-sobrepeso",
+    "zones": [
+      "abdomen",
+      "gluteos",
+      "piernas",
+      "corporal"
+    ],
+    "needs": [
+      "grasa-localizada",
+      "contorno"
+    ],
+    "summary": "Protocolo de la red para depósitos grasos de abdomen, flancos, espalda, glúteos y muslos.",
+    "queEs": "Velanova es la propuesta de Luvania para trabajar depósitos grasos por zonas, sin presentarla como dieta ni como cirugía. La página anterior delimitaba la zona en sectores y advertía un tiempo máximo de aplicación. Esos parámetros los confirma el profesional en sede: no se publican aquí como receta.",
+    "beneficios": [
+      "Trabaja zonas marcadas, no el cuerpo entero de una vez.",
+      "Sin cirugía.",
+      "Incluye delimitación de la zona antes de aplicar.",
+      "El plan se ajusta al depósito real, no a una foto de catálogo."
+    ],
+    "paraQuien": "Quien quiere intervenir cintura, cartucheras o espalda baja y tiene un estado de salud compatible con el protocolo.",
+    "sesiones": "TODO: un caso publicado mencionaba 6 sesiones. No es el protocolo estándar hasta que el equipo lo confirme.",
+    "duracion": "La duración de cada aplicación tiene un tope técnico. Se explica en la cita.",
+    "faqs": [
+      {
+        "q": "¿Reemplaza la dieta?",
+        "a": "No. Sin hábitos, el depósito puede volver."
+      },
+      {
+        "q": "¿Duele?",
+        "a": "La web anterior lo presentaba como tolerable. La sensibilidad es personal."
+      },
+      {
+        "q": "¿Qué lo diferencia de Lipomax?",
+        "a": "Son protocolos hermanos de contorno. TODO: el equipo debe decir cuál indica en cada caso."
+      }
+    ],
+    "related": [
+      "lipomax",
+      "hidrolipoclasia",
+      "lipolisis-de-diodo-laser"
+    ],
+    "placeholder": true,
+    "placeholderNote": "Página de origen delgada y con promesa de pérdida de peso rápida, que no se replica.",
+    "inAudit44": true
+  },
+  {
+    "slug": "electroporacion",
+    "name": "Electroporación",
+    "especialidad": "obesidad-y-sobrepeso",
+    "zones": [
+      "abdomen",
+      "piernas",
+      "brazos",
+      "corporal"
+    ],
+    "needs": [
+      "grasa-localizada",
+      "celulitis",
+      "flacidez",
+      "contorno"
+    ],
+    "summary": "Mesoterapia virtual: impulsos para llevar activos a la piel sin agujas, en protocolos de contorno.",
+    "queEs": "La electroporación, o mesoterapia virtual, usa impulsos eléctricos breves para aumentar la permeabilidad de la piel y aplicar activos sin inyección. En Luvania aparece en el grupo de contorno, asociada a grasa localizada, celulitis e hidratación de la piel. No es una corriente de electroestimulación muscular: eso es otro protocolo.",
+    "beneficios": [
+      "Sin agujas.",
+      "Puede orientar grasa localizada y aspecto de la piel.",
+      "Se personalizan los activos.",
+      "Sirve de apoyo, no de solución única."
+    ],
+    "paraQuien": "Quien prefiere evitar inyecciones y tiene un objetivo de contorno o de calidad de piel corporal.",
+    "sesiones": "TODO: confirmar con el equipo médico el número de sesiones, el intervalo y la duración del resultado.",
+    "duracion": "Cada sesión es de consultorio. El número no estaba publicado de forma única.",
+    "faqs": [
+      {
+        "q": "¿Es lo mismo que las corrientes rusas?",
+        "a": "No. La electroporación busca llevar activos. Las corrientes rusas buscan contraer músculo."
+      },
+      {
+        "q": "¿Puedo hacerme en la cara?",
+        "a": "El enfoque publicado es corporal. Un uso facial se confirma en la valoración."
+      },
+      {
+        "q": "¿Hay dolor?",
+        "a": "Suele sentirse un hormigueo. Se regula la intensidad."
+      }
+    ],
+    "related": [
+      "drenaje-linfatico",
+      "celulitis",
+      "lipomax"
+    ],
+    "placeholder": true,
+    "placeholderNote": "Página de origen delgada. No se publican parámetros del equipo.",
+    "inAudit44": true
+  },
+  {
+    "slug": "toxina-botulinica-tipo-a",
+    "name": "Toxina botulínica tipo A",
+    "especialidad": "estetica-facial",
+    "zones": [
+      "rostro",
+      "cuello"
+    ],
+    "needs": [
+      "arrugas",
+      "lineas-de-expresion"
+    ],
+    "summary": "Aplicación médica para suavizar líneas de expresión de movimiento, con aguja fina.",
+    "queEs": "La toxina botulínica tipo A relaja de forma temporal músculos que marcan líneas de expresión, sobre todo en frente, entrecejo y patas de gallo. Es un acto médico, con dosis y puntos definidos en la valoración. No rellena surcos profundos ni cambia el volumen del rostro: para eso se valoran otros protocolos.",
+    "beneficios": [
+      "Suaviza líneas que aparecen al gesticular.",
+      "El procedimiento es corto.",
+      "El efecto es temporal y se puede mantener con controles.",
+      "La expresión se busca natural, no congelada."
+    ],
+    "paraQuien": "Adultos con líneas de movimiento que un médico considere candidatas. Embarazo, ciertas enfermedades neuromusculares y infecciones en la zona se revisan siempre.",
+    "sesiones": "TODO: confirmar con el equipo médico el número de sesiones, el intervalo y la duración del resultado.",
+    "duracion": "El efecto suele apreciarse en unos días y no es permanente. El plazo exacto de mantenimiento lo define el médico.",
+    "faqs": [
+      {
+        "q": "¿Me va a quedar la cara quieta?",
+        "a": "La intención es modular el músculo, no borrar el gesto. Eso se acuerda antes."
+      },
+      {
+        "q": "¿Duele?",
+        "a": "Se usa una aguja fina. A veces, anestesia tópica. Hay quien siente un pinchazo breve."
+      },
+      {
+        "q": "¿Sirve para la papada?",
+        "a": "No es su indicación principal. Papada y flacidez se valoran con otros protocolos."
+      }
+    ],
+    "related": [
+      "hilos-tensores",
+      "hidroxiapatita-de-calcio",
+      "hiperhidrosis"
+    ],
+    "placeholder": false,
+    "placeholderNote": "",
+    "inAudit44": true
+  },
+  {
+    "slug": "hidroxiapatita-de-calcio",
+    "name": "Hidroxiapatita de calcio",
+    "especialidad": "estetica-facial",
+    "zones": [
+      "rostro",
+      "manos",
+      "cuello"
+    ],
+    "needs": [
+      "flacidez",
+      "volumen",
+      "rejuvenecimiento",
+      "lineas-de-expresion"
+    ],
+    "summary": "Gel biocompatible que aporta soporte y estimula colágeno. En la web anterior el nombre estaba mal escrito.",
+    "queEs": "La hidroxiapatita de calcio es un material de relleno biocompatible. A diferencia del ácido hialurónico, la red lo presenta por su capacidad de inducir colágeno y por una duración que en la página anterior se estimaba alrededor de un año, según la persona. El producto comercial vigente queda por confirmar.",
+    "beneficios": [
+      "Busca firmeza y un soporte que no depende solo del relleno inmediato.",
+      "Se usa en rostro y, en algunos planes, en manos.",
+      "El material se degrada: no es un implante permanente.",
+      "El diseño del rostro lo hace un médico."
+    ],
+    "paraQuien": "Quien necesita soporte estructural más que solo hidratación, y acepta un procedimiento mínimamente invasivo.",
+    "sesiones": "TODO: confirmar con el equipo médico el número de sesiones, el intervalo y la duración del resultado.",
+    "duracion": "La web anterior hablaba de efectos que pueden alcanzar 12 meses o más. Es una referencia, no una garantía.",
+    "faqs": [
+      {
+        "q": "¿Es ácido hialurónico?",
+        "a": "No. Son materiales distintos. El hialurónico tiene su propia ficha en este sitio."
+      },
+      {
+        "q": "¿Cómo se escribía antes?",
+        "a": "La etiqueta del sitio anterior se comía una vocal. El nombre correcto es hidroxiapatita de calcio."
+      },
+      {
+        "q": "¿Se puede retirar?",
+        "a": "TODO: el protocolo de corrección no estaba publicado. Se conversa en la valoración."
+      }
+    ],
+    "related": [
+      "acido-hialuronico",
+      "hilos-tensores",
+      "perfilamiento-maxilar-hombres"
+    ],
+    "placeholder": false,
+    "placeholderNote": "",
+    "inAudit44": true
+  },
+  {
+    "slug": "aumento-y-o-perfilamiento-de-labios",
+    "name": "Perfilamiento de labios",
+    "especialidad": "estetica-facial",
+    "zones": [
+      "rostro"
+    ],
+    "needs": [
+      "volumen",
+      "hidratacion",
+      "contorno"
+    ],
+    "summary": "Diseño de labios para hidratar, definir el borde o sumar volumen con criterio médico.",
+    "queEs": "El perfilamiento de labios busca proporción, no un molde único. Puede ir de una hidratación discreta a un volumen más claro, siempre con un material indicado por el médico. En la red, la ficha no detallaba la marca del producto: lo habitual en este objetivo es el ácido hialurónico, y eso se confirma en la cita.",
+    "beneficios": [
+      "Define arco, borde y proporción.",
+      "El cambio se ve en la sesión, con inflamación inicial.",
+      "Se puede avanzar por etapas.",
+      "Se revisa simetría y función, no solo la foto."
+    ],
+    "paraQuien": "Quien quiere definir o hidratar los labios y no tiene infección activa, herpes en brote o una expectativa de cambio extremo en una sola cita.",
+    "sesiones": "TODO: confirmar con el equipo médico el número de sesiones, el intervalo y la duración del resultado.",
+    "duracion": "Hay inflamación los primeros días. El resultado asentado se valora después, en el control.",
+    "faqs": [
+      {
+        "q": "¿Queda artificial?",
+        "a": "El encargo es conservar tu gesto. El volumen se acuerda en mililitros y en forma."
+      },
+      {
+        "q": "¿Duele?",
+        "a": "Se usa anestesia tópica o la que trae el producto. El labio es una zona sensible."
+      },
+      {
+        "q": "¿Qué material es?",
+        "a": "TODO: confirmar si el protocolo vigente es ácido hialurónico y cuál presentación."
+      }
+    ],
+    "related": [
+      "aumento-y-o-perfilamiento-de-pomulos",
+      "aumento-y-o-perfilamiento-de-menton",
+      "acido-hialuronico"
+    ],
+    "placeholder": false,
+    "placeholderNote": "",
+    "inAudit44": true
+  },
+  {
+    "slug": "aumento-y-o-perfilamiento-de-pomulos",
+    "name": "Perfilamiento de pómulos",
+    "especialidad": "estetica-facial",
+    "zones": [
+      "rostro"
+    ],
+    "needs": [
+      "volumen",
+      "flacidez",
+      "contorno"
+    ],
+    "summary": "Soporte del pómulo para devolver luz al centro del rostro, sin cirugía.",
+    "queEs": "Con los años el pómulo pierde proyección y la mejilla se ve más plana. El perfilamiento busca devolver ese soporte con un material de relleno, en puntos que el médico marca. No estira la piel como un hilo ni relaja el músculo como la toxina.",
+    "beneficios": [
+      "Devuelve proyección al tercio medio.",
+      "Puede aligerar visualmente el surco.",
+      "El cambio se diseña en reposo y al sonreír.",
+      "Se puede hacer por etapas."
+    ],
+    "paraQuien": "Quien nota el rostro cansado o plano y quiere volumen, no solo alisar una arruga.",
+    "sesiones": "TODO: confirmar con el equipo médico el número de sesiones, el intervalo y la duración del resultado.",
+    "duracion": "La inflamación baja en días. La estabilidad del material depende del producto, que está por confirmar.",
+    "faqs": [
+      {
+        "q": "¿Me va a cambiar la sonrisa?",
+        "a": "Se prueba el gesto en la cita. El objetivo es acompañar tu expresión."
+      },
+      {
+        "q": "¿Por qué el precio anterior se ve raro?",
+        "a": "La oferta publicada traía un precio tachado que parece un error de digitación. Está marcado en Promociones."
+      },
+      {
+        "q": "¿Duele?",
+        "a": "Hay anestesia. Puede quedar sensibilidad o un moretón corto."
+      }
+    ],
+    "related": [
+      "aumento-y-o-perfilamiento-de-menton",
+      "hidroxiapatita-de-calcio",
+      "acido-hialuronico"
+    ],
+    "placeholder": false,
+    "placeholderNote": "",
+    "inAudit44": true
+  },
+  {
+    "slug": "aumento-y-o-perfilamiento-de-menton",
+    "name": "Perfilamiento de mentón",
+    "especialidad": "estetica-facial",
+    "zones": [
+      "rostro",
+      "cuello"
+    ],
+    "needs": [
+      "volumen",
+      "contorno",
+      "flacidez"
+    ],
+    "summary": "Proyección del mentón para equilibrar el perfil, con un procedimiento de consultorio.",
+    "queEs": "Un mentón poco proyectado cambia cómo se lee la mandíbula y la papada. El perfilamiento suma soporte en el mentón con material de relleno, sin implante fijo. Se mira de frente y de perfil, y se conversa qué tanto volumen tiene sentido.",
+    "beneficios": [
+      "Equilibra el perfil.",
+      "No es cirugía ósea.",
+      "Ayuda a leer mejor la línea de la mandíbula.",
+      "El resultado se revisa cuando baja la inflamación."
+    ],
+    "paraQuien": "Quien quiere proyección del mentón y tiene tejidos sanos. No corrige una mordida: eso es odontología u ortodoncia.",
+    "sesiones": "TODO: confirmar con el equipo médico el número de sesiones, el intervalo y la duración del resultado.",
+    "duracion": "Procedimiento de consultorio. El mantenimiento depende del material.",
+    "faqs": [
+      {
+        "q": "¿Arregla la mordida?",
+        "a": "No. Solo el contorno estético del mentón."
+      },
+      {
+        "q": "¿Se nota al tacto?",
+        "a": "Los primeros días puede haber firmeza. El material bien colocado se integra al gesto."
+      },
+      {
+        "q": "¿Sirve si tengo papada?",
+        "a": "A veces acompaña, pero la papada grasa o laxa tiene su propio protocolo."
+      }
+    ],
+    "related": [
+      "perfilamiento-maxilar-hombres",
+      "dewlap-lipopapada-sin-cirugia",
+      "aumento-y-o-perfilamiento-de-pomulos"
+    ],
+    "placeholder": false,
+    "placeholderNote": "",
+    "inAudit44": true
+  },
+  {
+    "slug": "acne",
+    "name": "Acné",
+    "especialidad": "estetica-facial",
+    "zones": [
+      "rostro"
+    ],
+    "needs": [
+      "acne",
+      "cicatrices",
+      "manchas"
+    ],
+    "summary": "Plan facial para brotes, marca y textura. No sustituye un tratamiento dermatológico cuando el acné es médico.",
+    "queEs": "El acné de Luvania es un camino estético para piel con brotes leves o con la marca que dejan: limpieza, activos y, si cabe, aparatología como Dermapen. Si hay nódulos, dolor o acné que no cede, se orienta a dermatología. No se promete una piel nueva en una sesión.",
+    "beneficios": [
+      "Ordena limpieza y activos según el tipo de piel.",
+      "Puede trabajar la marca cuando el brote ya está controlado.",
+      "Evita recetas genéricas de internet.",
+      "Incluye pauta de casa y fotoprotección."
+    ],
+    "paraQuien": "Piel con comedones, brote leve o marcas. Brotes infectados, acné quístico o uso de isotretinoína se revisan con un médico antes de cualquier aparatología.",
+    "sesiones": "TODO: confirmar con el equipo médico el número de sesiones, el intervalo y la duración del resultado.",
+    "duracion": "Un plan suele medirse en semanas, no en una cita. El número exacto no estaba unificado en la web anterior.",
+    "faqs": [
+      {
+        "q": "¿Me lo van a exprimir todo?",
+        "a": "La extracción, si se hace, es selectiva. Lastimar la piel empeora la marca."
+      },
+      {
+        "q": "¿Puedo venir con brote activo?",
+        "a": "Sí a la valoración. No toda aparatología se aplica sobre infección."
+      },
+      {
+        "q": "¿Quitan las manchas del acné?",
+        "a": "Se pueden atenuar. El plazo depende de la profundidad de la marca."
+      }
+    ],
+    "related": [
+      "limpieza-facial-profunda",
+      "dermapen",
+      "manchas"
+    ],
+    "placeholder": false,
+    "placeholderNote": "",
+    "inAudit44": true
+  },
+  {
+    "slug": "eliminar-ojeras",
+    "name": "Ojeras",
+    "especialidad": "estetica-facial",
+    "zones": [
+      "rostro"
+    ],
+    "needs": [
+      "ojeras",
+      "hidratacion",
+      "volumen"
+    ],
+    "summary": "Valoración del oscurecimiento bajo el ojo: pigmento, vasitos o surco, porque no todo se trata igual.",
+    "queEs": "La ojera no es una sola cosa. Puede ser pigmento, circulación superficial o un surco hundido. Luvania separa el motivo en la valoración y recién ahí propone despigmentación, calidad de piel o soporte. Prometer borrar una ojera genética en una cita no es serio.",
+    "beneficios": [
+      "Se distingue color, surco y bolsa.",
+      "El plan puede ser tópico, de aparatología o de soporte.",
+      "La zona es delicada: se trabaja con criterio.",
+      "Se indica fotoprotección, que aquí pesa más."
+    ],
+    "paraQuien": "Quien se ve el rostro cansado aun durmiendo bien. Si hay alergia, problema de tiroides o una bolsa que es grasa, se dice qué sí entra en el protocolo estético.",
+    "sesiones": "TODO: confirmar con el equipo médico el número de sesiones, el intervalo y la duración del resultado.",
+    "duracion": "Los cambios de color son graduales. Un surco tratado con soporte se ve antes, con inflamación inicial.",
+    "faqs": [
+      {
+        "q": "¿Es lo mismo que las bolsas?",
+        "a": "No. La bolsa es volumen; la ojera es color o surco. Hay ficha aparte."
+      },
+      {
+        "q": "¿Con una sesión basta?",
+        "a": "Casi nunca en pigmento. El plan se escribe en la valoración."
+      },
+      {
+        "q": "¿Puedo maquillarme después?",
+        "a": "Depende de la técnica. Te lo indican por escrito al salir."
+      }
+    ],
+    "related": [
+      "bolsas-en-los-ojos",
+      "dermapen",
+      "acido-hialuronico"
+    ],
+    "placeholder": false,
+    "placeholderNote": "",
+    "inAudit44": true
+  },
+  {
+    "slug": "bolsas-en-los-ojos",
+    "name": "Bolsas en los ojos",
+    "especialidad": "estetica-facial",
+    "zones": [
+      "rostro"
+    ],
+    "needs": [
+      "ojeras",
+      "flacidez",
+      "contorno"
+    ],
+    "summary": "Abordaje de la bolsa del párpado inferior: qué puede mejorar un protocolo de consultorio y qué no.",
+    "queEs": "La bolsa suele ser grasa o edema que empuja la piel fina del párpado. Algunos casos mejoran con calidad de piel, drenaje local y hábitos; otros son quirúrgicos y se informan así. Luvania valora antes de prometer un párpado liso.",
+    "beneficios": [
+      "Diferencia edema, piel laxa y bolsa grasa.",
+      "Propone solo lo que el consultorio puede hacer.",
+      "Cuida la piel fina de la zona.",
+      "Se apoya en fotos para no discutir de memoria."
+    ],
+    "paraQuien": "Quien nota hinchazón o un abultamiento bajo el ojo. Una bolsa de grasa marcada puede quedar fuera de un protocolo no quirúrgico.",
+    "sesiones": "TODO: confirmar con el equipo médico el número de sesiones, el intervalo y la duración del resultado.",
+    "duracion": "No hay un plazo único publicado. El edema responde distinto a la bolsa estructural.",
+    "faqs": [
+      {
+        "q": "¿Evito la cirugía?",
+        "a": "A veces sí, a veces no. La valoración existe para decirlo."
+      },
+      {
+        "q": "¿Es lo mismo que ojeras?",
+        "a": "No. Si el problema es el color, mira la ficha de ojeras."
+      },
+      {
+        "q": "¿Puedo hacerlo si uso lentes de contacto?",
+        "a": "Se conversa en la cita. La zona se protege."
+      }
+    ],
+    "related": [
+      "eliminar-ojeras",
+      "lifting-facial",
+      "hilos-tensores"
+    ],
+    "placeholder": false,
+    "placeholderNote": "",
+    "inAudit44": true
+  },
+  {
+    "slug": "lifting-facial",
+    "name": "Lifting facial",
+    "especialidad": "estetica-facial",
+    "zones": [
+      "rostro",
+      "cuello"
+    ],
+    "needs": [
+      "flacidez",
+      "rejuvenecimiento",
+      "contorno"
+    ],
+    "summary": "Protocolo no quirúrgico para firmeza del óvalo. No es un lifting de quirófano.",
+    "queEs": "En Luvania, lifting facial nombra un conjunto de técnicas de consultorio para la flacidez del óvalo y del cuello: calidad de piel, soporte o hilos, según el grado de caída. No sustituye una ritidectomía. El nombre se presta a confusión y por eso la valoración muestra qué técnica sería, con su nombre real.",
+    "beneficios": [
+      "Busca un óvalo más nítido.",
+      "Sin quirófano ni incapacidad larga.",
+      "Se elige la técnica según la caída, no al revés.",
+      "Se puede mantener con controles."
+    ],
+    "paraQuien": "Piel con flacidez leve o moderada. Caídas marcadas se informan con honestidad si el camino es otro.",
+    "sesiones": "TODO: confirmar con el equipo médico el número de sesiones, el intervalo y la duración del resultado.",
+    "duracion": "Depende de la técnica elegida. Un estímulo de colágeno no se ve el mismo día; un soporte, sí, con inflamación.",
+    "faqs": [
+      {
+        "q": "¿Es cirugía?",
+        "a": "No. Si lo que buscas es un lifting quirúrgico, no es este protocolo."
+      },
+      {
+        "q": "¿Incluye hilos?",
+        "a": "Puede incluirlos. También puede no incluirlos. Se decide en la cita."
+      },
+      {
+        "q": "¿Cuánto dura?",
+        "a": "TODO: no había una cifra única. Varía con la técnica."
+      }
+    ],
+    "related": [
+      "hilos-tensores",
+      "proface",
+      "hidroxiapatita-de-calcio"
+    ],
+    "placeholder": false,
+    "placeholderNote": "",
+    "inAudit44": true
+  },
+  {
+    "slug": "manchas",
+    "name": "Manchas",
+    "especialidad": "estetica-facial",
+    "zones": [
+      "rostro",
+      "manos",
+      "cuello"
+    ],
+    "needs": [
+      "manchas",
+      "rejuvenecimiento"
+    ],
+    "summary": "Lectura del tipo de mancha y un plan para unificar el tono, sin prometer borrar el melasma en una cita.",
+    "queEs": "Las manchas de la cara no comparten origen: sol, hormonas, inflamación o un lentigo no se tratan igual. La página anterior de este tratamiento estaba casi vacía, así que este texto es una guía editorial. El plan real —despigmentantes, peeling, aparatología— lo escribe el equipo después de ver la piel.",
+    "beneficios": [
+      "Empieza por identificar el tipo de mancha.",
+      "Combina casa, fotoprotección y cabina.",
+      "Evita ácidos agresivos sin supervisión.",
+      "Sirve también como puerta de entrada si la mancha es el motivo de la cita."
+    ],
+    "paraQuien": "Quien tiene manchas solares, melasma o marcas. Una mancha que cambia de forma, pica o sangra no es estética: se deriva.",
+    "sesiones": "TODO: confirmar con el equipo médico el número de sesiones, el intervalo y la duración del resultado.",
+    "duracion": "El tono se unifica en semanas o meses. El sol del día siguiente puede devolver la mancha.",
+    "faqs": [
+      {
+        "q": "¿Se van para siempre?",
+        "a": "Pueden atenuarse y volver si no hay fotoprotección. El melasma es especialmente insistente."
+      },
+      {
+        "q": "¿Por qué esta página está marcada?",
+        "a": "Porque la ficha original casi no tenía contenido. Falta la revisión médica del protocolo."
+      },
+      {
+        "q": "¿Duele?",
+        "a": "Depende de la técnica. Un despigmentante en casa no duele; un peeling puede arder un momento."
+      }
+    ],
+    "related": [
+      "peeling-ultrasonico",
+      "dermapen",
+      "cromoterapia"
+    ],
+    "placeholder": true,
+    "placeholderNote": "La página original tenía unas 345 palabras y ningún subtítulo. Este texto es un placeholder editorial.",
+    "inAudit44": true
+  },
+  {
+    "slug": "perfilamiento-maxilar-hombres",
+    "name": "Perfilamiento maxilar",
+    "especialidad": "estetica-facial",
+    "zones": [
+      "rostro",
+      "cuello"
+    ],
+    "needs": [
+      "volumen",
+      "contorno",
+      "flacidez"
+    ],
+    "summary": "Definición de mandíbula y mentón. En la web anterior se asociaba a ácido hialurónico Volux.",
+    "queEs": "El perfilamiento maxilar busca una mandíbula más nítida. La página anterior lo vinculaba a ácido hialurónico para el tercio inferior, con mención a Volux, y el slug decía «hombres» aunque el objetivo no es exclusivo. Corregimos el nombre visible y dejamos el producto exacto como pendiente de confirmación.",
+    "beneficios": [
+      "Marca ángulo mandibular y transición al cuello.",
+      "Procedimiento de consultorio.",
+      "No opera el hueso.",
+      "Se diseña de frente y de perfil."
+    ],
+    "paraQuien": "Quien perdió definición en mandíbula o quiere un ángulo más claro, sea cual sea su género. El slug antiguo mencionaba hombres; la valoración no excluye a nadie por eso.",
+    "sesiones": "TODO: confirmar con el equipo médico el número de sesiones, el intervalo y la duración del resultado.",
+    "duracion": "Se ve una diferencia al terminar, con posible inflamación. El mantenimiento depende del hialurónico usado.",
+    "faqs": [
+      {
+        "q": "¿Solo es para hombres?",
+        "a": "No. El nombre del enlace antiguo decía hombres. La técnica es de contorno facial."
+      },
+      {
+        "q": "¿Es toxina?",
+        "a": "La ficha anterior hablaba de ácido hialurónico, no de toxina. TODO: confirmar el producto vigente."
+      },
+      {
+        "q": "¿Qué es Volux?",
+        "a": "Una presentación de ácido hialurónico citada en el sitio anterior. TODO: confirmar si sigue en uso."
+      }
+    ],
+    "related": [
+      "aumento-y-o-perfilamiento-de-menton",
+      "acido-hialuronico",
+      "toxina-botulinica-tipo-a"
+    ],
+    "placeholder": true,
+    "placeholderNote": "La página original no tenía secciones y mezclaba el nombre con un slug «hombres».",
+    "inAudit44": true
+  },
+  {
+    "slug": "hilos-tensores",
+    "name": "Hilos tensores",
+    "especialidad": "estetica-facial",
+    "zones": [
+      "rostro",
+      "cuello",
+      "corporal"
+    ],
+    "needs": [
+      "flacidez",
+      "rejuvenecimiento",
+      "contorno"
+    ],
+    "summary": "Hilos finos que dan soporte inmediato y, con el tiempo, un estímulo de colágeno. El cuerpo los reabsorbe.",
+    "queEs": "Los hilos tensores se colocan bajo la piel con una aguja o cánula fina para reposicionar tejido laxo y estimular colágeno mientras se reabsorben. Sirven en óvalo, ceja, cuello y algunas zonas corporales. No sustituyen un lifting quirúrgico cuando la caída es mucha.",
+    "beneficios": [
+      "Efecto de soporte que se aprecia al terminar.",
+      "Material reabsorbible, no un implante fijo.",
+      "Procedimiento de menos de una hora en la mayoría de los planos faciales.",
+      "Se puede combinar con calidad de piel, en otro momento."
+    ],
+    "paraQuien": "Flacidez leve o moderada, con piel que todavía tiene qué reposicionar. Embarazo, infección o expectativas de un lifting de quirófano se conversan antes.",
+    "sesiones": "TODO: confirmar cuántos hilos y cuántas sesiones de mantenimiento. La aplicación facial suele durar entre 30 y 60 minutos.",
+    "duracion": "La web anterior estimaba la reabsorción entre 1 y 2 años, según la persona. Es una referencia, no una vigencia firmada.",
+    "faqs": [
+      {
+        "q": "¿Se ven los hilos?",
+        "a": "No deberían verse. Si hay un pliegue o un hilo palpable, se controla."
+      },
+      {
+        "q": "¿Duele?",
+        "a": "Se usa anestesia. Puede haber molestia, moretón o una sensación de tirantez unos días."
+      },
+      {
+        "q": "¿Puedo hacer ejercicio?",
+        "a": "No el mismo día. El equipo entrega los cuidados: gesto amplio, calor y deporte se pausan."
+      }
+    ],
+    "related": [
+      "lifting-facial",
+      "hidroxiapatita-de-calcio",
+      "toxina-botulinica-tipo-a"
+    ],
+    "placeholder": false,
+    "placeholderNote": "",
+    "inAudit44": true
+  },
+  {
+    "slug": "dewlap-lipopapada-sin-cirugia",
+    "name": "Dewlap: papada sin cirugía",
+    "especialidad": "estetica-facial",
+    "zones": [
+      "cuello",
+      "rostro"
+    ],
+    "needs": [
+      "papada",
+      "grasa-localizada",
+      "flacidez"
+    ],
+    "summary": "Protocolo de la red para la papada, sin cirugía. El nombre comercial en la web es Dewlap.",
+    "queEs": "Dewlap es el protocolo de Luvania para la papada que combina depósito graso y piel laxa bajo la mandíbula. No es una lipectomía. La página anterior era de las más largas del sitio y mezclaba ejercicios, autodiagnóstico y el tratamiento: aquí se queda la intención clínica y se pide confirmar la tecnología exacta.",
+    "beneficios": [
+      "Enfocado en la papada, no en bajar de peso.",
+      "Sin quirófano.",
+      "Sirve para leer si la papada es grasa, piel o las dos.",
+      "Se documenta con fotos de perfil."
+    ],
+    "paraQuien": "Quien se ve papada de perfil y quiere un camino no quirúrgico. Una papada muy estructural puede quedar mejor explicada que tratada de más.",
+    "sesiones": "TODO: confirmar con el equipo médico el número de sesiones, el intervalo y la duración del resultado.",
+    "duracion": "La web anterior prometía plazos de días o dos semanas en artículos. Esos plazos no se sostienen aquí.",
+    "faqs": [
+      {
+        "q": "¿Es lo mismo que lipo sin cirugía?",
+        "a": "No necesariamente. Lipo sin cirugía es una pieza de marca aparte, más cercana a protocolos de cuerpo. TODO: confirmar si Dewlap usa la misma tecnología."
+      },
+      {
+        "q": "¿Desaparece en 7 días?",
+        "a": "No es una promesa de esta web. La papada cambia según grasa, piel y hábitos."
+      },
+      {
+        "q": "¿Duele?",
+        "a": "Depende de la técnica que indique la valoración. Se explica antes de agendar."
+      }
+    ],
+    "related": [
+      "lipo-sin-cirugia",
+      "hilos-tensores",
+      "perfilamiento-maxilar-hombres"
+    ],
+    "placeholder": false,
+    "placeholderNote": "",
+    "inAudit44": true
+  },
+  {
+    "slug": "limpieza-facial-profunda",
+    "name": "Limpieza facial profunda",
+    "especialidad": "estetica-facial",
+    "zones": [
+      "rostro"
+    ],
+    "needs": [
+      "acne",
+      "hidratacion",
+      "rejuvenecimiento"
+    ],
+    "summary": "Higiene profesional de la piel: desmaquille, preparación y extracción medida, no un facial genérico.",
+    "queEs": "La limpieza profunda ordena impurezas, comedones y una piel opaca. Es la base antes de activos más intensos y también un mantenimiento. No es un peeling agresivo ni una promesa de poro cerrado para siempre: el poro no se «cierra», se ve más ordenado.",
+    "beneficios": [
+      "Retira sebo y células que apagan la luz de la piel.",
+      "Prepara mejor cualquier protocolo que venga después.",
+      "Incluye pauta de casa para no irritar.",
+      "Sirve como primera cita si todavía no sabes qué tratamiento elegir."
+    ],
+    "paraQuien": "Casi cualquier piel que quiera higiene profesional. Brote infectado, rosácea en crisis o piel recién tratada con ácidos fuertes se reprograma.",
+    "sesiones": "TODO: confirmar con el equipo médico el número de sesiones, el intervalo y la duración del resultado.",
+    "duracion": "Una sesión de cabina. El mantenimiento suele ser periódico; el intervalo no estaba publicado.",
+    "faqs": [
+      {
+        "q": "¿Me van a doler las extracciones?",
+        "a": "Puede haber molestia. No se fuerza un comedón cerrado."
+      },
+      {
+        "q": "¿Cada cuánto vuelvo?",
+        "a": "TODO: confirmar el intervalo de mantenimiento que usa la red."
+      },
+      {
+        "q": "¿Quedo rojo?",
+        "a": "Un rato, sí. El maquillaje del mismo día se desaconseja."
+      }
+    ],
+    "related": [
+      "acne",
+      "peeling-ultrasonico",
+      "porcelanizacion"
+    ],
+    "placeholder": false,
+    "placeholderNote": "",
+    "inAudit44": true
+  },
+  {
+    "slug": "electroplasma",
+    "name": "Electroplasma",
+    "especialidad": "estetica-facial",
+    "zones": [
+      "rostro"
+    ],
+    "needs": [
+      "rejuvenecimiento",
+      "lineas-de-expresion",
+      "hidratacion",
+      "cicatrices"
+    ],
+    "summary": "Protocolo con plasma de origen vegetal y factores de crecimiento, distinto del plasma de tu propia sangre.",
+    "queEs": "Electroplasma es el nombre de Luvania para un rejuvenecimiento con factores de crecimiento de origen vegetal, no con el plasma de tu sangre (ese es Plasma virtual). La página anterior describía limpieza, aplicación y una máscara fría, con sesiones de alrededor de 60 minutos. Se usa para textura, líneas finas y aspecto de marcas.",
+    "beneficios": [
+      "No requiere toma de sangre.",
+      "Busca luminosidad y una piel más cómoda.",
+      "Sesión de cabina, cercana a una hora según la ficha anterior.",
+      "Se puede alternar con otros faciales, si el plan lo dice."
+    ],
+    "paraQuien": "Quien quiere un estímulo de calidad de piel y prefiere no hacerse una extracción de sangre.",
+    "sesiones": "TODO: confirmar cuántas sesiones. La ficha anterior estimaba unos 60 minutos por cita.",
+    "duracion": "Puedes retomar tu día con la piel sensible. El sol se cuida.",
+    "faqs": [
+      {
+        "q": "¿Es PRP?",
+        "a": "No. El PRP está en Plasma virtual. Aquí el activo es de origen vegetal."
+      },
+      {
+        "q": "¿Duele?",
+        "a": "La ficha anterior no lo presentaba como doloroso. Puede haber calor o enrojecimiento."
+      },
+      {
+        "q": "¿Cuántas sesiones?",
+        "a": "TODO: no había un número cerrado, solo la duración aproximada de cada una."
+      }
+    ],
+    "related": [
+      "plasma-virtual",
+      "factores-de-crecimiento",
+      "biorevitalizacion"
+    ],
+    "placeholder": false,
+    "placeholderNote": "",
+    "inAudit44": true
+  },
+  {
+    "slug": "biorevitalizacion",
+    "name": "Biorevitalización",
+    "especialidad": "estetica-facial",
+    "zones": [
+      "rostro",
+      "cuello",
+      "manos"
+    ],
+    "needs": [
+      "hidratacion",
+      "rejuvenecimiento",
+      "lineas-de-expresion",
+      "flacidez"
+    ],
+    "summary": "Aporte de hidratación y estímulo a una piel que se ve apagada, sin ser un relleno de volumen.",
+    "queEs": "La biorevitalización busca devolver agua, luminosidad y calidad a la piel, no cambiar un rasgo. En la práctica de medicina estética suele apoyarse en ácido hialurónico poco reticulado u otros activos; el producto que usa Luvania no estaba nombrado con precisión y queda por confirmar.",
+    "beneficios": [
+      "Piel más cómoda y luminosa.",
+      "No busca cambiar la forma de la nariz o el labio.",
+      "Útil como mantenimiento.",
+      "Se puede hacer en rostro, cuello o escote."
+    ],
+    "paraQuien": "Piel deshidratada, fina o cansada, que no necesariamente quiere volumen.",
+    "sesiones": "TODO: confirmar con el equipo médico el número de sesiones, el intervalo y la duración del resultado.",
+    "duracion": "El efecto de hidratación se siente antes que un cambio de colágeno, que es más lento.",
+    "faqs": [
+      {
+        "q": "¿Es un relleno?",
+        "a": "No es un perfilamiento. Es calidad de piel. El volumen está en otras fichas."
+      },
+      {
+        "q": "¿Lleva agujas?",
+        "a": "TODO: confirmar si el protocolo de la red es inyectado o transdérmico."
+      },
+      {
+        "q": "¿Cada cuánto se mantiene?",
+        "a": "TODO: el intervalo no estaba publicado."
+      }
+    ],
+    "related": [
+      "electroplasma",
+      "acido-hialuronico",
+      "porcelanizacion"
+    ],
+    "placeholder": false,
+    "placeholderNote": "",
+    "inAudit44": true
+  },
+  {
+    "slug": "microdermoabrasion",
+    "name": "Microdermoabrasión",
+    "especialidad": "estetica-facial",
+    "zones": [
+      "rostro"
+    ],
+    "needs": [
+      "rejuvenecimiento",
+      "manchas",
+      "cicatrices",
+      "acne"
+    ],
+    "summary": "Renovación mecánica suave de la capa superficial de la piel.",
+    "queEs": "La microdermoabrasión retira células muertas con un sistema controlado de puntas o cristales, según el equipo. Ayuda a que la piel se vea más pareja y a que un activo posterior penetre mejor. No llega a la profundidad de un láser ni de un peeling médico fuerte.",
+    "beneficios": [
+      "Piel más lisa al tacto.",
+      "Puede apoyar manchas superficiales y poros.",
+      "Sin tiempo largo de recuperación en la mayoría de los casos.",
+      "Sirve como preparación de otros protocolos."
+    ],
+    "paraQuien": "Piel engrosada, opaca o con textura leve. No se hace sobre infección, herida o isotretinoína reciente.",
+    "sesiones": "TODO: confirmar con el equipo médico el número de sesiones, el intervalo y la duración del resultado.",
+    "duracion": "Enrojecimiento de horas. La ficha original era corta y no fijaba un paquete de sesiones.",
+    "faqs": [
+      {
+        "q": "¿Me pela la cara?",
+        "a": "Una descamación fina es posible. No debería ser una costra."
+      },
+      {
+        "q": "¿Duele?",
+        "a": "Se siente roce. Se regula la potencia."
+      },
+      {
+        "q": "¿La puedo hacer si tengo acné?",
+        "a": "Con comedones cerrados se valora. Con infección activa, no."
+      }
+    ],
+    "related": [
+      "peeling-ultrasonico",
+      "dermapen",
+      "limpieza-facial-profunda"
+    ],
+    "placeholder": true,
+    "placeholderNote": "Página de origen delgada. El tipo de equipo no estaba especificado.",
+    "inAudit44": true
+  },
+  {
+    "slug": "diatermia",
+    "name": "Diatermia",
+    "especialidad": "estetica-facial",
+    "zones": [
+      "rostro",
+      "corporal"
+    ],
+    "needs": [
+      "flacidez",
+      "rejuvenecimiento",
+      "tonicidad",
+      "celulitis"
+    ],
+    "summary": "Calor terapéutico de alta frecuencia para tejidos, usado en planes de firmeza y confort.",
+    "queEs": "La diatermia aplica una corriente de alta frecuencia que calienta tejidos en profundidad, con el fin de acompañar firmeza, circulación y confort. En estética se usa en rostro y cuerpo. No es un láser y no «derrite» un depósito de grasa por sí sola: se indica cuando el objetivo es tejido y tono, no una liposucción.",
+    "beneficios": [
+      "Sensación de calor profunda y controlada.",
+      "Puede apoyar firmeza y planes corporales.",
+      "Sin agujas.",
+      "Sesión tolerable para la mayoría."
+    ],
+    "paraQuien": "Quien busca tono y calidad de tejido. Marcapasos, embarazo y metales en la zona se descartan siempre.",
+    "sesiones": "TODO: confirmar con el equipo médico el número de sesiones, el intervalo y la duración del resultado.",
+    "duracion": "Cada cita es de cabina. El número de sesiones no estaba unificado.",
+    "faqs": [
+      {
+        "q": "¿Quema?",
+        "a": "El calor debe ser tolerable. Si arde, se baja la intensidad."
+      },
+      {
+        "q": "¿Sirve para la celulitis?",
+        "a": "Puede formar parte de un plan. No es el único gesto."
+      },
+      {
+        "q": "¿Tiene contraindicaciones?",
+        "a": "Sí: dispositivos electrónicos implantados, embarazo y algunas enfermedades. Se preguntan en la valoración."
+      }
+    ],
+    "related": [
+      "corrientes-rusas",
+      "ems-garden-sculpt",
+      "celulitis"
+    ],
+    "placeholder": false,
+    "placeholderNote": "",
+    "inAudit44": true
+  },
+  {
+    "slug": "porcelanizacion",
+    "name": "Porcelanización",
+    "especialidad": "estetica-facial",
+    "zones": [
+      "rostro"
+    ],
+    "needs": [
+      "lineas-de-expresion",
+      "hidratacion",
+      "rejuvenecimiento"
+    ],
+    "summary": "Protocolo facial de luminosidad y textura. En la web anterior el enlace decía «porcenalización»: el nombre correcto de la técnica descrita es porcelanización.",
+    "queEs": "La porcelanización, tal como la explicaba la propia página de Luvania, retira células muertas y busca una piel más tersa y luminosa, en la familia de un peeling suave más que de un láser. El slug antiguo tenía un error de escritura. Aquí el nombre visible queda corregido.",
+    "beneficios": [
+      "Piel más pareja y con más luz.",
+      "Puede atenuar la piel reseca y líneas finas.",
+      "Sin cirugía.",
+      "Menos agresiva que un peeling profundo, según la propia ficha anterior."
+    ],
+    "paraQuien": "Quien quiere luminosidad y una piel más ordenada, sin un procedimiento invasivo.",
+    "sesiones": "TODO: confirmar con el equipo médico el número de sesiones, el intervalo y la duración del resultado.",
+    "duracion": "Puede haber enrojecimiento breve. El protocolo de sesiones no estaba cifrado.",
+    "faqs": [
+      {
+        "q": "¿Por qué cambió el nombre?",
+        "a": "La página se llamaba porcenalización, pero el texto hablaba de porcelanización. Corregimos el nombre."
+      },
+      {
+        "q": "¿Es un peeling?",
+        "a": "Se parece, y la ficha anterior decía que es menos agresivo. TODO: confirmar el activo exacto."
+      },
+      {
+        "q": "¿Me descama?",
+        "a": "Puede haber una descamación fina. Te indican cómo cuidarla."
+      }
+    ],
+    "related": [
+      "peeling-ultrasonico",
+      "limpieza-facial-profunda",
+      "biorevitalizacion"
+    ],
+    "placeholder": true,
+    "placeholderNote": "Nombre de origen con errata. Falta confirmar activos y número de sesiones.",
+    "inAudit44": true
+  },
+  {
+    "slug": "cromoterapia",
+    "name": "Cromoterapia",
+    "especialidad": "estetica-facial",
+    "zones": [
+      "rostro",
+      "corporal"
+    ],
+    "needs": [
+      "bienestar",
+      "rejuvenecimiento",
+      "manchas"
+    ],
+    "summary": "Uso de luz de color como complemento de un facial o de un plan de piel, no como tratamiento médico aislado.",
+    "queEs": "La cromoterapia aplica luz de distintos colores sobre la piel. En un centro estético funciona como complemento de limpieza, activos o aparatología, por su efecto sobre el confort y, según el color, sobre el aspecto de la piel. No diagnostica ni trata enfermedades por sí sola.",
+    "beneficios": [
+      "Sesión tranquila, sin dolor.",
+      "Se integra a otros faciales.",
+      "No tiene incapacidad.",
+      "Ayuda a cerrar un protocolo con una piel más calmada."
+    ],
+    "paraQuien": "Quien ya está en un plan facial y quiere sumar luz, o quien busca una primera experiencia de cabina muy suave.",
+    "sesiones": "TODO: confirmar con el equipo médico el número de sesiones, el intervalo y la duración del resultado.",
+    "duracion": "La página anterior era pesada en imágenes y corta en protocolo. La duración de la luz queda por confirmar.",
+    "faqs": [
+      {
+        "q": "¿Cura alguna enfermedad?",
+        "a": "No. Es un complemento estético."
+      },
+      {
+        "q": "¿Qué color me toca?",
+        "a": "Lo elige quien hace el protocolo, según lo que se esté tratando ese día."
+      },
+      {
+        "q": "¿Me puedo quemar?",
+        "a": "No es un láser de alta potencia. Aun así, los ojos se protegen si la luz lo requiere."
+      }
+    ],
+    "related": [
+      "limpieza-facial-profunda",
+      "manchas",
+      "biorevitalizacion"
+    ],
+    "placeholder": false,
+    "placeholderNote": "",
+    "inAudit44": true
+  },
+  {
+    "slug": "factores-de-crecimiento",
+    "name": "Factores de crecimiento",
+    "especialidad": "estetica-facial",
+    "zones": [
+      "rostro",
+      "capilar"
+    ],
+    "needs": [
+      "rejuvenecimiento",
+      "cicatrices",
+      "caida-cabello",
+      "lineas-de-expresion"
+    ],
+    "summary": "Activos que acompañan la reparación de la piel o del cuero cabelludo. El origen —propio o vegetal— se confirma en la cita.",
+    "queEs": "Los factores de crecimiento son proteínas que intervienen en la reparación del tejido. En la red conviven con el plasma de tu sangre y con el plasma vegetal del electroplasma. Esta ficha existe porque el menú la listaba aparte: el equipo debe decir qué presentación usa cuando agendas «factores» a secas.",
+    "beneficios": [
+      "Busca calidad de piel y apoyo en marcas.",
+      "También se conversa en planes capilares.",
+      "No es un relleno de volumen.",
+      "Se personaliza el origen del activo."
+    ],
+    "paraQuien": "Quien quiere estímulo biológico y ya tiene claro que no busca cambiar un rasgo con volumen.",
+    "sesiones": "TODO: confirmar con el equipo médico el número de sesiones, el intervalo y la duración del resultado.",
+    "duracion": "Los cambios de textura son graduales. No había un paquete único publicado.",
+    "faqs": [
+      {
+        "q": "¿Es lo mismo que el plasma virtual?",
+        "a": "Puede serlo, si el factor sale de tu sangre. TODO: confirmar el protocolo que vende esta ficha."
+      },
+      {
+        "q": "¿Duele?",
+        "a": "Depende de si se inyecta o se aplica con aparatología."
+      },
+      {
+        "q": "¿Sirve para cicatrices?",
+        "a": "Puede apoyar el aspecto de una cicatriz. No la borra."
+      }
+    ],
+    "related": [
+      "plasma-virtual",
+      "electroplasma",
+      "hair-loss"
+    ],
+    "placeholder": true,
+    "placeholderNote": "Se solapa con Plasma virtual y Electroplasma. Falta la distinción oficial del protocolo.",
+    "inAudit44": true
+  },
+  {
+    "slug": "collagen-therapy",
+    "name": "Collagen Therapy",
+    "especialidad": "estetica-facial",
+    "zones": [
+      "rostro",
+      "cuello"
+    ],
+    "needs": [
+      "rejuvenecimiento",
+      "lineas-de-expresion",
+      "flacidez",
+      "manchas"
+    ],
+    "summary": "Bioestimulación para colágeno y elastina. El nombre correcto es Collagen Therapy. La promo 2x1 de la guía de marca no está publicada como oferta vigente.",
+    "queEs": "Collagen Therapy es el protocolo de Luvania para estimular colágeno y elastina, mejorar líneas finas, poros y luminosidad, en sesiones de cabina. La guía de marca lo escribió con una letra de menos y mostraba un 2x1 que la web no tenía cargado como oferta. Aquí queda el nombre corregido y el 2x1 como pendiente comercial.",
+    "beneficios": [
+      "Busca piel más firme y luminosa.",
+      "Puede apoyar líneas finas y poros.",
+      "Sesiones de cabina, no de quirófano.",
+      "Se puede combinar con otros faciales si el plan lo permite."
+    ],
+    "paraQuien": "Quien quiere prevenir o atenuar signos de envejecimiento de la piel y puede cumplir la fotoprotección.",
+    "sesiones": "La ficha anterior hablaba de unas 3 sesiones de 30 a 60 minutos. TODO: confirmar si ese sigue siendo el paquete.",
+    "duracion": "Puedes volver a tu día. El colágeno nuevo no se ve en la puerta del centro.",
+    "faqs": [
+      {
+        "q": "¿Es el 2x1 de la guía?",
+        "a": "La guía de marca lo muestra con el nombre mal escrito. La web de ofertas no lo tenía activo el 17 de noviembre de 2026. TODO: confirmar vigencia."
+      },
+      {
+        "q": "¿Duele?",
+        "a": "La ficha anterior lo presentaba como compatible con volver a la rutina de inmediato."
+      },
+      {
+        "q": "¿Reemplaza el hialurónico?",
+        "a": "No. Estimula tu piel; no rellena un surco."
+      }
+    ],
+    "related": [
+      "dermapen",
+      "biorevitalizacion",
+      "proface"
+    ],
+    "placeholder": false,
+    "placeholderNote": "",
+    "inAudit44": true
+  },
+  {
+    "slug": "peeling-ultrasonico",
+    "name": "Peeling ultrasónico",
+    "especialidad": "estetica-facial",
+    "zones": [
+      "rostro"
+    ],
+    "needs": [
+      "hidratacion",
+      "acne",
+      "rejuvenecimiento",
+      "manchas"
+    ],
+    "summary": "Limpieza con ultrasonido para desprender impurezas con menos fricción que una extracción clásica.",
+    "queEs": "El peeling ultrasónico usa una espátula que vibra y, con un gel, ayuda a desprender células e impurezas. Es una higiene fina, útil en piel sensible que no tolera bien el vapor y la extracción agresiva. No sustituye un peeling químico profundo.",
+    "beneficios": [
+      "Poco traumático.",
+      "Piel más limpia y receptiva.",
+      "Buena puerta de entrada.",
+      "Se combina con activos calmantes al final."
+    ],
+    "paraQuien": "Piel que quiere higiene y no está en brote infectado ni recién irritada por ácidos.",
+    "sesiones": "TODO: confirmar con el equipo médico el número de sesiones, el intervalo y la duración del resultado.",
+    "duracion": "Sesión de cabina. Enrojecimiento leve, si aparece, cede pronto.",
+    "faqs": [
+      {
+        "q": "¿Pela la piel?",
+        "a": "El nombre confunde. No es un peeling químico de descamación fuerte."
+      },
+      {
+        "q": "¿Duele?",
+        "a": "Se siente la espátula y el frío del gel, no un pinchazo."
+      },
+      {
+        "q": "¿Cada cuánto?",
+        "a": "TODO: intervalo de mantenimiento por confirmar."
+      }
+    ],
+    "related": [
+      "limpieza-facial-profunda",
+      "microdermoabrasion",
+      "acne"
+    ],
+    "placeholder": false,
+    "placeholderNote": "",
+    "inAudit44": true
+  },
+  {
+    "slug": "proface",
+    "name": "Proface",
+    "especialidad": "estetica-facial",
+    "zones": [
+      "rostro"
+    ],
+    "needs": [
+      "rejuvenecimiento",
+      "flacidez",
+      "hidratacion"
+    ],
+    "summary": "Protocolo facial combinado de la red para nutrición, tono y luminosidad.",
+    "queEs": "Proface es un protocolo propio: la página anterior lo describía como una combinación de procedimientos para nutrir, tonificar e iluminar, armada después de una valoración. No es un dispositivo con un solo nombre comercial publicado. Por eso el detalle de cada paso queda marcado como pendiente.",
+    "beneficios": [
+      "Se arma según la piel de ese día.",
+      "Busca luz y tono, no un cambio de rasgos.",
+      "Sin cirugía.",
+      "Puede ser la opción si quieres un facial completo y no una técnica suelta."
+    ],
+    "paraQuien": "Quien quiere un rejuvenecimiento de cabina y acepta que el protocolo exacto se define en sede.",
+    "sesiones": "TODO: confirmar con el equipo médico el número de sesiones, el intervalo y la duración del resultado.",
+    "duracion": "La página anterior no publicaba ni minutos ni número de sesiones de forma fiable.",
+    "faqs": [
+      {
+        "q": "¿Qué incluye exactamente?",
+        "a": "TODO: la secuencia de aparatología y activos no estaba especificada."
+      },
+      {
+        "q": "¿Es un lifting?",
+        "a": "Busca un efecto de piel más fresca. No es un lifting quirúrgico ni, por defecto, unos hilos."
+      },
+      {
+        "q": "¿Duele?",
+        "a": "No debería. Si un paso es intenso, te lo adelantan."
+      }
+    ],
+    "related": [
+      "lifting-facial",
+      "collagen-therapy",
+      "biorevitalizacion"
+    ],
+    "placeholder": true,
+    "placeholderNote": "Protocolo de marca con ficha delgada. Falta la secuencia oficial.",
+    "inAudit44": true
+  },
+  {
+    "slug": "lipolisis-de-diodo-laser",
+    "name": "Lipólisis de diodo láser",
+    "especialidad": "estetica-corporal",
+    "zones": [
+      "abdomen",
+      "piernas",
+      "brazos",
+      "cuello"
+    ],
+    "needs": [
+      "grasa-localizada",
+      "contorno",
+      "papada"
+    ],
+    "summary": "Láser de diodo orientado a grasa localizada. Es la ficha más cercana a la pieza de marca «lipo sin cirugía», relación aún no confirmada.",
+    "queEs": "La lipólisis con diodo láser busca actuar sobre adipocitos de una zona marcada mediante luz, sin una liposucción clásica. En la auditoría es la candidata principal de la pieza «Lipo sin cirugía» y de las menciones genéricas a láser. Hasta que el equipo lo confirme, las dos fichas conviven y se enlazan.",
+    "beneficios": [
+      "Enfocada en un depósito, no en el peso global.",
+      "Sin quirófano tradicional.",
+      "Se delimita la zona.",
+      "Exige fotoprotección y cuidados que se entregan por escrito."
+    ],
+    "paraQuien": "Personas con grasa localizada y piel que el equipo considere apta para láser. Embarazo, ciertas medicaciones fotosensibles y expectativas de muchos centímetros en una sesión se conversan antes.",
+    "sesiones": "TODO: confirmar con el equipo médico el número de sesiones, el intervalo y la duración del resultado.",
+    "duracion": "Puede haber calor, enrojecimiento o sensibilidad. El plazo del cambio no se publica como garantía.",
+    "faqs": [
+      {
+        "q": "¿Es la lipo sin cirugía del aviso?",
+        "a": "Es la más cercana. TODO: confirmarlo con quien produjo la guía de marca."
+      },
+      {
+        "q": "¿Duele?",
+        "a": "Hay calor. La intensidad se regula. No es una cirugía con anestesia general."
+      },
+      {
+        "q": "¿Cuántos centímetros?",
+        "a": "No se prometen. La guía de marca habla de 2 a 5 cm en otra pieza; esa cifra no se traslada a esta ficha sin confirmación."
+      }
+    ],
+    "related": [
+      "lipo-sin-cirugia",
+      "hidrolipoclasia",
+      "dewlap-lipopapada-sin-cirugia"
+    ],
+    "placeholder": false,
+    "placeholderNote": "",
+    "inAudit44": true
+  },
+  {
+    "slug": "celulitis",
+    "name": "Celulitis",
+    "especialidad": "estetica-corporal",
+    "zones": [
+      "piernas",
+      "gluteos",
+      "abdomen"
+    ],
+    "needs": [
+      "celulitis",
+      "flacidez",
+      "contorno"
+    ],
+    "summary": "Plan para la piel de naranja: circulación, tejido y hábitos, no una crema milagro.",
+    "queEs": "La celulitis es fibrosis y grasa bajo una piel que se ve irregular. Luvania la trabaja como plan —aparatología, drenaje, activos— y no como una sesión única. El grado (lo que se ve de pie y lo que se ve al pellizcar) cambia el camino.",
+    "beneficios": [
+      "Se clasifica el grado antes de vender un paquete.",
+      "Combina cabina y cuidados.",
+      "Mejor en muslos, glúteos y cadera.",
+      "Se fotografía para ver el cambio real."
+    ],
+    "paraQuien": "Quien se incomoda con la textura de la piel, no quien busca bajar diez kilos. Problemas venosos marcados se revisan aparte.",
+    "sesiones": "TODO: confirmar con el equipo médico el número de sesiones, el intervalo y la duración del resultado.",
+    "duracion": "Es de los protocolos que piden constancia. Un número cerrado de sesiones no estaba publicado.",
+    "faqs": [
+      {
+        "q": "¿Se quita del todo?",
+        "a": "Puede mejorar mucho y no desaparecer. La piel tiene memoria y los hábitos pesan."
+      },
+      {
+        "q": "¿Duele?",
+        "a": "Algunas técnicas de tejido se sienten. Se avisa cuáles."
+      },
+      {
+        "q": "¿Sirve el drenaje solo?",
+        "a": "Ayuda. Casi nunca alcanza como único gesto."
+      }
+    ],
+    "related": [
+      "drenaje-linfatico",
+      "electroporacion",
+      "diatermia"
+    ],
+    "placeholder": false,
+    "placeholderNote": "",
+    "inAudit44": true
+  },
+  {
+    "slug": "levantamiento-de-gluteos",
+    "name": "Levantamiento de glúteos",
+    "especialidad": "estetica-corporal",
+    "zones": [
+      "gluteos"
+    ],
+    "needs": [
+      "tonicidad",
+      "flacidez",
+      "volumen",
+      "contorno"
+    ],
+    "summary": "Protocolo no quirúrgico para firmeza y forma del glúteo, combinando técnicas de la red.",
+    "queEs": "El levantamiento de glúteos de Luvania se describía como una combinación de masaje, criogel, corrientes y otras técnicas para un glúteo más firme, sin implantes. No es un aumento quirúrgico con prótesis ni, por defecto, un relleno inyectado. La mezcla exacta de cada sesión queda por confirmar.",
+    "beneficios": [
+      "Busca firmeza y posición, no solo músculo de gimnasio.",
+      "Sin cirugía.",
+      "Se mira simetría y piel, no una talla de pantalón.",
+      "Puede convivir con corrientes o EMS si el plan lo dice."
+    ],
+    "paraQuien": "Quien quiere un glúteo más firme y entiende que el músculo también se construye con movimiento.",
+    "sesiones": "TODO: confirmar con el equipo médico el número de sesiones, el intervalo y la duración del resultado.",
+    "duracion": "Los casos publicados no son un protocolo. El plazo se fija en la valoración.",
+    "faqs": [
+      {
+        "q": "¿Aumenta varias tallas?",
+        "a": "No es una promesa. Puede mejorar forma y tono."
+      },
+      {
+        "q": "¿Duele?",
+        "a": "Hay técnicas que se sienten y otras que son un masaje. Se explica la secuencia."
+      },
+      {
+        "q": "¿En qué se diferencia del EMS?",
+        "a": "EMS es electroestimulación de alta intensidad. Este protocolo, en la ficha anterior, mezclaba varias técnicas. TODO: confirmar la secuencia vigente."
+      }
+    ],
+    "related": [
+      "ems-garden-sculpt",
+      "corrientes-rusas",
+      "moldeo-corporal"
+    ],
+    "placeholder": false,
+    "placeholderNote": "",
+    "inAudit44": true
+  },
+  {
+    "slug": "rejuvenecimiento-vaginal",
+    "name": "Rejuvenecimiento íntimo",
+    "especialidad": "estetica-corporal",
+    "zones": [
+      "intima"
+    ],
+    "needs": [
+      "flacidez",
+      "hidratacion",
+      "rejuvenecimiento"
+    ],
+    "summary": "Protocolo íntimo para confort y calidad de tejido. Se explica en privado, con indicación clara.",
+    "queEs": "El rejuvenecimiento íntimo de la red se orienta a sequedad, laxitud leve o calidad del tejido de la zona, con técnicas que el equipo médico debe detallar antes de cualquier cita. No es una cirugía de reducción de labios ni un tratamiento de una infección. La conversación es privada y la indicación, individual.",
+    "beneficios": [
+      "Se habla con claridad y sin apuro.",
+      "Busca confort, hidratación o tono, según el caso.",
+      "No reemplaza el control ginecológico.",
+      "La pudor y la higiene del protocolo son parte del servicio."
+    ],
+    "paraQuien": "Mujeres adultas que consultan por confort o cambios del tejido y no tienen una infección activa sin tratar.",
+    "sesiones": "TODO: confirmar con el equipo médico el número de sesiones, el intervalo y la duración del resultado.",
+    "duracion": "La ficha anterior no publicaba un número de sesiones fiable. No se inventa aquí.",
+    "faqs": [
+      {
+        "q": "¿Duele?",
+        "a": "La zona es sensible. Se explica cada paso y puedes detener la cita."
+      },
+      {
+        "q": "¿Reemplaza al ginecólogo?",
+        "a": "No. Si hay sangrado, dolor o infección, eso se atiende en consulta médica primero."
+      },
+      {
+        "q": "¿Hay oferta publicada?",
+        "a": "Sí, en Promociones, con precios del 17 de noviembre de 2026 pendientes de vigencia."
+      }
+    ],
+    "related": [
+      "diatermia",
+      "biorevitalizacion",
+      "factores-de-crecimiento"
+    ],
+    "placeholder": false,
+    "placeholderNote": "",
+    "inAudit44": true
+  },
+  {
+    "slug": "detoxificacion",
+    "name": "Detoxificación",
+    "especialidad": "estetica-corporal",
+    "zones": [
+      "corporal"
+    ],
+    "needs": [
+      "bienestar",
+      "contorno",
+      "hidratacion"
+    ],
+    "summary": "Protocolo corporal de la red para sensación de ligereza. No es una depuración médica ni un suero.",
+    "queEs": "Detoxificación, en el menú de Luvania, es un protocolo estético de cuerpo —no la sueroterapia intravenosa, que tiene ficha propia, ni el paquete comercial Detox-Reductor—. La página anterior lo desarrollaba como plan de contorno y bienestar. Los pasos exactos se confirman porque se solapa con Detox Therapy.",
+    "beneficios": [
+      "Busca ligereza y apoyo al contorno.",
+      "No promete «eliminar toxinas» como afirmación médica.",
+      "Se distingue del suero y de la oferta Detox-Reductor.",
+      "Incluye pautas de hidratación."
+    ],
+    "paraQuien": "Quien quiere un plan corporal de bienestar y medidas, con hábitos mínimos de agua, sueño y comida.",
+    "sesiones": "TODO: confirmar con el equipo médico el número de sesiones, el intervalo y la duración del resultado.",
+    "duracion": "Protocolo por sesiones. El número no estaba unificado.",
+    "faqs": [
+      {
+        "q": "¿Es un suero?",
+        "a": "No. El suero está en Sueroterapia."
+      },
+      {
+        "q": "¿Es la oferta Detox-Reductor?",
+        "a": "Puede estar emparentado. TODO: el equipo comercial debe decir si son el mismo producto."
+      },
+      {
+        "q": "¿Bajo de peso?",
+        "a": "Puede cambiar la sensación de volumen. No es un tratamiento de obesidad."
+      }
+    ],
+    "related": [
+      "detox-therapy",
+      "detox-reductor",
+      "drenaje-linfatico"
+    ],
+    "placeholder": false,
+    "placeholderNote": "",
+    "inAudit44": true
+  },
+  {
+    "slug": "moldeo-corporal",
+    "name": "Moldeo corporal",
+    "especialidad": "estetica-corporal",
+    "zones": [
+      "abdomen",
+      "piernas",
+      "brazos",
+      "gluteos",
+      "corporal"
+    ],
+    "needs": [
+      "contorno",
+      "celulitis",
+      "flacidez",
+      "grasa-localizada"
+    ],
+    "summary": "Modelado con metaloterapia: copas y accesorios de metal para tejido, grasa localizada y celulitis.",
+    "queEs": "El moldeo corporal de Luvania se apoya en metaloterapia, con instrumentos de aleación —entre ellos la copa sueca— para trabajar grasa localizada, celulitis y firmeza. Es manual, de consultorio, y la página anterior era corta. No se publican aquí resultados «desde la primera sesión» como promesa.",
+    "beneficios": [
+      "Trabajo manual sobre la zona.",
+      "Sin agujas ni cirugía.",
+      "Puede apoyar celulitis y medidas.",
+      "Se combina con drenaje si el plan lo pide."
+    ],
+    "paraQuien": "Quien prefiere una técnica manual de contorno y no tiene una lesión, várices marcadas sin valorar o piel lastimada en la zona.",
+    "sesiones": "TODO: un caso publicado hablaba de 10 sesiones. No se toma como paquete oficial.",
+    "duracion": "Cada cita es de cabina. Puede quedar la zona sensible.",
+    "faqs": [
+      {
+        "q": "¿Qué es la copa sueca?",
+        "a": "Un accesorio metálico de la metaloterapia, citado en la ficha anterior."
+      },
+      {
+        "q": "¿Duele?",
+        "a": "La presión se siente. Se ajusta."
+      },
+      {
+        "q": "¿Es cirugía?",
+        "a": "No."
+      }
+    ],
+    "related": [
+      "drenaje-linfatico",
+      "celulitis",
+      "corrientes-rusas"
+    ],
+    "placeholder": true,
+    "placeholderNote": "Página de origen delgada. Falta el protocolo escrito de la metaloterapia.",
+    "inAudit44": true
+  },
+  {
+    "slug": "corrientes-rusas",
+    "name": "Corrientes rusas",
+    "especialidad": "estetica-corporal",
+    "zones": [
+      "gluteos",
+      "abdomen",
+      "piernas",
+      "brazos"
+    ],
+    "needs": [
+      "tonicidad",
+      "flacidez",
+      "contorno"
+    ],
+    "summary": "Electroestimulación para contraer el músculo y acompañar la firmeza.",
+    "queEs": "Las corrientes rusas estimulan el músculo con impulsos para que se contraiga de forma rítmica. Se usan en glúteos, abdomen y piernas como apoyo de tono. No reemplazan el entrenamiento ni aumentan un glúteo como un implante. La ficha anterior tenía una errata («conrrientes») que aquí no se repite.",
+    "beneficios": [
+      "Trabaja firmeza muscular.",
+      "Sesión sin agujas.",
+      "Útil en glúteos y abdomen.",
+      "Se siente la contracción: eso es el tratamiento, no un fallo."
+    ],
+    "paraQuien": "Quien quiere tono y no tiene marcapasos, embarazo o una lesión muscular aguda en la zona.",
+    "sesiones": "TODO: confirmar con el equipo médico el número de sesiones, el intervalo y la duración del resultado.",
+    "duracion": "Un caso de la web hablaba de 3 sesiones. TODO: confirmar el paquete real.",
+    "faqs": [
+      {
+        "q": "¿Duele?",
+        "a": "La contracción es intensa y debe ser tolerable."
+      },
+      {
+        "q": "¿Reemplaza el gimnasio?",
+        "a": "No. Ayuda. El músculo se mantiene con movimiento."
+      },
+      {
+        "q": "¿Es lo mismo que EMS Garden Sculpt?",
+        "a": "Familia parecida, distinta intensidad y protocolo. TODO: confirmar cuál se indica."
+      }
+    ],
+    "related": [
+      "ems-garden-sculpt",
+      "levantamiento-de-gluteos",
+      "diatermia"
+    ],
+    "placeholder": true,
+    "placeholderNote": "Página de origen delgada.",
+    "inAudit44": true
+  },
+  {
+    "slug": "detox-therapy",
+    "name": "Detox Therapy",
+    "especialidad": "estetica-corporal",
+    "zones": [
+      "corporal",
+      "abdomen"
+    ],
+    "needs": [
+      "contorno",
+      "bienestar",
+      "grasa-localizada"
+    ],
+    "summary": "Combinación de técnicas, incluida metaloterapia, para estilizar. Nombre en inglés heredado del sitio anterior.",
+    "queEs": "Detox Therapy es un protocolo combinado de Luvania: la página anterior mencionaba valoración antropométrica y metaloterapia para grasa localizada y una piel más firme. Se solapa con Detoxificación y con la oferta Detox-Reductor. El nombre en inglés se conserva porque así está publicado, con esta explicación en español.",
+    "beneficios": [
+      "Empieza con medidas.",
+      "Mezcla técnicas según la zona.",
+      "Busca contorno, no una desintoxicación clínica.",
+      "Sin cirugía."
+    ],
+    "paraQuien": "Quien quiere un plan corporal armado y no una sola máquina.",
+    "sesiones": "TODO: confirmar con el equipo médico el número de sesiones, el intervalo y la duración del resultado.",
+    "duracion": "La ficha no fijaba minutos ni sesiones de forma confiable.",
+    "faqs": [
+      {
+        "q": "¿En qué se diferencia de Detoxificación?",
+        "a": "TODO: el equipo debe unificar nombres o explicar la diferencia comercial."
+      },
+      {
+        "q": "¿Incluye el precio de Detox-Reductor?",
+        "a": "Esa oferta está en Promociones. TODO: confirmar si corresponde a esta ficha."
+      },
+      {
+        "q": "¿Duele?",
+        "a": "La metaloterapia tiene presión. El resto se explica en la cita."
+      }
+    ],
+    "related": [
+      "detoxificacion",
+      "moldeo-corporal",
+      "detox-reductor"
+    ],
+    "placeholder": true,
+    "placeholderNote": "Solape de nombres con Detoxificación y Detox-Reductor.",
+    "inAudit44": true
+  },
+  {
+    "slug": "ems-garden-sculpt",
+    "name": "EMS Garden Sculpt",
+    "especialidad": "estetica-corporal",
+    "zones": [
+      "gluteos",
+      "abdomen",
+      "piernas",
+      "brazos"
+    ],
+    "needs": [
+      "tonicidad",
+      "grasa-localizada",
+      "flacidez"
+    ],
+    "summary": "Electroestimulación de alta intensidad: muchas contracciones en una sesión corta, para tono muscular.",
+    "queEs": "EMS Garden Sculpt es la tecnología de la red para estimular el músculo con alta intensidad. La ficha anterior hablaba de sesiones cercanas a 30 minutos y de un volumen alto de contracciones, además de un efecto sobre el metabolismo local de la grasa. Las cifras publicitarias (porcentajes de reafirmación) no se repiten aquí.",
+    "beneficios": [
+      "Sesión corta de contracción muscular.",
+      "Sin agujas ni recuperación larga.",
+      "Se usa en glúteo, abdomen y otras zonas.",
+      "Complementa, no sustituye, el movimiento diario."
+    ],
+    "paraQuien": "Quien busca tono y no tiene contraindicación para electroestimulación intensa.",
+    "sesiones": "La ficha anterior mostraba un caso de 5 sesiones de unos 30 minutos. TODO: confirmar si ese es el plan estándar.",
+    "duracion": "No debería haber incapacidad. Puede quedar una agujeta parecida a la del ejercicio.",
+    "faqs": [
+      {
+        "q": "¿Duele?",
+        "a": "La contracción es fuerte. Se sube de a poco."
+      },
+      {
+        "q": "¿Baja grasa?",
+        "a": "El objetivo principal publicado es el músculo. Un efecto sobre la grasa local se explica sin cifras mágicas."
+      },
+      {
+        "q": "¿Puedo hacerlo si tengo DIU o metal?",
+        "a": "TODO: las contraindicaciones finas las confirma el equipo antes de la cita."
+      }
+    ],
+    "related": [
+      "corrientes-rusas",
+      "levantamiento-de-gluteos",
+      "lipolisis-de-diodo-laser"
+    ],
+    "placeholder": false,
+    "placeholderNote": "",
+    "inAudit44": true
+  },
+  {
+    "slug": "hair-loss",
+    "name": "Caída del cabello",
+    "especialidad": "nutricion-capilar",
+    "zones": [
+      "capilar"
+    ],
+    "needs": [
+      "caida-cabello",
+      "rejuvenecimiento"
+    ],
+    "summary": "Protocolo capilar de la red. En la oferta vigente aparece como «Pérdida de cabello» y en el menú antiguo como Hair Loss.",
+    "queEs": "La caída del cabello tiene causas distintas: hormonal, déficit, tracción, estrés, piel del cuero cabelludo. Luvania publica un protocolo estético —activos, plasma o aparatología según el caso— después de mirar el cuero cabelludo. El nombre visible pasa a español; el enlace hair-loss se conserva.",
+    "beneficios": [
+      "Empieza por el cuero cabelludo, no por un champú genérico.",
+      "Puede incluir plasma u otros activos.",
+      "Se explica qué sí puede frenar y qué no.",
+      "Se registra con fotos."
+    ],
+    "paraQuien": "Quien nota más cabello en la almohada o una raya más amplia, y acepta que algunas caídas son médicas y se derivan.",
+    "sesiones": "TODO: confirmar con el equipo médico el número de sesiones, el intervalo y la duración del resultado.",
+    "duracion": "El cabello nuevo, cuando aparece, tarda meses. No hay un plazo de dos semanas.",
+    "faqs": [
+      {
+        "q": "¿Es la oferta de Pérdida de cabello?",
+        "a": "Sí, ese es el nombre en Promociones. TODO: confirmar vigencia del precio."
+      },
+      {
+        "q": "¿Me crece en zonas calvas antiguas?",
+        "a": "No siempre. Depende de si el folículo sigue activo."
+      },
+      {
+        "q": "¿Duele?",
+        "a": "Depende de si hay microinyección. Se explica antes."
+      }
+    ],
+    "related": [
+      "plasma-virtual",
+      "factores-de-crecimiento",
+      "sueroterapia"
+    ],
+    "placeholder": false,
+    "placeholderNote": "",
+    "inAudit44": true
+  },
+  {
+    "slug": "hiperhidrosis",
+    "name": "Hiperhidrosis",
+    "especialidad": "medicina-estetica",
+    "zones": [
+      "corporal",
+      "manos",
+      "rostro"
+    ],
+    "needs": [
+      "sudoracion",
+      "bienestar"
+    ],
+    "summary": "Sudoración excesiva de axilas, manos, pies o rostro. Estaba publicada y fuera del menú: aquí entra al catálogo.",
+    "queEs": "La hiperhidrosis es sudor que supera lo necesario para regular la temperatura, a menudo en axilas, palmas, plantas o cara. Luvania la tenía como página completa sin ningún enlace interno. El camino estético más citado en la red para axilas es la toxina botulínica, y eso se confirma en la valoración: no toda sudoración se trata igual ni en la misma sede.",
+    "beneficios": [
+      "Pone nombre médico a un sudor que estorba la vida diaria.",
+      "Se distingue de un sofoco puntual.",
+      "Puede articularse con toxina en axilas, si el médico lo indica.",
+      "Deja de ser una página huérfana."
+    ],
+    "paraQuien": "Quien empapa la ropa o evita dar la mano, y quiere una valoración. Causas endocrinas o medicamentos se revisan, no se ignoran.",
+    "sesiones": "TODO: confirmar con el equipo médico el número de sesiones, el intervalo y la duración del resultado.",
+    "duracion": "Si el camino es toxina, el efecto es temporal. Otros caminos no estaban descritos con un plazo.",
+    "faqs": [
+      {
+        "q": "¿Es toxina?",
+        "a": "Puede serlo en axilas. TODO: confirmar el protocolo y las zonas que sí se tratan en sede."
+      },
+      {
+        "q": "¿Por qué no estaba en el menú?",
+        "a": "La auditoría la encontró publicada y sin enlaces. En este sitio sí se navega."
+      },
+      {
+        "q": "¿Duele?",
+        "a": "Si hay microinyecciones, se sienten. Hay anestesia tópica en muchos planos."
+      }
+    ],
+    "related": [
+      "toxina-botulinica-tipo-a",
+      "sueroterapia",
+      "diatermia"
+    ],
+    "placeholder": false,
+    "placeholderNote": "",
+    "inAudit44": true
+  },
+  {
+    "slug": "sueroterapia",
+    "name": "Sueroterapia",
+    "especialidad": "medicina-estetica",
+    "zones": [
+      "corporal"
+    ],
+    "needs": [
+      "bienestar",
+      "hidratacion"
+    ],
+    "summary": "Suero intravenoso con una fórmula elegida tras valoración. También estaba fuera del menú.",
+    "queEs": "La sueroterapia es la administración intravenosa de una fórmula —vitaminas, minerales y otros componentes— armada según lo que el profesional indique. No es un jugo detox ni la ficha de Detoxificación. La página existía, completa, y nadie enlazaba a ella. Aquí tiene ficha, preguntas y un pendiente claro: la lista oficial de fórmulas.",
+    "beneficios": [
+      "Hidratación y aporte directo, cuando está indicado.",
+      "Fórmula personalizada, no un cóctel único.",
+      "Se hace en un espacio de la sede, con supervisión.",
+      "No reemplaza comida, sueño ni un tratamiento médico de base."
+    ],
+    "paraQuien": "Adultos que, tras una valoración, tienen indicación de un suero. No es un plan para cualquier persona que pase por la puerta, ni un tratamiento de una enfermedad digestiva.",
+    "sesiones": "TODO: confirmar con el equipo médico el número de sesiones, el intervalo y la duración del resultado.",
+    "duracion": "Una aplicación suele durar lo que tarde el goteo. El número de sesiones no estaba estandarizado en la auditoría.",
+    "faqs": [
+      {
+        "q": "¿Qué lleva el suero?",
+        "a": "TODO: publicar las fórmulas vigentes y quién las prescribe."
+      },
+      {
+        "q": "¿Puedo elegirlo como un menú?",
+        "a": "No sin valoración. Hay componentes que no son para todo el mundo."
+      },
+      {
+        "q": "¿Es lo mismo que Detoxificación?",
+        "a": "No. Una es suero; la otra es un protocolo de cabina corporal."
+      }
+    ],
+    "related": [
+      "detoxificacion",
+      "hair-loss",
+      "hiperhidrosis"
+    ],
+    "placeholder": false,
+    "placeholderNote": "",
+    "inAudit44": true
+  },
+  {
+    "slug": "acido-hialuronico",
+    "name": "Ácido hialurónico",
+    "especialidad": "estetica-facial",
+    "zones": [
+      "rostro",
+      "cuello",
+      "manos"
+    ],
+    "needs": [
+      "volumen",
+      "hidratacion",
+      "lineas-de-expresion",
+      "ojeras"
+    ],
+    "summary": "Material de relleno e hidratación. La guía de marca lo promociona y la web anterior no tenía ficha: el enlace desde un artículo daba 404.",
+    "queEs": "El ácido hialurónico es una molécula que la piel ya conoce, usada para hidratar o para dar volumen según cómo esté preparada. En Luvania aparece dentro de labios, pómulos, mentón y perfilamiento, y en la guía de marca como pieza propia con un descuento que no estaba en la web de ofertas. Esta ficha existe para que el nombre se pueda buscar. El producto, las presentaciones y el precio vigente están por confirmar.",
+    "beneficios": [
+      "Nombre corregido: ácido hialurónico, no las variantes mal escritas de la web anterior.",
+      "Sirve tanto para hidratar como para proyectar, y no es lo mismo.",
+      "Se enlaza con las fichas de perfilamiento.",
+      "No se inventa un precio: la guía muestra -50% sin una oferta cargada en la web."
+    ],
+    "paraQuien": "Quien pregunta por hialurónico y necesita saber en qué se diferencia de la hidroxiapatita de calcio.",
+    "sesiones": "TODO: confirmar con el equipo médico el número de sesiones, el intervalo y la duración del resultado.",
+    "duracion": "Depende de si es hidratación o volumen. El mantenimiento es de meses, no de años fijos.",
+    "faqs": [
+      {
+        "q": "¿Dónde estaba esta página?",
+        "a": "No existía. Un artículo enlazaba /tratamientos/acido-hialuronico y daba 404."
+      },
+      {
+        "q": "¿Es lo mismo que la hidroxiapatita?",
+        "a": "No. La hidroxiapatita busca un estímulo de colágeno más largo; el hialurónico es más versátil en hidratación y volumen."
+      },
+      {
+        "q": "¿Cuál es el precio?",
+        "a": "TODO: no había una oferta con precio en la pestaña de ofertas del 17 de noviembre de 2026."
+      }
+    ],
+    "related": [
+      "aumento-y-o-perfilamiento-de-labios",
+      "hidroxiapatita-de-calcio",
+      "perfilamiento-maxilar-hombres"
+    ],
+    "placeholder": true,
+    "placeholderNote": "Ficha creada porque la auditoría la lista como ausente. Texto inferido.",
+    "inAudit44": false
+  },
+  {
+    "slug": "lipo-sin-cirugia",
+    "name": "Lipo sin cirugía",
+    "especialidad": "estetica-corporal",
+    "zones": [
+      "abdomen",
+      "piernas",
+      "brazos",
+      "cuello"
+    ],
+    "needs": [
+      "grasa-localizada",
+      "contorno"
+    ],
+    "summary": "Pieza de la guía de marca. No había página. Las fichas más cercanas son la lipólisis láser, la hidrolipoclasia, Lipomax, Velanova y la electroporación.",
+    "queEs": "«Lipo sin cirugía» es un nombre de la guía de marca, asociado allí a cuotas y a una reducción de 2 a 5 cm por sesión. En el sitio no existe un protocolo con ese nombre. Esta página no inventa el equipo: reúne los protocolos reales de contorno y deja la cifra de centímetros como dato de la guía, no como promesa clínica.",
+    "beneficios": [
+      "Pone en el mapa un nombre que la publicidad ya usa.",
+      "No duplica en silencio la lipólisis láser.",
+      "Lleva a los protocolos que sí están descritos.",
+      "La cifra de centímetros queda marcada como no verificada."
+    ],
+    "paraQuien": "Quien llega desde un aviso de lipo sin cirugía y necesita saber qué se hace de verdad en la sede.",
+    "sesiones": "TODO: confirmar a qué protocolo de esta lista corresponde la pieza, y si los 2 a 5 cm se sostienen.",
+    "duracion": "La guía habla de financiación en cuotas. Las condiciones no estaban publicadas.",
+    "faqs": [
+      {
+        "q": "¿Cuál me van a hacer?",
+        "a": "Eso sale de la valoración. Puede ser láser, hidrolipoclasia u otro protocolo de contorno."
+      },
+      {
+        "q": "¿Me garantizan centímetros?",
+        "a": "No. La guía menciona 2 a 5 cm. Aquí no se convierte en garantía."
+      },
+      {
+        "q": "¿Es Dewlap?",
+        "a": "Dewlap es la papada. Puede compartir lógica, no necesariamente el mismo equipo."
+      }
+    ],
+    "related": [
+      "lipolisis-de-diodo-laser",
+      "hidrolipoclasia",
+      "lipomax"
+    ],
+    "placeholder": true,
+    "placeholderNote": "Pieza de marca sin página de origen. Texto inferido y enlazado a protocolos existentes.",
+    "inAudit44": false
+  },
+  {
+    "slug": "liporeductor",
+    "name": "Liporeductor",
+    "especialidad": "obesidad-y-sobrepeso",
+    "zones": [
+      "abdomen",
+      "corporal"
+    ],
+    "needs": [
+      "grasa-localizada",
+      "contorno"
+    ],
+    "summary": "Oferta con precio y sin página propia en el sitio anterior.",
+    "queEs": "Liporeductor aparece solo como oferta, con precio de lista y precio promocional, sin una página que explique el procedimiento. Hasta que el equipo describa el equipo y la indicación, esta ficha no inventa un mecanismo: informa que existe comercialmente y que se agenda como valoración de contorno.",
+    "beneficios": [
+      "Tiene precio publicado, a falta de vigencia.",
+      "No se describe un aparato que no conocemos.",
+      "Se agenda como valoración, no como un paquete cerrado a ciegas.",
+      "Queda junto a los otros protocolos de grasa localizada."
+    ],
+    "paraQuien": "Quien vio la oferta y quiere saber si sigue vigente antes de pedir una cita.",
+    "sesiones": "TODO: confirmar con el equipo médico el número de sesiones, el intervalo y la duración del resultado.",
+    "duracion": "TODO: duración de la sesión no publicada.",
+    "faqs": [
+      {
+        "q": "¿Sigue en promoción?",
+        "a": "El precio es el del 17 de noviembre de 2026. TODO: vigencia."
+      },
+      {
+        "q": "¿Qué me hacen?",
+        "a": "TODO: el protocolo no estaba escrito."
+      },
+      {
+        "q": "¿Duele?",
+        "a": "No hay descripción fiable. Se explica en la valoración, antes de cobrar."
+      }
+    ],
+    "related": [
+      "hidrolipoclasia",
+      "lipomax",
+      "velanova"
+    ],
+    "placeholder": true,
+    "placeholderNote": "Oferta sin página. Texto mínimo a propósito.",
+    "inAudit44": false
+  },
+  {
+    "slug": "shock-therapy-bronce",
+    "name": "Shock Therapy Bronce",
+    "especialidad": "obesidad-y-sobrepeso",
+    "zones": [
+      "corporal",
+      "abdomen"
+    ],
+    "needs": [
+      "contorno",
+      "grasa-localizada",
+      "bienestar"
+    ],
+    "summary": "Paquete comercial en oferta, sin página que explique qué incluye el nivel bronce.",
+    "queEs": "Shock Therapy Bronce es un nombre de paquete en la lista de ofertas. No había ficha clínica. No describimos sesiones imaginarias: publicamos el precio encontrado y pedimos el contenido del paquete.",
+    "beneficios": [
+      "Existe como oferta con dos precios.",
+      "El nivel «bronce» sugiere que hay otros niveles no publicados.",
+      "Se agenda para que te expliquen el contenido.",
+      "No se promete un resultado."
+    ],
+    "paraQuien": "Quien pregunta por el paquete bronce y quiere el detalle antes de pagar.",
+    "sesiones": "TODO: qué incluye el bronce, cuántas sesiones y si existen plata u oro.",
+    "duracion": "TODO: duración no publicada.",
+    "faqs": [
+      {
+        "q": "¿Qué incluye?",
+        "a": "TODO: no estaba escrito en la web."
+      },
+      {
+        "q": "¿Hay otros niveles?",
+        "a": "El nombre lo sugiere. No estaban en la lista de ofertas revisada."
+      },
+      {
+        "q": "¿El -30% es real?",
+        "a": "El rótulo decía -30%. El descuento calculado con los precios es otro: está en Promociones."
+      }
+    ],
+    "related": [
+      "detox-therapy",
+      "moldeo-corporal",
+      "liporeductor"
+    ],
+    "placeholder": true,
+    "placeholderNote": "Oferta sin página.",
+    "inAudit44": false
+  },
+  {
+    "slug": "detox-reductor",
+    "name": "Detox-Reductor",
+    "especialidad": "estetica-corporal",
+    "zones": [
+      "corporal",
+      "abdomen"
+    ],
+    "needs": [
+      "contorno",
+      "grasa-localizada",
+      "bienestar"
+    ],
+    "summary": "Oferta de contorno sin página. Puede solaparse con Detoxificación y Detox Therapy.",
+    "queEs": "Detox-Reductor está en la tabla de precios y no tiene ficha. Los nombres Detoxificación y Detox Therapy ya ocupan el menú. Esta página existe para no perder la oferta y para obligar una decisión: unificar o diferenciar.",
+    "beneficios": [
+      "Tiene precio de oferta.",
+      "Se enlaza con las otras fichas detox.",
+      "No se copia un protocolo ajeno como si fuera este.",
+      "La vigencia está por confirmar."
+    ],
+    "paraQuien": "Quien vio el precio y quiere saber si es el mismo plan que Detox Therapy.",
+    "sesiones": "TODO: confirmar con el equipo médico el número de sesiones, el intervalo y la duración del resultado.",
+    "duracion": "TODO: no hay duración publicada.",
+    "faqs": [
+      {
+        "q": "¿Es lo mismo que Detox Therapy?",
+        "a": "TODO: confirmar con el equipo comercial."
+      },
+      {
+        "q": "¿Puedo comprarlo hoy?",
+        "a": "El precio es histórico, del rastreo del 17 de noviembre de 2026."
+      },
+      {
+        "q": "¿Bajo de peso?",
+        "a": "El nombre dice reductor. Sin ficha, no prometemos kilos."
+      }
+    ],
+    "related": [
+      "detox-therapy",
+      "detoxificacion",
+      "drenaje-linfatico"
+    ],
+    "placeholder": true,
+    "placeholderNote": "Oferta sin página. Solape de nombres por resolver.",
+    "inAudit44": false
+  },
+  {
+    "slug": "autosanguis",
+    "name": "Autosanguis",
+    "especialidad": "medicina-estetica",
+    "zones": [
+      "corporal",
+      "rostro"
+    ],
+    "needs": [
+      "bienestar",
+      "rejuvenecimiento"
+    ],
+    "summary": "Oferta con precio y sin página. El nombre sugiere un procedimiento con la propia sangre; el protocolo no está descrito.",
+    "queEs": "Autosanguis figuraba en las ofertas, cerca del rango de precio del plasma, y no tenía página ni una explicación clínica en el rastreo. No lo igualamos al plasma virtual por el nombre. Queda como ficha comercial pendiente de definición médica.",
+    "beneficios": [
+      "El precio existe.",
+      "El procedimiento, no está escrito.",
+      "No se presenta como PRP hasta que el equipo lo diga.",
+      "Se agenda solo como valoración."
+    ],
+    "paraQuien": "Quien pregunta por autosanguis después de ver una oferta o un filtro antiguo.",
+    "sesiones": "TODO: confirmar con el equipo médico el número de sesiones, el intervalo y la duración del resultado.",
+    "duracion": "TODO: no hay duración publicada.",
+    "faqs": [
+      {
+        "q": "¿Es plasma virtual?",
+        "a": "Puede estarlo emparentado. TODO: confirmar."
+      },
+      {
+        "q": "¿Está disponible?",
+        "a": "Estaba en la lista de precios. La vigencia no está confirmada."
+      },
+      {
+        "q": "¿Duele?",
+        "a": "Si implica una toma de sangre, se siente el pinchazo. El resto no está descrito."
+      }
+    ],
+    "related": [
+      "plasma-virtual",
+      "sueroterapia",
+      "factores-de-crecimiento"
+    ],
+    "placeholder": true,
+    "placeholderNote": "Oferta sin página. Definición clínica pendiente.",
+    "inAudit44": false
+  },
+  {
+    "slug": "dercelu",
+    "name": "Dercelu",
+    "especialidad": "estetica-corporal",
+    "zones": [
+      "piernas",
+      "gluteos"
+    ],
+    "needs": [
+      "celulitis",
+      "contorno"
+    ],
+    "summary": "Oferta con precio, sin página. El nombre apunta a celulitis; el protocolo no está escrito.",
+    "queEs": "Dercelu aparece en la tabla de ofertas, con un precio alto propio de un paquete, y sin texto clínico. Por el nombre se agrupa junto a celulitis, sin inventar aparatología.",
+    "beneficios": [
+      "Tiene precio publicado.",
+      "Se presenta como paquete de celulitis a confirmar.",
+      "No se describe un equipo desconocido.",
+      "La vigencia está pendiente."
+    ],
+    "paraQuien": "Quien vio la oferta de Dercelu y quiere saber si sigue y qué incluye.",
+    "sesiones": "TODO: contenido del paquete y número de sesiones.",
+    "duracion": "TODO: duración no publicada.",
+    "faqs": [
+      {
+        "q": "¿Qué significa el nombre?",
+        "a": "No está explicado en la web. TODO: nombre comercial y técnica."
+      },
+      {
+        "q": "¿Reemplaza la ficha de celulitis?",
+        "a": "No. Celulitis es el plan general. Dercelu es una oferta concreta sin ficha."
+      },
+      {
+        "q": "¿Sigue vigente el precio?",
+        "a": "Hay que confirmarlo. La cifra es del 17 de noviembre de 2026."
+      }
+    ],
+    "related": [
+      "celulitis",
+      "drenaje-linfatico",
+      "electroporacion"
+    ],
+    "placeholder": true,
+    "placeholderNote": "Oferta sin página.",
+    "inAudit44": false
+  },
+  {
+    "slug": "rinomodelacion",
+    "name": "Rinomodelación",
+    "especialidad": "estetica-facial",
+    "zones": [
+      "rostro"
+    ],
+    "needs": [
+      "volumen",
+      "contorno"
+    ],
+    "summary": "Perfil de la nariz con material de relleno, sin cirugía. Había precio de oferta y la página pública daba 404; en el gestor figuraba como borrador.",
+    "queEs": "La rinomodelación busca equilibrar el dorso o la punta con un material de relleno, casi siempre ácido hialurónico, sin entrar a quirófano. No achica un hueso ni reemplaza una rinoplastia. Estaba en oferta y el enlace público no existía. El producto exacto queda por confirmar.",
+    "beneficios": [
+      "Corrige pequeños huecos o una punta, no una nariz entera.",
+      "Sin cirugía.",
+      "Reversible en la lógica del hialurónico, si ese es el material.",
+      "Exige mano médica y fotos de perfil."
+    ],
+    "paraQuien": "Quien quiere un ajuste del perfil y entiende el límite: no es una cirugía funcional de tabique.",
+    "sesiones": "TODO: confirmar con el equipo médico el número de sesiones, el intervalo y la duración del resultado.",
+    "duracion": "El efecto se ve al terminar, con inflamación. El mantenimiento depende del material.",
+    "faqs": [
+      {
+        "q": "¿Puedo respirar mejor?",
+        "a": "No es el objetivo. Un problema funcional se valora con otorrino o cirugía."
+      },
+      {
+        "q": "¿Duele?",
+        "a": "Hay anestesia. La nariz es sensible y puede quedar hinchada unos días."
+      },
+      {
+        "q": "¿El precio de la oferta sigue?",
+        "a": "Está en Promociones con fecha de rastreo. TODO: vigencia."
+      }
+    ],
+    "related": [
+      "acido-hialuronico",
+      "perfilamiento-maxilar-hombres",
+      "aumento-y-o-perfilamiento-de-menton"
+    ],
+    "placeholder": true,
+    "placeholderNote": "Borrador del gestor y oferta publicada, sin página pública. Texto inferido.",
+    "inAudit44": false
+  },
+  {
+    "slug": "cavitacion",
+    "name": "Cavitación",
+    "especialidad": "obesidad-y-sobrepeso",
+    "zones": [
+      "abdomen",
+      "piernas",
+      "brazos"
+    ],
+    "needs": [
+      "grasa-localizada",
+      "contorno"
+    ],
+    "summary": "Ultrasonido de baja frecuencia para depósitos localizados. Estaba en borrador y en el filtro de ofertas, no en el menú.",
+    "queEs": "La cavitación usa ultrasonido para trabajar grasa localizada en consulta, sin cirugía. En el gestor de la web figuraba como borrador y en testimonios, pero la URL pública no respondía. Esta ficha avisa ese estado: no está confirmada como protocolo vigente de todas las sedes.",
+    "beneficios": [
+      "Técnica conocida de contorno, no una invención de esta página.",
+      "Sin agujas.",
+      "Se delimita la zona.",
+      "Falta la confirmación de que la red la ofrece hoy."
+    ],
+    "paraQuien": "Quien pregunta por cavitación porque la vio en un testimonio o en un filtro antiguo.",
+    "sesiones": "TODO: confirmar con el equipo médico el número de sesiones, el intervalo y la duración del resultado.",
+    "duracion": "TODO: confirmar si el equipo sigue en las sedes.",
+    "faqs": [
+      {
+        "q": "¿La siguen haciendo?",
+        "a": "TODO: estaba en borrador, no publicada."
+      },
+      {
+        "q": "¿Duele?",
+        "a": "Suele sentirse un zumbido. El equipo de Luvania no está descrito aquí."
+      },
+      {
+        "q": "¿Bajo de peso?",
+        "a": "No es el objetivo. Es una zona, no la báscula."
+      }
+    ],
+    "related": [
+      "hidrolipoclasia",
+      "lipolisis-de-diodo-laser",
+      "velanova"
+    ],
+    "placeholder": true,
+    "placeholderNote": "Borrador del gestor. Texto inferido. Confirmar vigencia.",
+    "inAudit44": false
+  },
+  {
+    "slug": "criolipolisis",
+    "name": "Criolipólisis",
+    "especialidad": "obesidad-y-sobrepeso",
+    "zones": [
+      "abdomen",
+      "piernas",
+      "brazos"
+    ],
+    "needs": [
+      "grasa-localizada",
+      "contorno"
+    ],
+    "summary": "Frío controlado sobre un pliegue de grasa. Borrador del gestor y filtro de ofertas, sin página pública.",
+    "queEs": "La criolipólisis enfría un pliegue para que parte de esas células grasas se reduzca con el tiempo, sin cirugía. Estaba como borrador. No afirmamos que todas las sedes tengan el equipo ni publicamos un porcentaje de reducción.",
+    "beneficios": [
+      "Procedimiento de consultorio, con un aplicador.",
+      "El cambio, cuando ocurre, es de semanas, no de horas.",
+      "No sirve para obesidad general.",
+      "Falta confirmar equipo y sedes."
+    ],
+    "paraQuien": "Quien busca criolipólisis por el nombre y quiere saber si Luvania la tiene activa.",
+    "sesiones": "TODO: confirmar con el equipo médico el número de sesiones, el intervalo y la duración del resultado.",
+    "duracion": "El frío se siente intenso al inicio y luego la zona se adormece. La pauta de Luvania no está publicada.",
+    "faqs": [
+      {
+        "q": "¿Está disponible?",
+        "a": "TODO: no estaba publicada."
+      },
+      {
+        "q": "¿Duele?",
+        "a": "El frío inicial es incómodo. Luego cede en la mayoría de los equipos de este tipo."
+      },
+      {
+        "q": "¿Cuándo se ve?",
+        "a": "En esta familia de tratamientos, el plazo habitual se cuenta en semanas. TODO: protocolo de la red."
+      }
+    ],
+    "related": [
+      "cavitacion",
+      "hidrolipoclasia",
+      "liporeductor"
+    ],
+    "placeholder": true,
+    "placeholderNote": "Borrador. Texto inferido.",
+    "inAudit44": false
+  },
+  {
+    "slug": "cicatrices",
+    "name": "Cicatrices",
+    "especialidad": "estetica-facial",
+    "zones": [
+      "rostro",
+      "corporal"
+    ],
+    "needs": [
+      "cicatrices",
+      "acne",
+      "rejuvenecimiento"
+    ],
+    "summary": "Acompañamiento del aspecto de una cicatriz. Borrador del gestor, sin página pública.",
+    "queEs": "No toda cicatriz se trata igual: una de acné, una quirúrgica reciente y una queloide piden caminos distintos. El gestor tenía un borrador de «Cicatrices» que no estaba publicado. Esta ficha no prescribe láser ni agujas: dice que la valoración mira el tipo de cicatriz y deriva si hace falta.",
+    "beneficios": [
+      "Evita prometer borrar una cicatriz.",
+      "Diferencia marca de acné, cirugía y queloide.",
+      "Puede apoyarse en protocolos ya publicados, como Dermapen, si el equipo lo indica.",
+      "Estaba inédita en la web pública."
+    ],
+    "paraQuien": "Quien consulta por una marca ya cerrada, no por una herida abierta.",
+    "sesiones": "TODO: confirmar con el equipo médico el número de sesiones, el intervalo y la duración del resultado.",
+    "duracion": "TODO: técnicas vigentes no publicadas.",
+    "faqs": [
+      {
+        "q": "¿La borran?",
+        "a": "Se puede atenuar el aspecto. Una cicatriz no vuelve a ser piel que nunca se lastimó."
+      },
+      {
+        "q": "¿Está en el menú hoy?",
+        "a": "No estaba publicado. TODO: confirmar si se ofrece."
+      },
+      {
+        "q": "¿Duele?",
+        "a": "Depende de la técnica que se indique."
+      }
+    ],
+    "related": [
+      "dermapen",
+      "acne",
+      "factores-de-crecimiento"
+    ],
+    "placeholder": true,
+    "placeholderNote": "Borrador. Texto inferido.",
+    "inAudit44": false
+  },
+  {
+    "slug": "bruxismo",
+    "name": "Bruxismo",
+    "especialidad": "estetica-facial",
+    "zones": [
+      "rostro"
+    ],
+    "needs": [
+      "bienestar",
+      "lineas-de-expresion"
+    ],
+    "summary": "Apretamiento dental con posible alivio estético del músculo masetero. Borrador, sin página pública.",
+    "queEs": "El bruxismo es apretar o rechinar los dientes. A veces se conversa toxina en el masetero para bajar la fuerza del músculo y, de paso, afinar esa zona. Es una decisión médica, no un facial. El borrador no estaba publicado y no describimos dosis.",
+    "beneficios": [
+      "Explica por qué alguien pide cita por bruxismo en un centro estético.",
+      "No reemplaza la placa del odontólogo.",
+      "Si el camino es toxina, lo indica un médico.",
+      "No estaba en el menú público."
+    ],
+    "paraQuien": "Quien aprieta la mandíbula y quiere saber si hay un camino estético, además del odontológico.",
+    "sesiones": "TODO: confirmar con el equipo médico el número de sesiones, el intervalo y la duración del resultado.",
+    "duracion": "TODO: confirmar si la red trata masetero y con qué protocolo.",
+    "faqs": [
+      {
+        "q": "¿Me curan el bruxismo?",
+        "a": "No. Se puede modular el músculo. La causa puede seguir."
+      },
+      {
+        "q": "¿Es la misma toxina de las arrugas?",
+        "a": "Es la misma familia de producto, en otro músculo y con otra indicación."
+      },
+      {
+        "q": "¿Lo ofrecen hoy?",
+        "a": "TODO: estaba en borrador."
+      }
+    ],
+    "related": [
+      "toxina-botulinica-tipo-a",
+      "perfilamiento-maxilar-hombres",
+      "hiperhidrosis"
+    ],
+    "placeholder": true,
+    "placeholderNote": "Borrador. Texto inferido. Confirmar si se ofrece.",
+    "inAudit44": false
+  },
+  {
+    "slug": "varices-en-las-piernas",
+    "name": "Várices en las piernas",
+    "especialidad": "estetica-corporal",
+    "zones": [
+      "piernas"
+    ],
+    "needs": [
+      "bienestar",
+      "contorno"
+    ],
+    "summary": "La web tenía un borrador con este nombre. El tratamiento vascular no se improvisa en una ficha estética.",
+    "queEs": "Las várices son venas que un médico vascular debe ver. Un centro estético puede acompañar la pesadez con drenaje, y no debe esclerosar una vena sin indicación ni habilitación para eso. El borrador existía y la página pública no. Esta ficha sirve para no prometer un tratamiento que no está descrito.",
+    "beneficios": [
+      "No convierte a Luvania en un centro vascular por el nombre de un borrador.",
+      "Orienta la pesadez estética al drenaje, si cabe.",
+      "Pide valoración médica cuando la vena es el problema.",
+      "Estaba fuera del menú."
+    ],
+    "paraQuien": "Quien busca «várices» en el sitio y merece una respuesta honesta, no un paquete inventado.",
+    "sesiones": "TODO: confirmar si existe un protocolo vascular habilitado o si el borrador debe retirarse.",
+    "duracion": "No publicada.",
+    "faqs": [
+      {
+        "q": "¿Me quitan las várices?",
+        "a": "No está descrito un procedimiento para eso. TODO: confirmar con dirección médica."
+      },
+      {
+        "q": "¿Qué puedo agendar?",
+        "a": "Una valoración. Si lo que hay es pesadez, se conversa drenaje. Si hay vena enferma, se orienta."
+      },
+      {
+        "q": "¿Por qué está en la web nueva?",
+        "a": "Porque el inventario la encontró. Ocultarla sería dejar el hueco sin explicación."
+      }
+    ],
+    "related": [
+      "drenaje-linfatico",
+      "celulitis",
+      "diatermia"
+    ],
+    "placeholder": true,
+    "placeholderNote": "Borrador de una condición vascular. Texto deliberadamente prudente.",
+    "inAudit44": false
+  },
+  {
+    "slug": "eliminar-estrias",
+    "name": "Estrías",
+    "especialidad": "estetica-corporal",
+    "zones": [
+      "corporal",
+      "abdomen",
+      "piernas",
+      "gluteos"
+    ],
+    "needs": [
+      "estrias",
+      "flacidez"
+    ],
+    "summary": "Aspecto de las estrías. Borrador del gestor, sin página pública.",
+    "queEs": "La estría es una rotura dérmica. Su color (roja o blanca) cambia lo que se puede esperar. El borrador «Eliminar estrías» no estaba publicado y el verbo «eliminar» promete de más: aquí el nombre visible es Estrías y el objetivo es atenuar textura y color, a menudo con apoyo de protocolos como Dermapen.",
+    "beneficios": [
+      "Ajusta la expectativa: atenuar, no borrar.",
+      "Diferencia estría reciente y antigua.",
+      "Se apoya en técnicas ya descritas si el equipo las indica.",
+      "No estaba en el menú."
+    ],
+    "paraQuien": "Quien tiene estrías y quiere saber el margen real antes de comprar un paquete.",
+    "sesiones": "TODO: confirmar con el equipo médico el número de sesiones, el intervalo y la duración del resultado.",
+    "duracion": "TODO: protocolo vigente no publicado.",
+    "faqs": [
+      {
+        "q": "¿Desaparecen?",
+        "a": "Las rojas responden mejor que las blancas. Ninguna promesa de borrado."
+      },
+      {
+        "q": "¿Duele?",
+        "a": "Si hay micropunción, se siente. Hay anestesia tópica en muchos planos."
+      },
+      {
+        "q": "¿Lo ofrecen?",
+        "a": "TODO: confirmar. Estaba en borrador."
+      }
+    ],
+    "related": [
+      "dermapen",
+      "celulitis",
+      "microdermoabrasion"
+    ],
+    "placeholder": true,
+    "placeholderNote": "Borrador. Texto inferido. El nombre comercial «eliminar» se suaviza.",
+    "inAudit44": false
+  },
+  {
+    "slug": "laser-co2-fraccionado",
+    "name": "Láser de CO₂ fraccionado",
+    "especialidad": "rejuvenecimiento-facial",
+    "zones": [
+      "rostro",
+      "manos"
+    ],
+    "needs": [
+      "cicatrices",
+      "manchas",
+      "rejuvenecimiento",
+      "lineas-de-expresion"
+    ],
+    "summary": "Láser fraccionado para textura y marcas. Borrador del gestor, sin página pública.",
+    "queEs": "El CO₂ fraccionado hace columnas microscópicas de lesión controlada para que la piel renueve textura, marcas o un tono irregular. Es un procedimiento con recuperación real, no un facial de mediodía. Estaba en borrador dentro de rejuvenecimiento facial. No afirmamos que el equipo esté instalado en las cinco sedes.",
+    "beneficios": [
+      "Es el láser de textura, distinto de la lipólisis de diodo.",
+      "Tiene días de cuidado, no solo enrojecimiento de una hora.",
+      "Sirve de referencia si preguntas por láser facial.",
+      "Falta confirmar sede y equipo."
+    ],
+    "paraQuien": "Quien pregunta por CO₂ y puede aceptar una recuperación visible unos días.",
+    "sesiones": "TODO: confirmar disponibilidad por sede, número de pases y cuidados escritos.",
+    "duracion": "La recuperación de este tipo de láser se cuenta en días. La pauta de Luvania no está publicada.",
+    "faqs": [
+      {
+        "q": "¿Es la depilación láser?",
+        "a": "No. La depilación tiene otra ficha, también pendiente."
+      },
+      {
+        "q": "¿Puedo trabajar al día siguiente?",
+        "a": "En muchos protocolos de CO₂, no. TODO: la baja social de la red."
+      },
+      {
+        "q": "¿Está en todas las sedes?",
+        "a": "TODO: el borrador no lo decía."
+      }
+    ],
+    "related": [
+      "dermapen",
+      "manchas",
+      "cicatrices"
+    ],
+    "placeholder": true,
+    "placeholderNote": "Borrador. Texto inferido. Confirmar equipo y sedes.",
+    "inAudit44": false
+  },
+  {
+    "slug": "depilacion-laser",
+    "name": "Depilación láser",
+    "especialidad": "estetica-corporal",
+    "zones": [
+      "piernas",
+      "brazos",
+      "rostro",
+      "intima",
+      "corporal"
+    ],
+    "needs": [
+      "bienestar",
+      "contorno"
+    ],
+    "summary": "Figuraba en el filtro de ofertas y no tenía página ni precio en la tabla revisada.",
+    "queEs": "La depilación láser estaba como opción de un filtro y no como tratamiento publicado ni como oferta con precio. Esta ficha no inventa el tipo de láser ni los paquetes. Sirve para que la búsqueda no caiga en blanco y para dejar el pendiente comercial a la vista.",
+    "beneficios": [
+      "Responde a una búsqueda que el sitio viejo insinuaba.",
+      "No publica un precio que no existe.",
+      "Pide confirmar tecnología y zonas.",
+      "No se mezcla con el CO₂ ni con la lipólisis."
+    ],
+    "paraQuien": "Quien quiere saber si Luvania depila con láser antes de escribir por WhatsApp.",
+    "sesiones": "TODO: confirmar si el servicio existe, en qué sedes y con qué equipo.",
+    "duracion": "TODO: no hay duración ni precios publicados.",
+    "faqs": [
+      {
+        "q": "¿Cuánto cuesta?",
+        "a": "No había precio en la tabla del 17 de noviembre de 2026."
+      },
+      {
+        "q": "¿Duele?",
+        "a": "La depilación láser se siente. Sin saber el equipo, no describimos más."
+      },
+      {
+        "q": "¿En qué sedes?",
+        "a": "TODO."
+      }
+    ],
+    "related": [
+      "laser-co2-fraccionado",
+      "lipolisis-de-diodo-laser",
+      "limpieza-facial-profunda"
+    ],
+    "placeholder": true,
+    "placeholderNote": "Solo aparecía en el filtro de ofertas. Texto mínimo.",
+    "inAudit44": false
+  },
+  {
+    "slug": "eliminacion-de-tatuajes",
+    "name": "Eliminación de tatuajes",
+    "especialidad": "estetica-facial",
+    "zones": [
+      "rostro",
+      "corporal",
+      "brazos"
+    ],
+    "needs": [
+      "manchas",
+      "cicatrices"
+    ],
+    "summary": "Nombre en el filtro de ofertas, sin página ni precio. No se describe un láser que no está confirmado.",
+    "queEs": "Quitar un tatuaje, cuando se hace, suele ser un láser de picosegundos o Q-switch en varias sesiones, y no siempre sale todo el pigmento. Luvania no tenía esta página ni un precio. La ficha existe para no dejar el filtro huérfano y para no prometer un borrado.",
+    "beneficios": [
+      "Explica el hueco del catálogo.",
+      "No promete borrar un tatuaje.",
+      "Pide confirmación de equipo.",
+      "Si no se ofrece, esta página debería retirarse."
+    ],
+    "paraQuien": "Quien busca el servicio porque aparecía en un filtro del sitio anterior.",
+    "sesiones": "TODO: confirmar si se ofrece. Si no, despublicar esta ficha.",
+    "duracion": "No publicada.",
+    "faqs": [
+      {
+        "q": "¿Me lo quitan en una sesión?",
+        "a": "Casi nunca, en esta familia de tratamientos. Y aquí ni siquiera está confirmado el servicio."
+      },
+      {
+        "q": "¿Duele?",
+        "a": "Si se ofrece y es láser, duele. No hay protocolo escrito."
+      },
+      {
+        "q": "¿Por qué está publicada?",
+        "a": "Para que el inventario no esconda un nombre que el sitio anterior ya mostraba en un filtro."
+      }
+    ],
+    "related": [
+      "laser-co2-fraccionado",
+      "manchas",
+      "cicatrices"
+    ],
+    "placeholder": true,
+    "placeholderNote": "Solo filtro de ofertas. Pendiente de retirar o de completar.",
+    "inAudit44": false
+  }
+]
