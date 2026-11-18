@@ -75,7 +75,12 @@ export function SiteHeader() {
           </button>
           <Link href="/sedes">Sedes</Link>
           <details className="nav-more">
-            <summary className="min-h-11 cursor-pointer">Más</summary>
+            <summary>
+              Más
+              <svg className="nav-chevron" viewBox="0 0 12 12" aria-hidden="true">
+                <path d="M2.2 4.3 6 8l3.8-3.7" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </summary>
             <div className="nav-more-panel">
               <Link href="/promociones">Promociones</Link>
               <Link href="/franquicias">Franquicias</Link>

@@ -126,9 +126,31 @@ body {
   box-shadow: 0 14px 28px rgb(238 135 107 / 0.28);
 }
 
-.nav-more { position: relative; }
-.nav-more summary { list-style: none; }
+.site-header nav[aria-label="Principal"] > a,
+.site-header nav[aria-label="Principal"] > button,
+.nav-more summary {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+}
+
+.nav-more {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.nav-more summary {
+  gap: 0.28rem;
+  list-style: none;
+  cursor: pointer;
+}
 .nav-more summary::-webkit-details-marker { display: none; }
+.nav-chevron {
+  width: 0.72rem;
+  height: 0.72rem;
+  transition: transform 0.2s ease;
+}
+.nav-more[open] .nav-chevron { transform: rotate(180deg); }
 .nav-more-panel {
   position: absolute;
   top: calc(100% + 0.35rem);
@@ -292,6 +314,15 @@ body {
   overflow: hidden;
   aspect-ratio: 4 / 5;
   background: transparent;
+  /* Funde el recorte rectangular: la cara queda en el centro y los bordes izquierdo e inferior se disuelven en el crema. */
+  --hero-mask:
+    linear-gradient(to right, transparent 0%, #000 16%, #000 96%, transparent 100%),
+    linear-gradient(to top, transparent 0%, #000 20%, #000 94%, transparent 100%),
+    radial-gradient(ellipse 108% 92% at 58% 40%, #000 52%, transparent 78%);
+  -webkit-mask-image: var(--hero-mask);
+  mask-image: var(--hero-mask);
+  -webkit-mask-composite: source-in, source-in;
+  mask-composite: intersect, intersect;
 }
 
 .hero-portrait {
