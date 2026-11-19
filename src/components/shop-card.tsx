@@ -1,18 +1,22 @@
 "use client";
 
-import type { ShopProduct } from "@/data/shop";
+import { canPurchase, type ShopProduct } from "@/data/shop";
 import { cop } from "@/lib/format";
 import Link from "next/link";
 import { useState } from "react";
+import { BookButton } from "./book-button";
 import { useCart } from "./cart-store";
+import { useDemoCart } from "./demo-cart";
 
 export function ShopCard({ product, sesiones }: { product: ShopProduct; sesiones?: string | null }) {
   const cart = useCart();
+  const demo = useDemoCart();
+  const purchasable = canPurchase(product, demo);
   const [qty, setQty] = useState(1);
   const [added, setAdded] = useState(false);
 
   function add() {
-    if (!product.disponibleOnline) return;
+    if (!purchasable) return;
     cart.add(product.slug, qty);
     setAdded(true);
     window.setTimeout(() => setAdded(false), 1600);
@@ -35,7 +39,7 @@ export function ShopCard({ product, sesiones }: { product: ShopProduct; sesiones
           <span className="shop-now">{cop(product.precio)}</span>
           {product.precioAntes ? <span className="shop-before">{cop(product.precioAntes)}</span> : null}
         </p>
-        {product.disponibleOnline ? (
+        {purchasable ? (
           <>
             <div className="qty" aria-label={`Cantidad de ${product.nombre}`}>
               <button type="button" onClick={() => setQty((value) => Math.max(1, value - 1))} aria-label="Disminuir cantidad">
@@ -54,7 +58,9 @@ export function ShopCard({ product, sesiones }: { product: ShopProduct; sesiones
             </p>
           </>
         ) : (
-          <p className="shop-offline">No disponible en línea</p>
+          <BookButton className="shop-add shop-book" tratamiento={product.nombre}>
+            Agendar valoración
+          </BookButton>
         )}
         <Link href={`/tratamientos/${product.slug}`} className="shop-secondary">
           Ver tratamiento

@@ -1,14 +1,5 @@
 import { discountPercent, offers } from "./offers";
-
-/** Tratamientos de la oferta cuyo estado no es VERIFIED. No se venden en línea. */
-const offline = new Set([
-  "liporeductor",
-  "shock-therapy-bronce",
-  "detox-reductor",
-  "rinomodelacion",
-  "autosanguis",
-  "dercelu",
-]);
+import { purchaseTerms, type TipoPrecio } from "./purchase";
 
 export type ShopProduct = {
   id: string;
@@ -19,12 +10,14 @@ export type ShopProduct = {
   precioAntes: number | null;
   descuento: number | null;
   disponibleOnline: boolean;
+  requiereValoracion: boolean;
+  tipoPrecio: TipoPrecio;
   moneda: "COP";
 };
 
 export function shopProducts(): ShopProduct[] {
   return offers.map((offer) => {
-    const disponibleOnline = !offline.has(offer.treatmentSlug);
+    const terms = purchaseTerms(offer.treatmentSlug);
     const precioAntes =
       offer.priceBeforeSuspicious || offer.priceBefore <= offer.priceNow ? null : offer.priceBefore;
     return {
@@ -36,10 +29,16 @@ export function shopProducts(): ShopProduct[] {
       precio: offer.priceNow,
       precioAntes,
       descuento: precioAntes ? discountPercent(offer) : null,
-      disponibleOnline,
+      disponibleOnline: terms.disponibleOnline,
+      requiereValoracion: terms.requiereValoracion,
+      tipoPrecio: terms.tipoPrecio,
       moneda: "COP",
     };
   });
+}
+
+export function canPurchase(product: ShopProduct, demo: boolean) {
+  return product.disponibleOnline || demo;
 }
 
 export function shopProduct(slug: string) {

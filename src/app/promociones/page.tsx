@@ -26,7 +26,7 @@ export default function PromocionesPage() {
       <Breadcrumbs items={crumbs} />
       <h1 className="display mt-6 text-5xl sm:text-6xl">Promociones</h1>
       <p className="mt-4 max-w-2xl text-lg leading-8 text-mute">
-        Precios de referencia del 17 de noviembre de 2026. Sujetos a valoración y vigencia. El pago en línea estará disponible pronto: arma el pedido y envíalo por WhatsApp.
+        Precios de referencia del 17 de noviembre de 2026. Sujetos a valoración y vigencia. La compra en línea se abre cuando cada protocolo quede habilitado.
       </p>
       <ul className="shop-grid mt-8">
         {ordered.map((offer) => (

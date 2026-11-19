@@ -8,7 +8,32 @@ const steps = [
   ["4", "Tú decides", "Sigues solo si el plan te hace sentido."],
 ];
 
-export function Valoracion() {
+export function Valoracion({ layout = "home" }: { layout?: "home" | "steps" }) {
+  if (layout === "steps") {
+    return (
+      <section data-tone="peach" className="valoracion-band">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img className="valoracion-petal" src="/stock/petalo-a.webp" alt="" />
+        <div className="valoracion-band-grid">
+          <div>
+            <p className="text-xs font-bold tracking-[0.16em] text-clay uppercase">La primera conversación</p>
+            <h2 className="display mt-3 text-5xl">Cómo es tu valoración</h2>
+            <p className="mt-4 max-w-sm text-mute">Una cita para mirar la zona y decidir con calma. Sin compromiso de tratamiento.</p>
+          </div>
+          <ol className="valoracion-steps">
+            {steps.map(([n, title, copy]) => (
+              <li key={n}>
+                <p>{n}</p>
+                <h3>{title}</h3>
+                <span>{copy}</span>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section data-tone="peach" className="relative z-[1] overflow-hidden bg-[#f1ceb3]">
       <FlorLuvania className="flor-glow" />

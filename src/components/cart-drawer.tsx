@@ -1,14 +1,16 @@
 "use client";
 
-import { shopProduct } from "@/data/shop";
+import { canPurchase, shopProduct } from "@/data/shop";
 import type { AgendaSede } from "@/data/types";
 import { cop, waLink } from "@/lib/format";
 import Link from "next/link";
 import { useEffect, useId, useRef, useState } from "react";
 import { useCart } from "./cart-store";
+import { useDemoCart } from "./demo-cart";
 
 export function CartDrawer({ sedes }: { sedes: AgendaSede[] }) {
   const cart = useCart();
+  const demo = useDemoCart();
   const dialog = useRef<HTMLDialogElement>(null);
   const titleId = useId();
   const [sede, setSede] = useState(sedes[0]?.slug ?? "");
@@ -22,7 +24,7 @@ export function CartDrawer({ sedes }: { sedes: AgendaSede[] }) {
 
   const items = cart.lines.flatMap((line) => {
     const product = shopProduct(line.slug);
-    return product?.disponibleOnline ? [{ line, product }] : [];
+    return product && canPurchase(product, demo) ? [{ line, product }] : [];
   });
   const subtotal = items.reduce((sum, item) => sum + item.product.precio * item.line.cantidad, 0);
   const chosen = sedes.find((item) => item.slug === sede) ?? sedes[0];

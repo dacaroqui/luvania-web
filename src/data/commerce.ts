@@ -1,6 +1,7 @@
 import { getTreatment } from "./index";
 import { verifiedCatalog } from "./catalog";
 import { offerForTreatment } from "./offers";
+import { purchaseTerms, type TipoPrecio } from "./purchase";
 import { sedes } from "./sedes";
 import { especialidadBySlug, needById, zoneById } from "./taxonomy";
 import type { CatalogItem } from "./types";
@@ -20,8 +21,9 @@ export type CommerceProduct = {
   precio: number | null;
   moneda: "COP";
   precioPromocional: number | null;
-  requiereValoracion: true;
-  disponibleOnline: false;
+  requiereValoracion: boolean;
+  disponibleOnline: boolean;
+  tipoPrecio: TipoPrecio;
   sedes: string[];
 };
 
@@ -39,6 +41,7 @@ function prices(slug: string) {
 export function commerceCatalog(): CommerceProduct[] {
   return verifiedCatalog().map((item) => {
     const money = prices(item.slug);
+    const terms = purchaseTerms(item.slug);
     return {
       id: item.slug,
       nombre: item.name,
@@ -54,8 +57,9 @@ export function commerceCatalog(): CommerceProduct[] {
       precio: money.precio,
       moneda: "COP",
       precioPromocional: money.precioPromocional,
-      requiereValoracion: true,
-      disponibleOnline: false,
+      requiereValoracion: terms.requiereValoracion,
+      disponibleOnline: terms.disponibleOnline,
+      tipoPrecio: terms.tipoPrecio,
       sedes: sedeSlugs,
     };
   });

@@ -6,6 +6,7 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useState } 
 import { AgendaSheet } from "./agenda-sheet";
 import { CartDrawer } from "./cart-drawer";
 import { CartProvider } from "./cart-store";
+import { DemoCartProvider } from "./demo-cart";
 
 type AgendaApi = {
   openAgenda: (tratamiento?: string, sede?: string) => void;
@@ -21,7 +22,15 @@ export function useAgenda() {
   return useContext(AgendaContext);
 }
 
-export function Providers({ children, sedes }: { children: React.ReactNode; sedes: AgendaSede[] }) {
+export function Providers({
+  children,
+  sedes,
+  demoCart,
+}: {
+  children: React.ReactNode;
+  sedes: AgendaSede[];
+  demoCart: boolean;
+}) {
   const [open, setOpen] = useState(false);
   const [tratamiento, setTratamiento] = useState<string | undefined>();
   const [sede, setSede] = useState<string | undefined>();
@@ -51,11 +60,13 @@ export function Providers({ children, sedes }: { children: React.ReactNode; sede
 
   return (
     <AgendaContext.Provider value={api}>
-      <CartProvider>
-        {children}
-        <CartDrawer sedes={sedes} />
-        <AgendaSheet open={open} tratamientoInicial={tratamiento} sedeInicial={sede} sedes={sedes} onClose={() => setOpen(false)} />
-      </CartProvider>
+      <DemoCartProvider allowed={demoCart}>
+        <CartProvider>
+          {children}
+          <CartDrawer sedes={sedes} />
+          <AgendaSheet open={open} tratamientoInicial={tratamiento} sedeInicial={sede} sedes={sedes} onClose={() => setOpen(false)} />
+        </CartProvider>
+      </DemoCartProvider>
     </AgendaContext.Provider>
   );
 }

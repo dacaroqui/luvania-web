@@ -53,6 +53,12 @@ export interface Treatment {
   sesiones: string;
   duracion: string;
   faqs: Faq[];
+  /** Solo si el equipo escribió contraindicaciones. Si falta, la ficha no inventa la sección. */
+  riesgos?: string;
+  /** Texto del procedimiento. Si falta, no se muestra «Ver cómo funciona». */
+  procedimiento?: string;
+  /** Video del procedimiento, ruta propia o URL. */
+  video?: string;
   related: string[];
   placeholder: boolean;
   placeholderNote?: string;

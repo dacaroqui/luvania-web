@@ -1,10 +1,12 @@
 "use client";
 
+import { canPurchase, shopProduct } from "@/data/shop";
 import { especialidades } from "@/data/taxonomy";
 import { needPages, zonePages } from "@/lib/hubs";
 import { flags } from "@/lib/flags";
 import { BookButton } from "./book-button";
 import { useCart } from "./cart-store";
+import { useDemoCart } from "./demo-cart";
 import { LogoLockup } from "./logo-lockup";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -316,15 +318,21 @@ function MegaIcon({ name }: { name: "face" | "body" | "layers" }) {
 
 function CartSlot() {
   const cart = useCart();
+  const demo = useDemoCart();
   if (!flags.cart) return null;
-  const label = cart.count > 0 ? `Carrito, ${cart.count} ${cart.count === 1 ? "producto" : "productos"}` : "Carrito";
+  const count = cart.lines.reduce((sum, line) => {
+    const product = shopProduct(line.slug);
+    if (!product || !canPurchase(product, demo)) return sum;
+    return sum + line.cantidad;
+  }, 0);
+  const label = count > 0 ? `Carrito, ${count} ${count === 1 ? "producto" : "productos"}` : "Carrito";
   return (
     <button type="button" className="cart-slot" onClick={() => cart.setOpen(true)} aria-label={label}>
       <svg viewBox="0 0 24 24" aria-hidden="true">
         <path d="M6 8h12l-1 11H7L6 8Z" />
         <path d="M9 8V7a3 3 0 0 1 6 0v1" />
       </svg>
-      {cart.count > 0 ? <span className="cart-count">{cart.count}</span> : null}
+      {count > 0 ? <span className="cart-count">{count}</span> : null}
     </button>
   );
 }

@@ -48,6 +48,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           Saltar al contenido
         </a>
         <Providers
+          demoCart={process.env.VERCEL_ENV !== "production"}
           sedes={resolveSedes().map(({ slug, name, neighborhood, whatsapp }) => ({
             slug,
             name,
