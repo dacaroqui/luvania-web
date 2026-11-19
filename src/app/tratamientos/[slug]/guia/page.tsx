@@ -2,10 +2,12 @@ import { BookButton } from "@/components/book-button";
 import { Breadcrumbs, breadcrumbLd } from "@/components/breadcrumbs";
 import { JsonLd } from "@/components/json-ld";
 import { allGuides, getGuide, readingMinutes } from "@/data/guides";
-import { getTreatment, relatedTreatments } from "@/data";
+import { getTreatment } from "@/data";
 import { site } from "@/data/site";
 import { especialidadBySlug, needById, zoneById } from "@/data/taxonomy";
 import { needPages, zonePages } from "@/lib/hubs";
+import { relatedGuides } from "@/lib/guide-links";
+import { publicText } from "@/lib/public-copy";
 import { clinicalVisible } from "@/lib/review";
 import { pageMeta } from "@/lib/seo";
 import type { Metadata } from "next";
@@ -44,13 +46,14 @@ export default async function GuiaPage({ params }: { params: Promise<Params> }) 
 
   const especialidad = especialidadBySlug(treatment.especialidad);
   const minutes = readingMinutes(guide);
+  const fichaUrl = `${site.url}/tratamientos/${treatment.slug}`;
   const crumbs = [
     { name: "Tratamientos", href: "/tratamientos" },
-    { name: especialidad?.name ?? "Especialidad", href: `/especialidades/${treatment.especialidad}` },
     { name: treatment.name, href: `/tratamientos/${treatment.slug}` },
     { name: "Guía", href: `/tratamientos/${treatment.slug}/guia` },
   ];
-  const related = relatedTreatments(treatment).filter((item) => item.status === "VERIFIED").slice(0, 3);
+  const articles = relatedGuides(treatment, 3);
+  const summary = publicText(treatment.summary, treatment.name);
   const zones = treatment.zones.map((id) => ({
     name: zoneById(id)?.name ?? id,
     href: zoneHref.has(id) ? `/zonas/${id}` : undefined,
@@ -66,12 +69,13 @@ export default async function GuiaPage({ params }: { params: Promise<Params> }) 
       <JsonLd
         data={{
           "@context": "https://schema.org",
-          "@type": "MedicalWebPage",
+          "@type": "Article",
           headline: guide.h1,
           description: guide.description,
           url: `${site.url}/tratamientos/${guide.slug}/guia`,
           inLanguage: "es-CO",
-          about: { "@type": "MedicalProcedure", name: treatment.name },
+          about: { "@type": "MedicalProcedure", name: treatment.name, url: fichaUrl },
+          mentions: { "@type": "MedicalProcedure", name: treatment.name, url: fichaUrl },
           isPartOf: { "@type": "WebSite", name: site.name, url: site.url },
         }}
       />
@@ -98,9 +102,7 @@ export default async function GuiaPage({ params }: { params: Promise<Params> }) 
           {guide.medicalReview === "pendiente" ? (
             <p className="ficha-review-note">Contenido en revisión médica</p>
           ) : null}
-          <p className="guia-back">
-            <Link href={`/tratamientos/${treatment.slug}`}>Volver a la ficha de {treatment.name}</Link>
-          </p>
+          <TreatmentBridge treatment={treatment} summary={summary} />
         </div>
       </header>
 
@@ -171,27 +173,45 @@ export default async function GuiaPage({ params }: { params: Promise<Params> }) 
             </ul>
           </aside>
 
-          {related.length ? (
+          {articles.length ? (
             <section className="guia-related">
-              <h2 className="display">También te puede interesar</h2>
+              <h2 className="display">Artículos relacionados</h2>
               <ul>
-                {related.map((item) => (
+                {articles.map(({ guide: item }) => (
                   <li key={item.slug}>
-                    <Link href={`/tratamientos/${item.slug}`}>{item.name}</Link>
-                    {getGuide(item.slug) && clinicalVisible(getGuide(item.slug)!.medicalReview) ? (
-                      <Link href={`/tratamientos/${item.slug}/guia`}>Guía</Link>
-                    ) : null}
+                    <Link href={`/tratamientos/${item.slug}/guia`}>{item.h1}</Link>
+                    <span>{readingMinutes(item)} min de lectura</span>
                   </li>
                 ))}
               </ul>
             </section>
           ) : null}
 
-          <div className="guia-cta">
-            <BookButton tratamiento={treatment.name}>Agenda tu valoración</BookButton>
-          </div>
+          <TreatmentBridge treatment={treatment} summary={summary} />
         </article>
       </div>
     </main>
+  );
+}
+
+function TreatmentBridge({
+  treatment,
+  summary,
+}: {
+  treatment: { slug: string; name: string };
+  summary: string;
+}) {
+  return (
+    <aside className="guia-bridge glass">
+      <div>
+        <p className="ficha-guide-kicker">El tratamiento</p>
+        <h2 className="display">{treatment.name}</h2>
+        {summary ? <p>{summary}</p> : null}
+      </div>
+      <div className="guia-bridge-actions">
+        <Link href={`/tratamientos/${treatment.slug}`}>Conoce el tratamiento</Link>
+        <BookButton tratamiento={treatment.name}>Agenda tu valoración</BookButton>
+      </div>
+    </aside>
   );
 }

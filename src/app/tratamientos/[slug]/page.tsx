@@ -6,7 +6,7 @@ import { TreatmentView } from "@/components/treatment-view";
 import { FichaAddButton, FichaTabs } from "@/components/treatment-ficha";
 import { Valoracion } from "@/components/valoracion";
 import { getTreatment, isIndexable, relatedTreatments, treatments } from "@/data";
-import { getGuide } from "@/data/guides";
+import { getGuide, readingMinutes } from "@/data/guides";
 import { discountPercent, offerForTreatment } from "@/data/offers";
 import { priceCaption, purchaseTerms } from "@/data/purchase";
 import { resolveSedes } from "@/data/sedes";
@@ -15,6 +15,7 @@ import { especialidadBySlug, needById, zoneById } from "@/data/taxonomy";
 import { cop } from "@/lib/format";
 import { needPages, zonePages } from "@/lib/hubs";
 import { publicText } from "@/lib/public-copy";
+import { guideSentence, relatedGuides } from "@/lib/guide-links";
 import { clinicalVisible } from "@/lib/review";
 import { pageMeta } from "@/lib/seo";
 import { treatmentSeo } from "@/lib/treatment-seo";
@@ -129,6 +130,7 @@ export default async function TratamientoPage({ params }: { params: Promise<Para
   const related = verified ? relatedTreatments(treatment).filter((item) => item.status === "VERIFIED").slice(0, 3) : [];
   const guide = getGuide(treatment.slug);
   const showGuide = Boolean(guide && clinicalVisible(guide.medicalReview));
+  const guideMatches = showGuide ? [] : relatedGuides(treatment);
   const clinicalOrder = ["procedimiento", "preparacion", "cuidados", "efectos"];
   const clinicalCards =
     showGuide && guide
@@ -149,6 +151,8 @@ export default async function TratamientoPage({ params }: { params: Promise<Para
     clinicalCards.some((block) => block.id === "cuidados") ? { id: "cuidados", label: "Después" } : null,
     clinicalCards.some((block) => block.id === "efectos") ? { id: "efectos", label: "Efectos" } : null,
     riesgos ? { id: "riesgos", label: "Riesgos" } : null,
+    showGuide ? { id: "guia", label: "Guía" } : null,
+    !showGuide && guideMatches.length ? { id: "guias", label: "Guías" } : null,
     faqs.length ? { id: "preguntas", label: "Preguntas frecuentes" } : null,
   ].filter((item): item is { id: string; label: string } => Boolean(item));
 
@@ -161,6 +165,11 @@ export default async function TratamientoPage({ params }: { params: Promise<Para
     provider: { "@type": "MedicalClinic", name: site.legalName, url: site.url },
   };
   if (procedimiento) procedureLd.howPerformed = procedimiento;
+  if (showGuide && guide) {
+    const guideUrl = `${site.url}/tratamientos/${treatment.slug}/guia`;
+    procedureLd.subjectOf = { "@type": "Article", name: guide.h1, url: guideUrl };
+    procedureLd.relatedLink = guideUrl;
+  }
 
   return (
     <main className="ficha">
@@ -385,19 +394,33 @@ export default async function TratamientoPage({ params }: { params: Promise<Para
               </section>
             ))}
 
-          {showGuide ? (
-            <Link href={`/tratamientos/${treatment.slug}/guia`} className="guide-card glass">
-              {treatment.image ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img src={treatment.image} alt="" />
-              ) : null}
-              <span>
-                <span className="ficha-guide-kicker">Guía completa</span>
-                <span className="display">{treatment.name}</span>
-                <span>El artículo largo, sin promesas de resultado.</span>
-                {guide?.medicalReview === "pendiente" ? <span className="ficha-review-note">Contenido en revisión médica</span> : null}
-              </span>
-            </Link>
+          {showGuide && guide ? (
+            <section id="guia" className="ficha-guide-block glass">
+              <p className="ficha-guide-kicker">Guía completa</p>
+              <h2 className="display">{guide.h1}</h2>
+              <p className="ficha-guide-lead">{guide.description}</p>
+              <p className="ficha-guide-time">{readingMinutes(guide)} min de lectura</p>
+              {guide.medicalReview === "pendiente" ? <p className="ficha-review-note">Contenido en revisión médica</p> : null}
+              <Link href={`/tratamientos/${treatment.slug}/guia`}>{guideSentence(treatment.name)}</Link>
+            </section>
+          ) : null}
+
+          {!showGuide && guideMatches.length ? (
+            <section id="guias" className="ficha-guide-block glass">
+              <p className="ficha-guide-kicker">Guías relacionadas</p>
+              <h2 className="display">De la misma zona</h2>
+              <ul className="ficha-guide-list">
+                {guideMatches.map(({ guide: item }) => (
+                  <li key={item.slug}>
+                    <Link href={`/tratamientos/${item.slug}/guia`}>
+                      <span className="display">{item.h1}</span>
+                      <span>{item.description}</span>
+                      <span>{readingMinutes(item)} min de lectura</span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </section>
           ) : null}
 
           {faqs.length ? (

@@ -24,10 +24,10 @@ export const metadata = pageMeta({
 
 /** Fotos provisionales de stock. Sustituir con sesión propia. public/stock/CREDITOS.md */
 const shots = [
-  { href: "/especialidades/estetica-facial", name: "Faciales", image: "/stock/faciales.webp" },
-  { href: "/especialidades/estetica-corporal", name: "Corporales", image: "/stock/corporales.webp" },
-  { href: "/tratamientos/depilacion-laser", name: "Depilación láser", image: "/stock/depilacion.webp" },
-  { href: "/especialidades/medicina-estetica", name: "Wellness", image: "/stock/wellness.webp" },
+  { href: "/especialidades/estetica-facial", name: "Estética facial", image: "/stock/faciales.webp" },
+  { href: "/especialidades/estetica-corporal", name: "Estética corporal", image: "/stock/corporales.webp" },
+  { href: "/especialidades/obesidad-y-sobrepeso", name: "Contorno y grasa localizada", image: "/stock/depilacion.webp" },
+  { href: "/especialidades/medicina-estetica", name: "Medicina estética", image: "/stock/wellness.webp" },
 ];
 
 export default function HomePage() {
@@ -110,13 +110,11 @@ export default function HomePage() {
 
       <Encuentra />
 
-      <section data-tone="cream" className="body-section relative z-[1]">
+      <section data-tone="cream" className="body-section relative z-[1] overflow-hidden">
+        <FlorLuvania className="body-flor body-flor-a" />
+        <FlorLuvania className="body-flor body-flor-b" />
         <div className="relative z-[1] mx-auto max-w-6xl px-4 py-16 sm:py-20">
-          <h2 className="display text-5xl">Elige por el cuerpo</h2>
-          <p className="mt-3 max-w-xl text-mute">Toca una zona y mira los tratamientos publicados.</p>
-          <div className="mt-8">
-            <BodyMap />
-          </div>
+          <BodyMap />
         </div>
       </section>
 
