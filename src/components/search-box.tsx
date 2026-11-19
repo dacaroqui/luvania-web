@@ -1,8 +1,9 @@
 "use client";
 
 import { catalog } from "@/data/catalog";
-import { matchCatalog } from "@/lib/search";
+import { matchCatalog, zoneLabel } from "@/lib/search";
 import { track } from "@/lib/analytics";
+import type { CatalogItem } from "@/data/types";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useAgenda } from "./providers";
@@ -39,29 +40,43 @@ export function SearchBox({
           className="field"
         />
       </label>
-      {query.trim().length >= 2 ? (
-        <ul className={`grid gap-1 ${compact ? "absolute z-30 mt-2 w-full rounded-2xl border border-line bg-cream p-2 shadow-lg" : "mt-2"}`}>
-          {results.length === 0 ? (
-            <li>
-              <button type="button" className="btn-coral min-h-11 w-full" onClick={() => openAgenda()}>
-                No sé qué necesito: agendar valoración
-              </button>
-            </li>
-          ) : (
-            results.map((item) => (
-              <li key={item.slug}>
-                <Link
-                  href={`/tratamientos/${item.slug}`}
-                  className="flex min-h-11 items-center justify-between rounded-2xl bg-white px-3 text-sm"
-                  onClick={onNavigate}
-                >
-                  <span className="font-semibold">{item.name}</span>
-                </Link>
-              </li>
-            ))
-          )}
-        </ul>
-      ) : null}
+      {query.trim().length >= 2 ? <SearchResults items={results} onNavigate={onNavigate} onAgenda={() => openAgenda()} /> : null}
     </div>
+  );
+}
+
+export function SearchResults({
+  items,
+  onNavigate,
+  onAgenda,
+  className = "",
+}: {
+  items: CatalogItem[];
+  onNavigate?: () => void;
+  onAgenda: () => void;
+  className?: string;
+}) {
+  if (items.length === 0) {
+    return (
+      <div className={`search-panel ${className}`}>
+        <p className="px-3 py-3 text-sm text-mute">Ningún protocolo publicado coincide.</p>
+        <button type="button" className="btn-coral min-h-11 w-full" onClick={onAgenda}>
+          Agendar valoración
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <ul className={`search-panel ${className}`}>
+      {items.map((item) => (
+        <li key={item.slug}>
+          <Link href={`/tratamientos/${item.slug}`} className="search-hit" onClick={onNavigate}>
+            <strong>{item.name}</strong>
+            <span className="search-zone">{zoneLabel(item.zones)}</span>
+          </Link>
+        </li>
+      ))}
+    </ul>
   );
 }

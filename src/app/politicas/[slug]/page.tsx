@@ -1,7 +1,7 @@
 import { Breadcrumbs, breadcrumbLd } from "@/components/breadcrumbs";
 import { JsonLd } from "@/components/json-ld";
 import { legalDocs } from "@/data/site";
-import { pageMeta } from "@/lib/seo";
+import { clampMeta, pageMeta } from "@/lib/seo";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
@@ -30,7 +30,7 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
   const { slug } = await params;
   const page = pages[slug as keyof typeof pages];
   if (!page) return {};
-  return pageMeta({ title: page.title, description: page.description, path: page.doc.href });
+  return pageMeta({ title: page.title, description: clampMeta(page.description), path: page.doc.href });
 }
 
 export default async function PoliticaPage({ params }: { params: Promise<Params> }) {

@@ -1,10 +1,10 @@
 import { Breadcrumbs, breadcrumbLd } from "@/components/breadcrumbs";
 import { JsonLd } from "@/components/json-ld";
 import { BookButton } from "@/components/book-button";
+import { TreatmentCard } from "@/components/treatment-card";
 import { forZone, zonePages } from "@/lib/hubs";
-import { pageMeta } from "@/lib/seo";
+import { clampMeta, pageMeta } from "@/lib/seo";
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 
 type Params = { slug: string };
@@ -18,8 +18,8 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
   const zone = zonePages.find((item) => item.slug === slug);
   if (!zone) return {};
   return pageMeta({
-    title: `${zone.name} en Bogotá | Luvania`,
-    description: zone.text,
+    title: zone.slug === "intima" ? "Zona íntima en Bogotá | Luvania" : `Zona ${zone.name} en Bogotá | Luvania`,
+    description: clampMeta(`Tratamientos de ${zone.name} en Luvania. ${zone.text}`),
     path: `/zonas/${zone.slug}`,
   });
 }
@@ -42,10 +42,7 @@ export default async function ZonaPage({ params }: { params: Promise<Params> }) 
       <ul className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {list.map((item) => (
           <li key={item.slug}>
-            <Link href={`/tratamientos/${item.slug}`} className="tilt-card block h-full rounded-3xl bg-white p-5">
-              <h2 className="display text-3xl">{item.name}</h2>
-              <p className="mt-2 text-sm leading-6 text-mute">{item.summary}</p>
-            </Link>
+            <TreatmentCard slug={item.slug} name={item.name} summary={item.summary} />
           </li>
         ))}
       </ul>

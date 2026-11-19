@@ -2,11 +2,11 @@ import { Breadcrumbs, breadcrumbLd } from "@/components/breadcrumbs";
 import { JsonLd } from "@/components/json-ld";
 import { testimonials } from "@/data/testimonials";
 import { isInternal } from "@/lib/public-copy";
-import { pageMeta } from "@/lib/seo";
+import { clampMeta, pageMeta } from "@/lib/seo";
 
 export const metadata = pageMeta({
   title: "Experiencias de pacientes | Luvania",
-  description: "Comentarios de pacientes sobre su visita a Luvania.",
+  description: clampMeta("Comentarios de pacientes sobre su visita a Luvania. No hay casos clínicos ni porcentajes de resultado."),
   path: "/experiencias",
 });
 

@@ -1,4 +1,5 @@
 import { catalog } from "@/data/catalog";
+import { allGuides } from "@/data/guides";
 import { resolveSedes } from "@/data/sedes";
 import { legalDocs, site } from "@/data/site";
 import { especialidades } from "@/data/taxonomy";
@@ -9,6 +10,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
   const paths = [
     "",
+    "/sobre-luvania",
     "/tratamientos",
     "/promociones",
     "/sedes",
@@ -22,6 +24,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...zonePages.map((zone) => `/zonas/${zone.slug}`),
     ...needPages.map((need) => `/necesidades/${need.slug}`),
     ...catalog.filter((item) => item.status === "VERIFIED").map((item) => `/tratamientos/${item.slug}`),
+    ...allGuides()
+      .filter((guide) => guide.medicalReview === "aprobado")
+      .map((guide) => `/tratamientos/${guide.slug}/guia`),
     ...legalDocs.map((doc) => doc.href),
   ];
   return paths.map((path) => ({

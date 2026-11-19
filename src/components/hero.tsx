@@ -1,73 +1,71 @@
-import { heroCopy } from "@/data/hero";
 import Link from "next/link";
+import { heroCopy } from "@/data/hero";
 import { BookButton } from "./book-button";
-import { FlorLuvania } from "./flor-luvania";
-import { HeroMotion } from "./hero-motion";
+import { HeroScene } from "./hero-petals";
 
-const labels = [
-  { href: "/zonas/rostro", name: "Rostro", style: { top: "14%", left: "4%" } },
-  { href: "/zonas/ojos", name: "Ojos", style: { top: "27%", left: "66%" } },
-  { href: "/zonas/piel", name: "Piel", style: { top: "42%", left: "68%" } },
-  { href: "/zonas/labios", name: "Labios", style: { top: "36%", left: "3%" } },
-];
+const benefits = [
+  { name: "Tecnología avanzada", icon: "spark" },
+  { name: "Acompañamiento personalizado", icon: "person" },
+  { name: "Resultados naturales", icon: "shield" },
+] as const;
 
 export function Hero() {
   return (
-    <section data-tone="cream" className="relative z-[1]">
-      <link rel="preload" as="image" href="/brand/hero-lcp.webp" media="(max-width: 768px)" fetchPriority="high" />
-      <link rel="preload" as="image" href="/brand/hero-mujer-manual.webp" media="(min-width: 769px)" fetchPriority="high" />
-      <div className="mx-auto grid max-w-6xl items-center gap-10 px-4 pt-10 pb-6 lg:grid-cols-[1.05fr_0.95fr] lg:pt-16 lg:pb-10">
-        <div className="reveal relative z-[1]">
-          <p className="text-xs font-bold tracking-[0.22em] text-mute">{heroCopy.eyebrow}</p>
-          <h1 className="display mt-4 max-w-xl text-[clamp(2.4rem,11vw,4.5rem)] leading-[0.95] sm:text-6xl lg:text-7xl">{heroCopy.title}</h1>
-          <p className="mt-4 inline-flex rounded-full bg-white px-3 py-1 text-sm font-semibold">{heroCopy.chip}</p>
-          <div className="mt-8 flex flex-wrap gap-3">
+    <HeroScene>
+      <div className="hero-grid mx-auto px-4">
+        <div className="hero-copy">
+          <p className="hero-eyebrow">{heroCopy.eyebrow}</p>
+          <h1 className="display hero-title">
+            <span>Realza tu</span>
+            <span>belleza natural</span>
+          </h1>
+          <p className="hero-lead">{heroCopy.lead}</p>
+          <div className="hero-actions">
             <BookButton />
-            <Link href="/tratamientos" className="btn-ghost">
+            <Link href="/sobre-luvania" className="btn-line hero-outline">
+              <i aria-hidden="true">
+                <svg viewBox="0 0 16 16">
+                  <path d="M6.2 4.4v7.2L12 8 6.2 4.4Z" fill="currentColor" />
+                </svg>
+              </i>
               {heroCopy.secondary}
             </Link>
           </div>
         </div>
-
-        <HeroMotion>
-          <div className="layer layer-back hero-wash" />
-          <div className="layer layer-flor">
-            <FlorLuvania className="flor-hero" />
-          </div>
-          <div className="layer layer-photo">
-            {/* ponytail: img estático para que el LCP no espere al optimizador ni a la hidratación de next/image. */}
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/brand/hero-lcp.webp"
-              srcSet="/brand/hero-lcp.webp 640w, /brand/hero-mujer-manual.webp 1500w"
-              sizes="(max-width: 768px) 86vw, 32rem"
-              alt="Mujer sonriente con la mano en el rostro"
-              width={1500}
-              height={1083}
-              fetchPriority="high"
-              decoding="async"
-              className="absolute inset-0 h-full w-full object-contain object-bottom"
-            />
-            {labels.map((label) => (
-              <Link key={label.name} href={label.href} className="hotspot" style={label.style}>
-                <i aria-hidden="true" />
-                {label.name}
-              </Link>
-            ))}
-          </div>
-          <svg className="layer layer-grid" viewBox="0 0 360 260" preserveAspectRatio="none" aria-hidden="true">
-            <g fill="none" stroke="#1a1a1a" strokeWidth="0.6" opacity="0.45">
-              <rect x="16" y="14" width="328" height="232" rx="18" />
-              <path d="M180 14v232M16 88h328M16 172h328" />
-              <path d="M16 40h18M16 220h18M326 40h18M326 220h18M40 14v12M320 14v12M40 234v12M320 234v12" />
-            </g>
-            <g fill="none" stroke="#ee876b" strokeWidth="0.8" opacity="0.7">
-              <circle cx="180" cy="118" r="46" />
-              <path d="M168 118h24M180 106v24" />
-            </g>
-          </svg>
-        </HeroMotion>
+        <ul className="hero-benefits">
+          {benefits.map((item) => (
+            <li key={item.name}>
+              <BenefitIcon name={item.icon} />
+              <span>{item.name}</span>
+            </li>
+          ))}
+        </ul>
       </div>
-    </section>
+    </HeroScene>
+  );
+}
+
+function BenefitIcon({ name }: { name: (typeof benefits)[number]["icon"] }) {
+  if (name === "person") {
+    return (
+      <svg viewBox="0 0 32 32" aria-hidden="true">
+        <circle cx="16" cy="11" r="4" />
+        <path d="M8 25c1.2-4 4-6 8-6s6.8 2 8 6" />
+      </svg>
+    );
+  }
+  if (name === "shield") {
+    return (
+      <svg viewBox="0 0 32 32" aria-hidden="true">
+        <path d="M16 5 26 9v7c0 6-4 10-10 12C10 26 6 22 6 16V9l10-4Z" />
+        <path d="M12 16.5 15 19.5 20.5 13" />
+      </svg>
+    );
+  }
+  return (
+    <svg viewBox="0 0 32 32" aria-hidden="true">
+      <path d="M16 6v4M16 22v4M6 16h4M22 16h4M9 9l2.6 2.6M20.4 20.4 23 23M23 9l-2.6 2.6M11.6 20.4 9 23" />
+      <circle cx="16" cy="16" r="3.2" />
+    </svg>
   );
 }

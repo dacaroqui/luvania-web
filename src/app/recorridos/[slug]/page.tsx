@@ -1,7 +1,7 @@
 import { BookButton } from "@/components/book-button";
 import { Breadcrumbs, breadcrumbLd } from "@/components/breadcrumbs";
 import { JsonLd } from "@/components/json-ld";
-import { pageMeta } from "@/lib/seo";
+import { clampMeta, pageMeta } from "@/lib/seo";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -37,7 +37,7 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
   if (!journey) return {};
   return pageMeta({
     title: `${journey.title} | Luvania`,
-    description: journey.title,
+    description: clampMeta(`${journey.title}. Un recorrido entre fichas publicadas de Luvania en Bogotá.`),
     path: `/recorridos/${slug}`,
   });
 }

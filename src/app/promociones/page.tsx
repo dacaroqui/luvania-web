@@ -1,16 +1,13 @@
 import { BookButton } from "@/components/book-button";
 import { Breadcrumbs, breadcrumbLd } from "@/components/breadcrumbs";
-import { DiscountBadge } from "@/components/discount-badge";
 import { JsonLd } from "@/components/json-ld";
-import { discountPercent, offers } from "@/data/offers";
-import { cop } from "@/lib/format";
-import { pageMeta } from "@/lib/seo";
-import Link from "next/link";
+import { PromosBrowser } from "@/components/promos-browser";
+import { clampMeta, pageMeta } from "@/lib/seo";
 
 export const metadata = pageMeta({
   title: "Promociones de tratamientos estéticos | Luvania",
   description:
-    "Ofertas de tratamientos en Luvania, con el precio de referencia y el precio actual. Sujetas a valoración y vigencia.",
+    clampMeta("Ofertas de tratamientos en Luvania, con el precio de referencia y el precio actual. Sujetas a valoración y vigencia."),
   path: "/promociones",
 });
 
@@ -22,27 +19,11 @@ export default function PromocionesPage() {
       <Breadcrumbs items={crumbs} />
       <h1 className="display mt-6 text-5xl sm:text-6xl">Promociones</h1>
       <p className="mt-4 max-w-2xl text-lg leading-8 text-mute">
-        Precios de referencia. Sujetos a valoración y vigencia.
+        Precios de referencia del 17 de noviembre de 2026. Elige la sede, agrega al carrito y cierra el pedido por WhatsApp.
       </p>
-      <ul className="mt-8 grid gap-4 md:grid-cols-2">
-        {offers.map((offer) => {
-          const percent = offer.priceBeforeSuspicious ? null : discountPercent(offer);
-          return (
-            <li key={offer.slug} className="flex gap-4 rounded-3xl bg-white p-5">
-              {percent ? <DiscountBadge percent={percent} /> : null}
-              <div>
-                <h2 className="display text-3xl">
-                  <Link href={`/tratamientos/${offer.treatmentSlug}`}>{offer.name}</Link>
-                </h2>
-                <p className="mt-2 text-sm">
-                  {percent ? <span className="line-through">{cop(offer.priceBefore)}</span> : null}{" "}
-                  <strong>{cop(offer.priceNow)}</strong>
-                </p>
-              </div>
-            </li>
-          );
-        })}
-      </ul>
+      <div className="mt-8">
+        <PromosBrowser />
+      </div>
       <BookButton className="mt-10 min-h-12 rounded-full bg-coral px-5 text-sm font-bold">
         Agendar valoración
       </BookButton>

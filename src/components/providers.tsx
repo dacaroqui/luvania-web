@@ -4,9 +4,15 @@ import type { AgendaSede } from "@/data/types";
 import { captureUtm, remember, track } from "@/lib/analytics";
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { AgendaSheet } from "./agenda-sheet";
+import { CartDrawer } from "./cart-drawer";
+import { CartProvider } from "./cart-store";
+import { DemoCartProvider } from "./demo-cart";
+import { SedeGate } from "./sede-gate";
+
+type AgendaRequest = { tratamiento?: string; tratamientoId?: string; necesidad?: string; sede?: string; promo?: string };
 
 type AgendaApi = {
-  openAgenda: (tratamiento?: string, sede?: string) => void;
+  openAgenda: (request?: AgendaRequest) => void;
   sedes: AgendaSede[];
 };
 
@@ -19,20 +25,34 @@ export function useAgenda() {
   return useContext(AgendaContext);
 }
 
-export function Providers({ children, sedes }: { children: React.ReactNode; sedes: AgendaSede[] }) {
+export function Providers({
+  children,
+  sedes,
+  demoCart,
+}: {
+  children: React.ReactNode;
+  sedes: AgendaSede[];
+  demoCart: boolean;
+}) {
   const [open, setOpen] = useState(false);
   const [tratamiento, setTratamiento] = useState<string | undefined>();
+  const [tratamientoId, setTratamientoId] = useState<string | undefined>();
+  const [necesidad, setNecesidad] = useState<string | undefined>();
   const [sede, setSede] = useState<string | undefined>();
+  const [promo, setPromo] = useState<string | undefined>();
 
-  const openAgenda = useCallback((next?: string, sedeSlug?: string) => {
-    setTratamiento(next);
-    setSede(sedeSlug);
+  const openAgenda = useCallback((request?: AgendaRequest) => {
+    setTratamiento(request?.tratamiento);
+    setTratamientoId(request?.tratamientoId);
+    setNecesidad(request?.necesidad);
+    setSede(request?.sede);
+    setPromo(request?.promo);
     setOpen(true);
     remember("luvania_origen", window.location.pathname);
-    if (next) remember("luvania_tratamiento", next);
-    const sedeName = sedes.find((item) => item.slug === sedeSlug)?.name;
+    if (request?.tratamiento) remember("luvania_tratamiento", request.tratamiento);
+    const sedeName = sedes.find((item) => item.slug === request?.sede)?.name;
     if (sedeName) remember("luvania_sede", sedeName);
-    track("cta_click", { tratamiento: next, sede: sedeName });
+    track("cta_click", { tratamiento: request?.tratamiento, sede: sedeName });
   }, [sedes]);
 
   useEffect(() => {
@@ -49,8 +69,24 @@ export function Providers({ children, sedes }: { children: React.ReactNode; sede
 
   return (
     <AgendaContext.Provider value={api}>
-      {children}
-      <AgendaSheet open={open} tratamientoInicial={tratamiento} sedeInicial={sede} sedes={sedes} onClose={() => setOpen(false)} />
+      <DemoCartProvider allowed={demoCart}>
+        <CartProvider>
+          {children}
+          <CartDrawer sedes={sedes} />
+          <SedeGate sedes={sedes} />
+          <AgendaSheet
+            open={open}
+            preview={demoCart}
+            tratamientoInicial={tratamiento}
+            tratamientoId={tratamientoId}
+            necesidadId={necesidad}
+            sedeInicial={sede}
+            promoInicial={promo}
+            sedes={sedes}
+            onClose={() => setOpen(false)}
+          />
+        </CartProvider>
+      </DemoCartProvider>
     </AgendaContext.Provider>
   );
 }

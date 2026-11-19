@@ -53,11 +53,22 @@ export interface Treatment {
   sesiones: string;
   duracion: string;
   faqs: Faq[];
+  /** Solo si el equipo escribió contraindicaciones. Si falta, la ficha no inventa la sección. */
+  riesgos?: string;
+  /** Texto del procedimiento. Si falta, no se muestra «Ver cómo funciona». */
+  procedimiento?: string;
+  /** Video del procedimiento, ruta propia o URL. */
+  video?: string;
   related: string[];
   placeholder: boolean;
   placeholderNote?: string;
   /** Pertenece a las 44 páginas de tratamiento del inventario (incluye la página basura "x"). */
   inAudit44: boolean;
+  /**
+   * Foto opcional. Ruta pública, por ejemplo `/tratamientos/hidrolipoclasia.webp`.
+   * Si no está, la interfaz muestra un marco de marca. No es un antes/después.
+   */
+  image?: string;
 }
 
 export interface CatalogItem {
@@ -70,6 +81,12 @@ export interface CatalogItem {
   summary: string;
 }
 
+export interface SedePrice {
+  sede: string;
+  priceNow: number;
+  priceBefore?: number;
+}
+
 export interface Offer {
   slug: string;
   name: string;
@@ -80,6 +97,12 @@ export interface Offer {
   labelOnOldSite: string;
   priceBeforeSuspicious?: boolean;
   note?: string;
+  /** `'todas'` o los slugs de sede donde vive esta promo. Si falta, es todas. */
+  sedes?: "todas" | string[];
+  /** Precio distinto solo en esas sedes. El resto usa priceNow. */
+  preciosPorSede?: SedePrice[];
+  /** Día inclusive, AAAA-MM-DD. Pasada esa fecha la promo se muestra vencida. */
+  vigenteHasta?: string;
 }
 
 export interface AgendaSede {

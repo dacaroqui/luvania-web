@@ -7,7 +7,8 @@ const leadSchema = z.object({
   nombre: z.string().trim().min(2).max(80),
   celular: z.string().trim().regex(/^[0-9+\s()-]{7,20}$/),
   sede: z.enum(slugs),
-  tratamiento: z.string().trim().max(120).optional().or(z.literal("")),
+  tratamiento: z.string().trim().max(160).optional().or(z.literal("")),
+  promo: z.string().trim().max(160).optional().or(z.literal("")),
   consentimiento: z.literal(true),
   website: z.string().max(0).optional().or(z.literal("")),
 });
@@ -43,6 +44,7 @@ export async function POST(request: Request) {
     celular: parsed.data.celular,
     sede: parsed.data.sede,
     tratamiento: parsed.data.tratamiento || "",
+    promo: parsed.data.promo || "",
     origen: request.headers.get("referer") || "",
     at: new Date().toISOString(),
   };
