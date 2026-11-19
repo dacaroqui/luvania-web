@@ -2082,10 +2082,20 @@ body:has(dialog[open]) .ficha-mobile-bar {
   padding: 0 0.9rem;
 }
 
+.mega-search label:hover,
+.catalog-search:hover {
+  background: rgb(255 255 255 / 0.82);
+  box-shadow: 0 1px 0 rgb(255 255 255 / 0.85) inset, 0 16px 32px rgb(141 61 44 / 0.14);
+}
 .mega-search label:focus-within,
 .catalog-search:focus-within {
   outline: 2px solid #8d3d2c;
   outline-offset: 3px;
+}
+.mega-search label:active,
+.catalog-search:active {
+  background: rgb(241 206 179 / 0.55);
+  box-shadow: 0 2px 8px rgb(141 61 44 / 0.12);
 }
 .mega-search svg {
   width: 1rem;
