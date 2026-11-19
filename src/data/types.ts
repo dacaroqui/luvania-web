@@ -81,6 +81,12 @@ export interface CatalogItem {
   summary: string;
 }
 
+export interface SedePrice {
+  sede: string;
+  priceNow: number;
+  priceBefore?: number;
+}
+
 export interface Offer {
   slug: string;
   name: string;
@@ -91,6 +97,12 @@ export interface Offer {
   labelOnOldSite: string;
   priceBeforeSuspicious?: boolean;
   note?: string;
+  /** `'todas'` o los slugs de sede donde vive esta promo. Si falta, es todas. */
+  sedes?: "todas" | string[];
+  /** Precio distinto solo en esas sedes. El resto usa priceNow. */
+  preciosPorSede?: SedePrice[];
+  /** Día inclusive, AAAA-MM-DD. Pasada esa fecha la promo se muestra vencida. */
+  vigenteHasta?: string;
 }
 
 export interface AgendaSede {

@@ -4,16 +4,13 @@ import { canPurchase, shopProduct } from "@/data/shop";
 import type { AgendaSede } from "@/data/types";
 import { cop, waLink } from "@/lib/format";
 import Link from "next/link";
-import { useEffect, useId, useRef, useState } from "react";
+import { useEffect, useId, useRef } from "react";
 import { useCart } from "./cart-store";
-import { useDemoCart } from "./demo-cart";
 
 export function CartDrawer({ sedes }: { sedes: AgendaSede[] }) {
   const cart = useCart();
-  const demo = useDemoCart();
   const dialog = useRef<HTMLDialogElement>(null);
   const titleId = useId();
-  const [sede, setSede] = useState(sedes[0]?.slug ?? "");
 
   useEffect(() => {
     const node = dialog.current;
@@ -23,11 +20,11 @@ export function CartDrawer({ sedes }: { sedes: AgendaSede[] }) {
   }, [cart.open]);
 
   const items = cart.lines.flatMap((line) => {
-    const product = shopProduct(line.slug);
-    return product && canPurchase(product, demo) ? [{ line, product }] : [];
+    const product = shopProduct(line.slug, cart.sede);
+    return product && canPurchase(product) ? [{ line, product }] : [];
   });
   const subtotal = items.reduce((sum, item) => sum + item.product.precio * item.line.cantidad, 0);
-  const chosen = sedes.find((item) => item.slug === sede) ?? sedes[0];
+  const chosen = sedes.find((item) => item.slug === cart.sede) ?? null;
 
   function checkout() {
     if (!chosen || items.length === 0) return;
@@ -48,7 +45,7 @@ export function CartDrawer({ sedes }: { sedes: AgendaSede[] }) {
   return (
     <dialog
       ref={dialog}
-      className="cart-drawer"
+      className="cart-drawer glass"
       aria-labelledby={titleId}
       onClose={() => cart.setOpen(false)}
       onClick={(event) => {
@@ -103,7 +100,10 @@ export function CartDrawer({ sedes }: { sedes: AgendaSede[] }) {
         {sedes.length > 0 ? (
           <label className="cart-sede">
             Sede
-            <select value={chosen?.slug ?? ""} onChange={(event) => setSede(event.target.value)}>
+            <select value={chosen?.slug ?? ""} onChange={(event) => cart.setSede(event.target.value)}>
+              <option value="" disabled>
+                Elige una sede
+              </option>
               {sedes.map((item) => (
                 <option key={item.slug} value={item.slug}>
                   {item.name}

@@ -1,4 +1,5 @@
 import { getTreatment } from "./index";
+import { offerForTreatment } from "./offers";
 
 export type TipoPrecio = "sesion" | "paquete" | "anticipo" | "desde_sujeto_valoracion" | null;
 
@@ -9,8 +10,9 @@ export type PurchaseTerms = {
 };
 
 /**
- * Nada se vende en línea hasta que el cliente lo defina aquí, por slug.
+ * Las ofertas de tratamientos VERIFIED se venden por el carrito.
  * Un tratamiento que no esté VERIFIED no puede activarse ni con un override.
+ * `overrides` sirve para apagar un slug puntual.
  */
 const overrides: Record<string, Partial<PurchaseTerms>> = {};
 
@@ -21,8 +23,13 @@ const defaults: PurchaseTerms = {
 };
 
 export function purchaseTerms(slug: string): PurchaseTerms {
-  const terms: PurchaseTerms = { ...defaults, ...overrides[slug] };
   const treatment = getTreatment(slug);
+  const verifiedOffer = treatment?.status === "VERIFIED" && Boolean(offerForTreatment(slug));
+  const terms: PurchaseTerms = {
+    ...defaults,
+    disponibleOnline: verifiedOffer,
+    ...overrides[slug],
+  };
   if (!treatment || treatment.status !== "VERIFIED") terms.disponibleOnline = false;
   return terms;
 }

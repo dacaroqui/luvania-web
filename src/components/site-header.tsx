@@ -6,7 +6,6 @@ import { needPages, zonePages } from "@/lib/hubs";
 import { flags } from "@/lib/flags";
 import { BookButton } from "./book-button";
 import { useCart } from "./cart-store";
-import { useDemoCart } from "./demo-cart";
 import { LogoLockup } from "./logo-lockup";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -328,11 +327,10 @@ function MegaIcon({ name }: { name: "face" | "body" | "layers" }) {
 
 function CartSlot() {
   const cart = useCart();
-  const demo = useDemoCart();
   if (!flags.cart) return null;
   const count = cart.lines.reduce((sum, line) => {
     const product = shopProduct(line.slug);
-    if (!product || !canPurchase(product, demo)) return sum;
+    if (!product || !canPurchase(product)) return sum;
     return sum + line.cantidad;
   }, 0);
   const label = count > 0 ? `Carrito, ${count} ${count === 1 ? "producto" : "productos"}` : "Carrito";

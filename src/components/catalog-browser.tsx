@@ -10,7 +10,6 @@ import { matchCatalog } from "@/lib/search";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useId, useMemo, useRef, useState } from "react";
-import { BookButton } from "./book-button";
 import { TreatmentMedia } from "./treatment-media";
 
 const VISIBLE = 6;
@@ -346,24 +345,21 @@ function CatalogCard({ product }: { product: CommerceProduct }) {
   const summary = publicText(product.descripcion);
   const amount = product.precioPromocional ?? product.precio;
   return (
-    <article className="catalog-card">
-      <Link href={`/tratamientos/${product.slug}`} className="catalog-card-media">
+    <Link href={`/tratamientos/${product.slug}`} className="catalog-card glass">
+      <span className="catalog-card-media">
         <TreatmentMedia name={product.nombre} image={product.imagen} />
         <span className="catalog-kicker">{product.especialidadNombre}</span>
-      </Link>
-      <div className="catalog-card-copy">
-        <h2 className="display catalog-name">
-          <Link href={`/tratamientos/${product.slug}`}>{product.nombre}</Link>
-        </h2>
-        <p className="catalog-summary">{summary}</p>
-        {amount != null ? <p className="catalog-price">Desde {cop(amount)}</p> : null}
-        <div className="catalog-actions">
-          <Link href={`/tratamientos/${product.slug}`} className="catalog-primary">
-            Ver tratamiento <span aria-hidden="true">→</span>
-          </Link>
-          {product.requiereValoracion ? <BookButton className="catalog-agenda">Agendar valoración</BookButton> : null}
-        </div>
-      </div>
-    </article>
+      </span>
+      <span className="catalog-card-copy">
+        <h2 className="display catalog-name">{product.nombre}</h2>
+        <span className="catalog-summary">{summary}</span>
+        <span className="catalog-foot">
+          {amount != null ? <span className="catalog-price">Desde {cop(amount)}</span> : <span />}
+          <span className="catalog-arrow" aria-hidden="true">
+            →
+          </span>
+        </span>
+      </span>
+    </Link>
   );
 }

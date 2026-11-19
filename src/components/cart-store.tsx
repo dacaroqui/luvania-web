@@ -4,13 +4,19 @@ import { flags } from "@/lib/flags";
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 
 export type CartLine = { slug: string; cantidad: number };
+type Pending = { slug: string; qty: number };
 
 type CartApi = {
   lines: CartLine[];
   count: number;
   open: boolean;
+  sede: string | null;
+  pending: Pending | null;
   setOpen: (open: boolean) => void;
-  add: (slug: string, qty?: number) => void;
+  setSede: (slug: string) => void;
+  requestAdd: (slug: string, qty?: number, sedeHint?: string) => void;
+  confirmSede: (slug: string) => void;
+  cancelPending: () => void;
   setQty: (slug: string, qty: number) => void;
   remove: (slug: string) => void;
   clear: () => void;
@@ -26,9 +32,20 @@ function clean(lines: CartLine[]) {
     .map((line) => ({ slug: line.slug, cantidad: Math.min(MAX_QTY, Math.floor(line.cantidad)) }));
 }
 
+function withLine(lines: CartLine[], slug: string, qty: number) {
+  const amount = Math.min(MAX_QTY, Math.max(1, Math.floor(qty)));
+  const found = lines.find((line) => line.slug === slug);
+  if (!found) return [...lines, { slug, cantidad: amount }];
+  return lines.map((line) =>
+    line.slug === slug ? { ...line, cantidad: Math.min(MAX_QTY, line.cantidad + amount) } : line,
+  );
+}
+
 export function CartProvider({ children }: { children: ReactNode }) {
   const [lines, setLines] = useState<CartLine[]>([]);
   const [open, setOpen] = useState(false);
+  const [sede, setSedeState] = useState<string | null>(null);
+  const [pending, setPending] = useState<Pending | null>(null);
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
@@ -36,8 +53,12 @@ export function CartProvider({ children }: { children: ReactNode }) {
     try {
       const raw = window.localStorage.getItem(STORAGE_KEY);
       if (raw) {
-        const parsed = JSON.parse(raw) as CartLine[];
+        const parsed = JSON.parse(raw) as CartLine[] | { lines?: CartLine[]; sede?: string | null };
         if (Array.isArray(parsed)) setLines(clean(parsed));
+        else if (parsed && Array.isArray(parsed.lines)) {
+          setLines(clean(parsed.lines));
+          if (typeof parsed.sede === "string") setSedeState(parsed.sede);
+        }
       }
     } catch {
       /* el carrito guardado no es válido */
@@ -47,26 +68,36 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (!flags.cart || !ready) return;
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(lines));
-  }, [lines, ready]);
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify({ lines, sede }));
+  }, [lines, sede, ready]);
 
   const api = useMemo<CartApi>(
     () => ({
       lines,
       count: lines.reduce((sum, line) => sum + line.cantidad, 0),
       open,
+      sede,
+      pending,
       setOpen,
-      add: (slug, qty = 1) => {
+      setSede: (slug) => setSedeState(slug),
+      requestAdd: (slug, qty = 1, sedeHint) => {
         if (!flags.cart) return;
-        const amount = Math.min(MAX_QTY, Math.max(1, Math.floor(qty)));
-        setLines((current) => {
-          const found = current.find((line) => line.slug === slug);
-          if (!found) return [...current, { slug, cantidad: amount }];
-          return current.map((line) =>
-            line.slug === slug ? { ...line, cantidad: Math.min(MAX_QTY, line.cantidad + amount) } : line,
-          );
-        });
+        const nextSede = sedeHint || sede;
+        if (!nextSede) {
+          setPending({ slug, qty });
+          return;
+        }
+        if (sedeHint) setSedeState(sedeHint);
+        setLines((current) => withLine(current, slug, qty));
+        setOpen(true);
       },
+      confirmSede: (slug) => {
+        setSedeState(slug);
+        if (pending) setLines((current) => withLine(current, pending.slug, pending.qty));
+        setPending(null);
+        setOpen(true);
+      },
+      cancelPending: () => setPending(null),
       setQty: (slug, qty) => {
         if (!flags.cart) return;
         const amount = Math.floor(qty);
@@ -84,7 +115,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
         setLines([]);
       },
     }),
-    [lines, open],
+    [lines, open, sede, pending],
   );
 
   return <CartContext.Provider value={api}>{children}</CartContext.Provider>;

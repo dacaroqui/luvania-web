@@ -1,6 +1,7 @@
 import { BookButton } from "@/components/book-button";
 import { Breadcrumbs, breadcrumbLd } from "@/components/breadcrumbs";
 import { JsonLd } from "@/components/json-ld";
+import { TreatmentCard } from "@/components/treatment-card";
 import { TreatmentView } from "@/components/treatment-view";
 import { FichaAddButton, FichaTabs } from "@/components/treatment-ficha";
 import { Valoracion } from "@/components/valoracion";
@@ -109,6 +110,11 @@ export default async function TratamientoPage({ params }: { params: Promise<Para
   const showHow = Boolean(procedimiento || video);
   const offer = offerForTreatment(treatment.slug);
   const percent = offer && !offer.priceBeforeSuspicious ? discountPercent(offer) : null;
+  const promoLabel = offer
+    ? offer.priceBeforeSuspicious
+      ? cop(offer.priceNow)
+      : `${cop(offer.priceNow)}, antes ${cop(offer.priceBefore)}`
+    : undefined;
   const terms = purchaseTerms(treatment.slug);
   const caption = priceCaption(terms.tipoPrecio);
   const zones = treatment.zones.map((id) => ({
@@ -185,7 +191,7 @@ export default async function TratamientoPage({ params }: { params: Promise<Para
             <h1 className="display">{treatment.name}</h1>
             {summary ? <p className="ficha-summary">{summary}</p> : null}
             <div className="ficha-hero-actions">
-              <BookButton tratamiento={treatment.name}>Agenda tu valoración</BookButton>
+              <BookButton tratamiento={treatment.name} promo={promoLabel}>Agenda tu valoración</BookButton>
               {showHow ? (
                 <a className="ficha-how" href="#como-funciona">
                   <span className="ficha-play" aria-hidden="true">
@@ -227,7 +233,7 @@ export default async function TratamientoPage({ params }: { params: Promise<Para
       <div className="ficha-stage">
         <FichaTabs items={sections} />
         <aside className="ficha-aside">
-          <div className="ficha-price">
+          <div className="ficha-price glass">
             {offer && percent ? <p className="ficha-discount">{percent}% de descuento</p> : null}
             {offer ? (
               <>
@@ -236,7 +242,7 @@ export default async function TratamientoPage({ params }: { params: Promise<Para
                 <p className="ficha-validity">Sujeto a valoración y vigencia.</p>
               </>
             ) : null}
-            <BookButton className="btn-coral ficha-book" tratamiento={treatment.name}>
+            <BookButton className="btn-coral ficha-book" tratamiento={treatment.name} promo={promoLabel}>
               Agenda tu valoración
             </BookButton>
             {offer ? <FichaAddButton slug={treatment.slug} nombre={treatment.name} /> : null}
@@ -266,25 +272,23 @@ export default async function TratamientoPage({ params }: { params: Promise<Para
                   <NameList items={sedes} />
                 </div>
               </li>
-              {sesiones ? (
-                <li>
-                  <span aria-hidden="true" />
+            </ul>
+            {sesiones || duracion ? (
+              <div className="ficha-facts">
+                {sesiones ? (
                   <div>
                     <h2>Sesiones</h2>
                     <p>{sesiones}</p>
                   </div>
-                </li>
-              ) : null}
-              {duracion ? (
-                <li>
-                  <span aria-hidden="true" />
+                ) : null}
+                {duracion ? (
                   <div>
                     <h2>Duración</h2>
                     <p>{duracion}</p>
                   </div>
-                </li>
-              ) : null}
-            </ul>
+                ) : null}
+              </div>
+            ) : null}
           </div>
         </aside>
 
@@ -382,15 +386,18 @@ export default async function TratamientoPage({ params }: { params: Promise<Para
             ))}
 
           {showGuide ? (
-            <aside className="ficha-guide-cta">
-              <p className="ficha-guide-kicker">Para leer con calma</p>
-              <h2 className="display">Lee la guía completa de {treatment.name}</h2>
-              <p>El artículo largo reúne el archivo de la ficha anterior, reescrito sin promesas de resultado, y lo que ya está publicado aquí.</p>
-              {guide?.medicalReview === "pendiente" ? <p className="ficha-review-note">Contenido en revisión médica</p> : null}
-              <Link href={`/tratamientos/${treatment.slug}/guia`}>
-                Abrir la guía <span aria-hidden="true">↗</span>
-              </Link>
-            </aside>
+            <Link href={`/tratamientos/${treatment.slug}/guia`} className="guide-card glass">
+              {treatment.image ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={treatment.image} alt="" />
+              ) : null}
+              <span>
+                <span className="ficha-guide-kicker">Guía completa</span>
+                <span className="display">{treatment.name}</span>
+                <span>El artículo largo, sin promesas de resultado.</span>
+                {guide?.medicalReview === "pendiente" ? <span className="ficha-review-note">Contenido en revisión médica</span> : null}
+              </span>
+            </Link>
           ) : null}
 
           {faqs.length ? (
@@ -422,19 +429,7 @@ export default async function TratamientoPage({ params }: { params: Promise<Para
               const spec = especialidadBySlug(item.especialidad)?.name;
               return (
                 <li key={item.slug}>
-                  <Link href={`/tratamientos/${item.slug}`} className="ficha-related-card">
-                    {item.image ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img src={item.image} alt={item.name} />
-                    ) : (
-                      <span className="ficha-related-empty" />
-                    )}
-                    {spec ? <span className="ficha-related-kicker">{spec}</span> : null}
-                    <span className="display ficha-related-name">{item.name}</span>
-                    <span className="ficha-related-go" aria-hidden="true">
-                      →
-                    </span>
-                  </Link>
+                  <TreatmentCard slug={item.slug} name={item.name} summary={item.summary} kicker={spec} />
                 </li>
               );
             })}
@@ -446,7 +441,7 @@ export default async function TratamientoPage({ params }: { params: Promise<Para
 
       <div className="ficha-mobile-bar">
         {offer ? <p className="ficha-mobile-price">{cop(offer.priceNow)}</p> : null}
-        <BookButton className="btn-coral" tratamiento={treatment.name}>
+        <BookButton className="btn-coral" tratamiento={treatment.name} promo={promoLabel}>
           Agenda tu valoración
         </BookButton>
       </div>

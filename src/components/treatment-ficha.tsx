@@ -3,7 +3,6 @@
 import { canPurchase, shopProduct } from "@/data/shop";
 import { useEffect, useState } from "react";
 import { useCart } from "./cart-store";
-import { useDemoCart } from "./demo-cart";
 
 export function FichaTabs({ items }: { items: { id: string; label: string }[] }) {
   const [current, setCurrent] = useState(items[0]?.id ?? "");
@@ -42,26 +41,22 @@ export function FichaTabs({ items }: { items: { id: string; label: string }[] })
 }
 
 export function FichaAddButton({ slug, nombre }: { slug: string; nombre: string }) {
-  const demo = useDemoCart();
   const cart = useCart();
-  const product = shopProduct(slug);
-  const [added, setAdded] = useState(false);
-  if (!product || !canPurchase(product, demo)) return null;
+  const product = shopProduct(slug, cart.sede);
+  if (!product || !canPurchase(product)) return null;
+  const inCart = cart.lines.find((line) => line.slug === slug)?.cantidad ?? 0;
 
   function add() {
-    cart.add(slug, 1);
-    cart.setOpen(true);
-    setAdded(true);
-    window.setTimeout(() => setAdded(false), 1600);
+    cart.requestAdd(slug, 1);
   }
 
   return (
-    <button type="button" className="ficha-cart" onClick={add}>
+    <button type="button" className={inCart ? "ficha-cart is-added" : "ficha-cart"} onClick={add}>
       <svg viewBox="0 0 24 24" aria-hidden="true">
         <path d="M6 8h12l-1 11H7L6 8Z" />
         <path d="M9 8V7a3 3 0 0 1 6 0v1" />
       </svg>
-      {added ? "Agregado" : "Agregar al carrito"}
+      {inCart ? `Agregado · ${inCart}` : "Agregar al carrito"}
       <span className="sr-only">{nombre}</span>
     </button>
   );

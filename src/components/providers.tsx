@@ -7,9 +7,12 @@ import { AgendaSheet } from "./agenda-sheet";
 import { CartDrawer } from "./cart-drawer";
 import { CartProvider } from "./cart-store";
 import { DemoCartProvider } from "./demo-cart";
+import { SedeGate } from "./sede-gate";
+
+type AgendaRequest = { tratamiento?: string; sede?: string; promo?: string };
 
 type AgendaApi = {
-  openAgenda: (tratamiento?: string, sede?: string) => void;
+  openAgenda: (request?: AgendaRequest) => void;
   sedes: AgendaSede[];
 };
 
@@ -34,16 +37,18 @@ export function Providers({
   const [open, setOpen] = useState(false);
   const [tratamiento, setTratamiento] = useState<string | undefined>();
   const [sede, setSede] = useState<string | undefined>();
+  const [promo, setPromo] = useState<string | undefined>();
 
-  const openAgenda = useCallback((next?: string, sedeSlug?: string) => {
-    setTratamiento(next);
-    setSede(sedeSlug);
+  const openAgenda = useCallback((request?: AgendaRequest) => {
+    setTratamiento(request?.tratamiento);
+    setSede(request?.sede);
+    setPromo(request?.promo);
     setOpen(true);
     remember("luvania_origen", window.location.pathname);
-    if (next) remember("luvania_tratamiento", next);
-    const sedeName = sedes.find((item) => item.slug === sedeSlug)?.name;
+    if (request?.tratamiento) remember("luvania_tratamiento", request.tratamiento);
+    const sedeName = sedes.find((item) => item.slug === request?.sede)?.name;
     if (sedeName) remember("luvania_sede", sedeName);
-    track("cta_click", { tratamiento: next, sede: sedeName });
+    track("cta_click", { tratamiento: request?.tratamiento, sede: sedeName });
   }, [sedes]);
 
   useEffect(() => {
@@ -64,7 +69,15 @@ export function Providers({
         <CartProvider>
           {children}
           <CartDrawer sedes={sedes} />
-          <AgendaSheet open={open} tratamientoInicial={tratamiento} sedeInicial={sede} sedes={sedes} onClose={() => setOpen(false)} />
+          <SedeGate sedes={sedes} />
+          <AgendaSheet
+            open={open}
+            tratamientoInicial={tratamiento}
+            sedeInicial={sede}
+            promoInicial={promo}
+            sedes={sedes}
+            onClose={() => setOpen(false)}
+          />
         </CartProvider>
       </DemoCartProvider>
     </AgendaContext.Provider>

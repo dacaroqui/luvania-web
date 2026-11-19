@@ -26,7 +26,7 @@ export default function SedesPage() {
       <ul className="mt-8 grid gap-4 md:grid-cols-2">
         {sedes.map((sede) => (
           <li key={sede.slug}>
-            <Link href={`/sedes/${sede.slug}`} className="block overflow-hidden rounded-3xl bg-white hover:-translate-y-1">
+            <Link href={`/sedes/${sede.slug}`} className="sede-card block overflow-hidden">
               {sedePhoto(sede.slug) ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img src={sedePhoto(sede.slug)} alt={sedeAlt(sede.slug)} className="aspect-[16/9] w-full object-cover" />

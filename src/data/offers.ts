@@ -1,6 +1,10 @@
 import type { Offer } from "./types";
 
-/** Precios leídos de las pestañas de ofertas el 17 de noviembre de 2026. Vigencia sin confirmar. */
+/**
+ * Precios leídos de las pestañas de ofertas el 17 de noviembre de 2026.
+ * Todas aplican en las cinco sedes (`sedes` omitido = todas).
+ * Cómo cargar una promo de una sola sede: docs/promociones-por-sede.md
+ */
 export const PRICE_AS_OF = "2026-11-17";
 
 export const offers: Offer[] = [
@@ -166,4 +170,34 @@ export function offerForTreatment(slug: string) {
 export function discountPercent(offer: Offer) {
   if (offer.priceBeforeSuspicious) return null;
   return Math.round((1 - offer.priceNow / offer.priceBefore) * 100);
+}
+
+export function offerScope(offer: Offer) {
+  return offer.sedes ?? "todas";
+}
+
+export function offerMatchesSede(offer: Offer, sede: string | null) {
+  if (!sede) return true;
+  const scope = offerScope(offer);
+  return scope === "todas" || scope.includes(sede);
+}
+
+export function offerExclusiveSedes(offer: Offer) {
+  const scope = offerScope(offer);
+  return scope === "todas" ? [] : scope;
+}
+
+export function offerIsExpired(offer: Offer, today = new Date()) {
+  if (!offer.vigenteHasta) return false;
+  const end = new Date(`${offer.vigenteHasta}T23:59:59-05:00`);
+  return today.getTime() > end.getTime();
+}
+
+export function resolvedPrice(offer: Offer, sede?: string | null) {
+  const override = sede ? offer.preciosPorSede?.find((row) => row.sede === sede) : undefined;
+  return {
+    priceNow: override?.priceNow ?? offer.priceNow,
+    priceBefore: override?.priceBefore ?? offer.priceBefore,
+    suspicious: Boolean(offer.priceBeforeSuspicious && !override),
+  };
 }

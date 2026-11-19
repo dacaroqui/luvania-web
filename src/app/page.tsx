@@ -7,6 +7,9 @@ import { OfferCard, isPublishedOffer } from "@/components/offer-card";
 import { BookButton } from "@/components/book-button";
 import { Valoracion } from "@/components/valoracion";
 import { benefitLines } from "@/data/hero";
+import { allGuides, readingMinutes } from "@/data/guides";
+import { getTreatment } from "@/data";
+import { clinicalVisible } from "@/lib/review";
 import { offers } from "@/data/offers";
 import { site } from "@/data/site";
 import { clampMeta, pageMeta } from "@/lib/seo";
@@ -29,6 +32,7 @@ const shots = [
 
 export default function HomePage() {
   const featured = offers.filter(isPublishedOffer).slice(0, 3);
+  const guides = allGuides().filter((guide) => clinicalVisible(guide.medicalReview)).slice(0, 3);
 
   return (
     <main>
@@ -148,6 +152,38 @@ export default function HomePage() {
       </section>
 
       <Valoracion />
+
+      {guides.length ? (
+        <section data-tone="cream" className="relative z-[1] bg-cream">
+          <div className="mx-auto max-w-6xl px-4 py-16">
+            <div className="flex flex-wrap items-end justify-between gap-4">
+              <h2 className="display text-4xl">Guías</h2>
+              <Link href="/blog" className="hero-secondary">
+                Ver todas
+              </Link>
+            </div>
+            <ul className="guide-index">
+              {guides.map((guide) => {
+                const treatment = getTreatment(guide.slug);
+                return (
+                <li key={guide.slug}>
+                  <Link href={`/tratamientos/${guide.slug}/guia`} className="guide-card glass">
+                    {treatment?.image ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img src={treatment.image} alt="" />
+                    ) : null}
+                    <span>
+                      <span className="ficha-guide-kicker">{readingMinutes(guide)} min</span>
+                      <span className="display">{guide.h1}</span>
+                    </span>
+                  </Link>
+                </li>
+                );
+              })}
+            </ul>
+          </div>
+        </section>
+      ) : null}
 
       <section data-tone="cream" className="relative z-[1] bg-cream">
         <div className="mx-auto max-w-6xl px-4 py-16">

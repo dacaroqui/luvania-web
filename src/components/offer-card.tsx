@@ -15,9 +15,9 @@ function sessionLabel(value: string | undefined) {
   return Number(match[1]) === 1 ? "1 sesión" : `${match[1]} sesiones`;
 }
 
-export function OfferCard({ offer }: { offer: Offer }) {
-  const product = shopProduct(offer.treatmentSlug);
+export function OfferCard({ offer, sede }: { offer: Offer; sede?: string | null }) {
+  const product = shopProduct(offer.treatmentSlug, sede);
   if (!product) return null;
   const sesiones = sessionLabel(getTreatment(offer.treatmentSlug)?.sesiones);
-  return <ShopCard product={product} sesiones={sesiones} />;
+  return <ShopCard product={product} sesiones={sesiones} sedeHint={sede} />;
 }
