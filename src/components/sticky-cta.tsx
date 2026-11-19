@@ -6,17 +6,17 @@ import { BookButton } from "./book-button";
 
 export function StickyCta() {
   const path = usePathname();
-  const isFicha = /^\/tratamientos\/[^/]+(\/guia)?$/.test(path);
-  const [show, setShow] = useState(path !== "/" && !isFicha);
+  const hide = /^\/tratamientos\/[^/]+(\/guia)?$/.test(path) || path.startsWith("/lp/");
+  const [show, setShow] = useState(path !== "/" && !hide);
 
   useEffect(() => {
-    const onScroll = () => setShow(!isFicha && (path !== "/" || window.scrollY > 560));
+    const onScroll = () => setShow(!hide && (path !== "/" || window.scrollY > 560));
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
-  }, [path, isFicha]);
+  }, [path, hide]);
 
-  if (isFicha || !show) return null;
+  if (hide || !show) return null;
 
   return (
     <div className="sticky-cta fixed inset-x-0 bottom-0 z-40 min-h-[4.75rem] border-t border-line bg-cream/95 px-3 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] backdrop-blur md:hidden">
