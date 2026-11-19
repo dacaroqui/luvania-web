@@ -21,16 +21,16 @@ Licencia: [Pexels License](https://www.pexels.com/license/).
 
 | Foto | Autor | Tratamientos |
 | --- | --- | --- |
-| https://www.pexels.com/photo/6543614/ | Polina | limpieza-facial-profunda, acne, proface, bolsas-en-los-ojos, aumento-y-o-perfilamiento-de-pomulos |
-| https://www.pexels.com/photo/5205659/ | Antoni Shkraba | peeling-ultrasonico, biorevitalizacion, eliminar-ojeras, cromoterapia, toxina-botulinica-tipo-a |
+| https://www.pexels.com/photo/3762874/ | Pexels | hilos-tensores, lifting-facial, factores-de-crecimiento, hidrolipoclasia, drenaje-linfatico, moldeo-corporal, detoxificacion, detox-therapy, liporeductor, detox-reductor, rejuvenecimiento-vaginal, corrientes-rusas, ems-garden-sculpt, lipomax, electroporacion, lipolisis-de-diodo-laser |
+| https://www.pexels.com/photo/3373716/ | Pexels | toxina-botulinica-tipo-a, eliminar-ojeras, bolsas-en-los-ojos |
+| https://www.pexels.com/photo/3762878/ | Pexels | dermapen, acne |
+| https://www.pexels.com/photo/3764016/ | Pexels | plasma-virtual, diatermia, limpieza-facial-profunda |
+| https://www.pexels.com/photo/6543614/ | Polina | proface, aumento-y-o-perfilamiento-de-pomulos |
+| https://www.pexels.com/photo/5205659/ | Antoni Shkraba | peeling-ultrasonico, biorevitalizacion, cromoterapia |
 | https://www.pexels.com/photo/3764013/ | Pexels | microdermoabrasion, electroplasma, collagen-therapy, hidroxiapatita-de-calcio |
 | https://www.pexels.com/photo/6659420/ | cottonbro studio | aumento-y-o-perfilamiento-de-labios |
-| https://www.pexels.com/photo/3997989/ | Anna Avilova | plasma-virtual, diatermia |
-| https://www.pexels.com/photo/6663463/ | Pexels | hilos-tensores, lifting-facial, factores-de-crecimiento, dermapen |
 | https://www.pexels.com/photo/8058612/ | Hanna Pad | aumento-y-o-perfilamiento-de-menton, perfilamiento-maxilar-hombres, rinomodelacion |
 | https://www.pexels.com/photo/5240617/ | Karolina Grabowska, Kaboompics | dewlap-lipopapada-sin-cirugia |
-| https://www.pexels.com/photo/6560289/ | Anna Tarazevich | hidrolipoclasia, drenaje-linfatico, moldeo-corporal, detoxificacion, detox-therapy, liporeductor, detox-reductor, rejuvenecimiento-vaginal, corrientes-rusas, ems-garden-sculpt |
-| https://www.pexels.com/photo/10893344/ | Paolo Ortega | lipomax, electroporacion, lipolisis-de-diodo-laser |
 | https://www.pexels.com/photo/9048470/ | Ron Lach | celulitis, dercelu, shock-therapy-bronce, levantamiento-de-gluteos, velanova |
 | https://www.pexels.com/photo/8058614/ | Hanna Pad | autosanguis, sueroterapia |
 | https://www.pexels.com/photo/7830509/ | Iryna Olar | hair-loss |

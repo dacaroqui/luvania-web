@@ -2,6 +2,7 @@ import { BookButton } from "@/components/book-button";
 import { Breadcrumbs, breadcrumbLd } from "@/components/breadcrumbs";
 import { JsonLd } from "@/components/json-ld";
 import { getSede, sedes } from "@/data/sedes";
+import { sedeAlt, sedePhoto } from "@/data/sede-photos";
 import { site } from "@/data/site";
 import { isInternal } from "@/lib/public-copy";
 import { agendaLink } from "@/lib/whatsapp";
@@ -65,6 +66,14 @@ export default async function SedePage({ params }: { params: Promise<Params> }) 
       <Breadcrumbs items={crumbs} />
       <p className="mt-6 text-xs font-bold tracking-[0.16em] text-clay uppercase">{sede.neighborhood}, Bogotá</p>
       <h1 className="display mt-2 text-4xl sm:text-6xl">Luvania {sede.name}</h1>
+      {sedePhoto(sede.slug) ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={sedePhoto(sede.slug)}
+          alt={sedeAlt(sede.slug)}
+          className="mt-6 aspect-[16/9] w-full rounded-3xl object-cover"
+        />
+      ) : null}
       <p className="mt-4 text-lg">{sede.address}</p>
 
       <iframe

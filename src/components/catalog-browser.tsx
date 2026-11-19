@@ -76,12 +76,30 @@ export function CatalogBrowser({ products }: { products: CommerceProduct[] }) {
     });
   }
 
+  function clearFacet(facet: Facet) {
+    write({
+      q,
+      necesidad: facet === "necesidad" ? [] : necesidad,
+      zona: facet === "zona" ? [] : zona,
+      especialidad: facet === "especialidad" ? [] : especialidad,
+      orden,
+    });
+  }
+
   const facets = useMemo(() => {
     const usedNeeds = new Set(products.flatMap((item) => item.necesidades));
     const usedZones = new Set(products.flatMap((item) => item.zonas));
     const usedEsp = new Set(products.map((item) => item.especialidad));
+    const order = (ids: string[]) => (a: { id: string }, b: { id: string }) => {
+      const ia = ids.indexOf(a.id);
+      const ib = ids.indexOf(b.id);
+      return (ia === -1 ? 99 : ia) - (ib === -1 ? 99 : ib);
+    };
     return {
-      necesidad: needs.filter((item) => usedNeeds.has(item.id)).map((item) => ({ id: item.id, name: item.name })),
+      necesidad: needs
+        .filter((item) => usedNeeds.has(item.id))
+        .map((item) => ({ id: item.id, name: item.name }))
+        .sort(order(["manchas", "flacidez", "arrugas", "acne", "ojeras", "volumen"])),
       zona: zones.filter((item) => usedZones.has(item.id)).map((item) => ({ id: item.id, name: item.name })),
       especialidad: especialidades.filter((item) => usedEsp.has(item.slug)).map((item) => ({ id: item.slug, name: item.name })),
     };
@@ -97,12 +115,7 @@ export function CatalogBrowser({ products }: { products: CommerceProduct[] }) {
     return items;
   }, [products, q, necesidad, zona, especialidad, orden]);
 
-  const chips = [
-    ...necesidad.map((id) => ({ facet: "necesidad" as const, id, label: facets.necesidad.find((item) => item.id === id)?.name ?? id })),
-    ...zona.map((id) => ({ facet: "zona" as const, id, label: facets.zona.find((item) => item.id === id)?.name ?? id })),
-    ...especialidad.map((id) => ({ facet: "especialidad" as const, id, label: facets.especialidad.find((item) => item.id === id)?.name ?? id })),
-  ];
-  const activeCount = chips.length;
+  const activeCount = necesidad.length + zona.length + especialidad.length;
   const dirty = activeCount > 0 || q.trim().length > 0 || orden === "az";
 
   const clearAll = () => {
@@ -110,58 +123,57 @@ export function CatalogBrowser({ products }: { products: CommerceProduct[] }) {
     write({ q: "", necesidad: [], zona: [], especialidad: [], orden: "relevantes" });
   };
 
+  const stack = (
+    <FilterStack
+      facets={facets}
+      necesidad={necesidad}
+      zona={zona}
+      especialidad={especialidad}
+      dirty={dirty}
+      onToggle={toggle}
+      onClearFacet={clearFacet}
+      onClear={clearAll}
+    />
+  );
+
   return (
     <div className="catalog-tools">
-      <div className="catalog-toolbar">
-        <p className="catalog-count" aria-live="polite">
-          {results.length} {results.length === 1 ? "tratamiento" : "tratamientos"}
-        </p>
-        <label className="catalog-search">
-          <span className="sr-only">Buscar tratamiento</span>
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <circle cx="11" cy="11" r="6.5" />
-            <path d="M16 16.5 20 20.5" />
-          </svg>
-          <input
-            value={draft}
-            placeholder="Buscar tratamiento"
-            onChange={(event) => setDraft(event.target.value)}
-          />
-        </label>
-        <label className="catalog-sort">
-          <span>Ordenar por</span>
-          <select
-            value={orden}
-            onChange={(event) => write({ q, necesidad, zona, especialidad, orden: event.target.value })}
-          >
-            <option value="relevantes">Más relevantes</option>
-            <option value="az">A–Z</option>
-          </select>
-        </label>
-        <button type="button" className="catalog-filter-btn" onClick={() => dialog.current?.showModal()}>
-          Filtros{activeCount ? ` (${activeCount})` : ""}
-        </button>
-      </div>
+      <label className="catalog-search">
+        <span className="sr-only">Buscar tratamientos</span>
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="11" cy="11" r="6.5" />
+          <path d="M16 16.5 20 20.5" />
+        </svg>
+        <input
+          value={draft}
+          placeholder="Buscar tratamientos, por ejemplo: Hilos, papada, hidroxiapatita..."
+          onChange={(event) => setDraft(event.target.value)}
+        />
+      </label>
 
       <div className="catalog-layout">
         <aside className="catalog-aside" aria-label="Filtros">
-          <FilterStack facets={facets} necesidad={necesidad} zona={zona} especialidad={especialidad} dirty={dirty} onToggle={toggle} onClear={clearAll} />
+          <div className="filter-card">{stack}</div>
         </aside>
         <div className="catalog-results">
-          {chips.length ? (
-            <div className="catalog-chips" aria-label="Filtros activos">
-              {chips.map((chip) => (
-                <button key={`${chip.facet}-${chip.id}`} type="button" className="catalog-chip" onClick={() => toggle(chip.facet, chip.id)}>
-                  {chip.label}
-                  <span aria-hidden="true">×</span>
-                  <span className="sr-only">Quitar {chip.label}</span>
-                </button>
-              ))}
-              <button type="button" className="catalog-clear-inline" onClick={clearAll}>
-                Limpiar filtros
-              </button>
-            </div>
-          ) : null}
+          <div className="catalog-toolbar">
+            <p className="catalog-count" aria-live="polite">
+              {results.length} {results.length === 1 ? "tratamiento" : "tratamientos"}
+            </p>
+            <label className="catalog-sort">
+              <span>Ordenar por</span>
+              <select
+                value={orden}
+                onChange={(event) => write({ q, necesidad, zona, especialidad, orden: event.target.value })}
+              >
+                <option value="relevantes">Más relevantes</option>
+                <option value="az">A–Z</option>
+              </select>
+            </label>
+            <button type="button" className="catalog-filter-btn" onClick={() => dialog.current?.showModal()}>
+              Filtros{activeCount ? ` (${activeCount})` : ""}
+            </button>
+          </div>
           {results.length === 0 ? (
             <div className="catalog-empty">
               <p>Ningún tratamiento publicado coincide con esta búsqueda.</p>
@@ -189,7 +201,16 @@ export function CatalogBrowser({ products }: { products: CommerceProduct[] }) {
           </button>
         </div>
         <div className="catalog-sheet-body">
-          <FilterStack facets={facets} necesidad={necesidad} zona={zona} especialidad={especialidad} dirty={dirty} onToggle={toggle} onClear={clearAll} />
+          <FilterStack
+            facets={facets}
+            necesidad={necesidad}
+            zona={zona}
+            especialidad={especialidad}
+            dirty={dirty}
+            onToggle={toggle}
+            onClearFacet={clearFacet}
+            onClear={clearAll}
+          />
         </div>
       </dialog>
     </div>
@@ -203,6 +224,7 @@ function FilterStack({
   especialidad,
   dirty,
   onToggle,
+  onClearFacet,
   onClear,
 }: {
   facets: { necesidad: { id: string; name: string }[]; zona: { id: string; name: string }[]; especialidad: { id: string; name: string }[] };
@@ -211,13 +233,14 @@ function FilterStack({
   especialidad: string[];
   dirty: boolean;
   onToggle: (facet: Facet, id: string) => void;
+  onClearFacet: (facet: Facet) => void;
   onClear: () => void;
 }) {
   return (
     <>
-      <FacetGroup title="Necesidad" options={facets.necesidad} selected={necesidad} onToggle={(id) => onToggle("necesidad", id)} defaultOpen />
-      <FacetGroup title="Zona" options={facets.zona} selected={zona} onToggle={(id) => onToggle("zona", id)} />
-      <FacetGroup title="Especialidad" options={facets.especialidad} selected={especialidad} onToggle={(id) => onToggle("especialidad", id)} />
+      <FacetGroup title="Necesidad" icon="spark" options={facets.necesidad} selected={necesidad} onToggle={(id) => onToggle("necesidad", id)} onAll={() => onClearFacet("necesidad")} />
+      <FacetGroup title="Zona" icon="pin" options={facets.zona} selected={zona} onToggle={(id) => onToggle("zona", id)} onAll={() => onClearFacet("zona")} />
+      <FacetGroup title="Especialidad" icon="layers" options={facets.especialidad} selected={especialidad} onToggle={(id) => onToggle("especialidad", id)} onAll={() => onClearFacet("especialidad")} />
       {flags.priceFilter ? <PriceRangeFilter /> : null}
       {dirty ? (
         <button type="button" className="catalog-clear" onClick={onClear}>
@@ -230,43 +253,77 @@ function FilterStack({
 
 function FacetGroup({
   title,
+  icon,
   options,
   selected,
   onToggle,
-  defaultOpen = false,
+  onAll,
 }: {
   title: string;
+  icon: "spark" | "pin" | "layers";
   options: { id: string; name: string }[];
   selected: string[];
   onToggle: (id: string) => void;
-  defaultOpen?: boolean;
+  onAll: () => void;
 }) {
-  const [open, setOpen] = useState(defaultOpen);
   const [more, setMore] = useState(false);
-  const panelId = useId();
   const shown = more ? options : options.slice(0, VISIBLE);
+  const allOn = selected.length === 0;
   return (
     <div className="facet">
-      <button type="button" className="facet-toggle" aria-expanded={open} aria-controls={panelId} onClick={() => setOpen((value) => !value)}>
+      <p className="facet-title">
+        <span className="facet-icon" aria-hidden="true">
+          <FacetIcon name={icon} />
+        </span>
         {title}
-        <svg viewBox="0 0 12 12" aria-hidden="true" className={open ? "is-open" : ""}>
-          <path d="M2.2 4.3 6 8l3.8-3.7" />
-        </svg>
-      </button>
-      <div id={panelId} className="facet-panel" hidden={!open}>
-        {shown.map((option) => (
-          <label key={option.id} className="facet-option">
-            <input type="checkbox" checked={selected.includes(option.id)} onChange={() => onToggle(option.id)} />
-            <span>{option.name}</span>
-          </label>
-        ))}
-        {options.length > VISIBLE ? (
-          <button type="button" className="facet-more" onClick={() => setMore((value) => !value)}>
-            {more ? "Ver menos" : "Ver más"}
-          </button>
-        ) : null}
+      </p>
+      <div className="facet-pills">
+        <button type="button" className={allOn ? "facet-pill is-on" : "facet-pill"} aria-pressed={allOn} onClick={onAll}>
+          Todas
+        </button>
+        {shown.map((option) => {
+          const on = selected.includes(option.id);
+          return (
+            <button key={option.id} type="button" className={on ? "facet-pill is-on" : "facet-pill"} aria-pressed={on} onClick={() => onToggle(option.id)}>
+              {option.name}
+            </button>
+          );
+        })}
       </div>
+      {options.length > VISIBLE ? (
+        <button type="button" className="facet-more" aria-expanded={more} onClick={() => setMore((value) => !value)}>
+          {more ? "Ver menos" : "Ver más"}
+          <svg viewBox="0 0 12 12" aria-hidden="true" className={more ? "is-open" : ""}>
+            <path d="M2.2 4.3 6 8l3.8-3.7" />
+          </svg>
+        </button>
+      ) : null}
     </div>
+  );
+}
+
+function FacetIcon({ name }: { name: "spark" | "pin" | "layers" }) {
+  if (name === "spark") {
+    return (
+      <svg viewBox="0 0 24 24">
+        <path d="M12 3.5 13.6 9 19 10.5 13.6 12 12 17.5 10.4 12 5 10.5 10.4 9Z" />
+      </svg>
+    );
+  }
+  if (name === "pin") {
+    return (
+      <svg viewBox="0 0 24 24">
+        <path d="M12 21s6-5.2 6-10a6 6 0 1 0-12 0c0 4.8 6 10 6 10Z" />
+        <circle cx="12" cy="11" r="1.7" />
+      </svg>
+    );
+  }
+  return (
+    <svg viewBox="0 0 24 24">
+      <path d="M5 8.5 12 5l7 3.5L12 12Z" />
+      <path d="M5 12.2 12 15.7l7-3.5" />
+      <path d="M5 15.8 12 19.3l7-3.5" />
+    </svg>
   );
 }
 
@@ -277,15 +334,8 @@ function PriceRangeFilter() {
     <div className="facet">
       <button type="button" className="facet-toggle" aria-expanded={open} aria-controls={panelId} onClick={() => setOpen((value) => !value)}>
         Precio
-        <svg viewBox="0 0 12 12" aria-hidden="true" className={open ? "is-open" : ""}>
-          <path d="M2.2 4.3 6 8l3.8-3.7" />
-        </svg>
       </button>
       <div id={panelId} className="facet-panel" hidden={!open}>
-        <label className="facet-option">
-          <span>Rango en COP</span>
-          <input type="range" min={0} max={1} value={0} disabled aria-disabled="true" />
-        </label>
         <p className="facet-note">Disponible cuando los precios estén validados.</p>
       </div>
     </div>
@@ -299,17 +349,17 @@ function CatalogCard({ product }: { product: CommerceProduct }) {
     <article className="catalog-card">
       <Link href={`/tratamientos/${product.slug}`} className="catalog-card-media">
         <TreatmentMedia name={product.nombre} image={product.imagen} />
+        <span className="catalog-kicker">{product.especialidadNombre}</span>
       </Link>
       <div className="catalog-card-copy">
-        <p className="catalog-kicker">{product.especialidadNombre}</p>
         <h2 className="display catalog-name">
           <Link href={`/tratamientos/${product.slug}`}>{product.nombre}</Link>
         </h2>
         <p className="catalog-summary">{summary}</p>
-        <p className="catalog-price">{amount != null ? `Desde ${cop(amount)}` : ""}</p>
+        {amount != null ? <p className="catalog-price">Desde {cop(amount)}</p> : null}
         <div className="catalog-actions">
           <Link href={`/tratamientos/${product.slug}`} className="catalog-primary">
-            Ver tratamiento
+            Ver tratamiento <span aria-hidden="true">→</span>
           </Link>
           {product.requiereValoracion ? <BookButton className="catalog-agenda">Agendar valoración</BookButton> : null}
         </div>
