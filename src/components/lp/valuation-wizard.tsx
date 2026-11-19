@@ -1,16 +1,59 @@
 "use client";
 
+import caidaLanding from "@/data/landings/caida-del-cabello";
 import type { ExtraNeed, LandingQuestion } from "@/data/landings/types";
+import { needPages } from "@/lib/hubs";
 import { createMockAgenda, type AgendaSlot, type MeetStatus } from "@/lib/agenda/provider";
+import { agendaLink } from "@/lib/whatsapp";
 import { submitCrmLead, type CrmAnswer } from "@/lib/crm-lead";
 import { blockedPayment } from "@/lib/payment/provider";
 import { useEffect, useMemo, useState } from "react";
+import Link from "next/link";
 
 type Answer = { opciones: string[]; texto: string };
 type Modality = "presencial" | "virtual" | "hibrida";
 type VirtualMode = "ahora" | "agendar";
+type Sede = { slug: string; name: string; whatsapp?: string };
 
 const empty = (): Answer => ({ opciones: [], texto: "" });
+
+const ANTES: LandingQuestion = {
+  id: "antes",
+  prompt: "¿Has probado algún tratamiento antes?",
+  choices: [
+    { id: "primera", label: "No, sería mi primera vez" },
+    { id: "cabina", label: "Sí, tratamientos en cabina" },
+    { id: "productos", label: "Sí, productos o suplementos" },
+  ],
+};
+
+const RESULTADO: LandingQuestion = {
+  id: "resultado",
+  prompt: "¿Qué resultado esperas conseguir?",
+  choices: [
+    { id: "piel", label: "Mejorar el aspecto de mi piel" },
+    { id: "comoda", label: "Sentirme más cómoda conmigo" },
+    { id: "orientacion", label: "Recibir orientación profesional" },
+  ],
+};
+
+const ZONA: LandingQuestion = {
+  id: "zona-general",
+  prompt: "¿En qué zona deseas enfocarte?",
+  choices: [
+    { id: "rostro", label: "Rostro" },
+    { id: "cuerpo", label: "Cuerpo" },
+    { id: "cabello", label: "Cabello" },
+    { id: "no-se", label: "No lo sé" },
+  ],
+};
+
+const STEPS = [
+  { title: "Cuéntanos sobre ti", subtitle: "Empecemos por lo que te gustaría mejorar.", kicker: "Tu experiencia Luvania", line: "Tu belleza comienza contigo.", photo: "/stock/hero.webp" },
+  { title: "Conozcamos tus preferencias", subtitle: "Así evitamos repetir un camino que no te sirvió.", kicker: "Tus preferencias", line: "A tu ritmo.", photo: "/stock/faciales.webp" },
+  { title: "Tu valoración Luvania", subtitle: "La sede y la modalidad se confirman con el equipo.", kicker: "La cita", line: "En sede o en línea.", photo: "/stock/experiencia.webp" },
+  { title: "Ya casi terminamos", subtitle: "Revisa el resumen y deja cómo contactarte.", kicker: "El cierre", line: "Un paso más.", photo: "/stock/wellness.webp" },
+];
 
 export function ValuationWizard({
   preview,
@@ -19,30 +62,46 @@ export function ValuationWizard({
   questions,
   extras,
   sedes,
+  frame = "page",
+  origin = null,
+  promo,
+  initialSede = null,
+  deliverWhatsapp = false,
 }: {
   preview: boolean;
   needId: string;
   path: string;
   questions: LandingQuestion[];
   extras: ExtraNeed[];
-  sedes: { slug: string; name: string }[];
+  sedes: Sede[];
+  frame?: "page" | "dialog";
+  origin?: { id: string; name: string } | null;
+  promo?: string;
+  initialSede?: string | null;
+  deliverWhatsapp?: boolean;
 }) {
   const agenda = useMemo(() => createMockAgenda(preview), [preview]);
   const [step, setStep] = useState(0);
+  const [errors, setErrors] = useState<Record<string, string>>({});
   const [patient, setPatient] = useState({ nombre: "", celular: "", email: "" });
+  const [consent, setConsent] = useState(false);
+  const [website, setWebsite] = useState("");
   const [answers, setAnswers] = useState<Record<string, Answer>>({});
-  const [picked, setPicked] = useState<string[]>([]);
+  const [picked, setPicked] = useState<string[]>(() => (needPages.some((need) => need.slug === needId) ? [needId] : []));
+  const [otra, setOtra] = useState("");
   const [extraAnswers, setExtraAnswers] = useState<Record<string, Record<string, Answer>>>({});
   const [modality, setModality] = useState<Modality | null>(null);
   const [virtualMode, setVirtualMode] = useState<VirtualMode | null>(null);
-  const [sede, setSede] = useState<string | null>(null);
+  const [sede, setSede] = useState<string | null>(initialSede);
   const [slots, setSlots] = useState<AgendaSlot[]>([]);
   const [day, setDay] = useState<string | null>(null);
   const [slot, setSlot] = useState<AgendaSlot | null>(null);
   const [meet, setMeet] = useState<MeetStatus | null>(null);
   const [reservationId, setReservationId] = useState<string | null>(null);
   const [upsell, setUpsell] = useState<boolean | null>(null);
-  const [saved, setSaved] = useState(false);
+  const [phase, setPhase] = useState<"form" | "recibida">("form");
+  const [note, setNote] = useState("");
+  const [pending, setPending] = useState(false);
   const [utm, setUtm] = useState({ source: null as string | null, campaign: null as string | null });
 
   useEffect(() => {
@@ -50,71 +109,102 @@ export function ValuationWizard({
     setUtm({ source: params.get("utm_source"), campaign: params.get("utm_campaign") });
   }, []);
 
-  const needsSede = modality === "presencial" || modality === "hibrida";
-  const wantsSlot = modality !== null && !(modality === "virtual" && virtualMode === "ahora");
-  const days = [...new Set(slots.map((item) => item.day))];
+  useEffect(() => {
+    if (step !== 2 || !modality) return;
+    if (modality === "virtual" && virtualMode === "ahora") {
+      setSlots([]);
+      return;
+    }
+    let live = true;
+    agenda.getSlots({ modality, sede, days: 5 }).then((next) => {
+      if (!live) return;
+      setSlots(next);
+      setDay((current) => current ?? next[0]?.day ?? null);
+    });
+    return () => {
+      live = false;
+    };
+  }, [agenda, modality, virtualMode, sede, step]);
 
-  function answerOf(id: string) {
-    return answers[id] ?? empty();
+  const provided = questions.length ? questions : caidaLanding.questions;
+  const bank = [...provided];
+  for (const question of caidaLanding.questions) {
+    if (!bank.some((item) => item.id === question.id)) bank.push(question);
   }
-
-  function toggle(id: string, label: string) {
-    const current = answerOf(id);
+  const byId = (id: string) => bank.find((item) => item.id === id);
+  const answerOf = (id: string) => answers[id] ?? empty();
+  const chooseOne = (question: LandingQuestion, label: string) => {
+    setAnswers({ ...answers, [question.id]: { ...answerOf(question.id), opciones: [label] } });
+    setErrors((current) => ({ ...current, [question.id]: "" }));
+  };
+  const toggleMany = (question: LandingQuestion, label: string) => {
+    const current = answerOf(question.id);
     const opciones = current.opciones.includes(label)
       ? current.opciones.filter((item) => item !== label)
       : [...current.opciones, label];
-    setAnswers({ ...answers, [id]: { ...current, opciones } });
-  }
+    setAnswers({ ...answers, [question.id]: { ...current, opciones } });
+    setErrors((currentErrors) => ({ ...currentErrors, [question.id]: "" }));
+  };
 
-  function answered(question: LandingQuestion, value: Answer | undefined) {
-    const current = value ?? empty();
-    return current.opciones.length > 0 || current.texto.trim().length > 0;
-  }
+  const needsSede = modality === "presencial" || modality === "hibrida";
+  const wantsSlot = modality !== null && !(modality === "virtual" && virtualMode === "ahora");
+  const hairDetail = picked.includes("caida-cabello") || answerOf("zona-general").opciones.includes("Cabello");
+  const tried = answerOf("antes").opciones[0];
+  const showTriedDetail = tried && tried !== "No, sería mi primera vez";
+  const days = [...new Set(slots.map((item) => item.day))];
+  const cards = [
+    ...needPages.filter((need) => need.slug === needId || extras.some((item) => item.id === need.slug)),
+  ];
 
-  const stepOneReady =
-    patient.nombre.trim().length > 1 &&
-    patient.celular.replace(/\D/g, "").length >= 7 &&
-    questions.every((question) => answered(question, answers[question.id]));
-
-  const stepTwoReady = picked.every((id) => {
-    const need = extras.find((item) => item.id === id);
-    if (!need) return false;
-    return need.questions.every((question) => answered(question, extraAnswers[id]?.[question.id]));
-  });
-
-  const stepThreeReady =
-    modality !== null &&
-    (modality !== "virtual" || virtualMode !== null) &&
-    (!needsSede || sede !== null) &&
-    (modality !== "virtual" || virtualMode !== "ahora" || preview);
-
-  async function loadSlots(nextModality: Modality, nextSede: string | null) {
-    const next = await agenda.getSlots({ modality: nextModality, sede: nextSede, days: 5 });
-    setSlots(next);
-    setDay(next[0]?.day ?? null);
-    setSlot(null);
-  }
-
-  async function continueFromModality() {
-    if (!modality) return;
-    if (modality === "virtual" && virtualMode === "ahora") {
-      setSlot(null);
-      setReservationId(null);
-      setMeet({ provider: "google-meet", url: null, status: "pendiente" });
-      setStep(3);
-      return;
+  function validate(index: number) {
+    const next: Record<string, string> = {};
+    if (index === 0) {
+      if (picked.length === 0 && !otra.trim()) next.mejorar = "Elige al menos una necesidad.";
+      if (picked.includes("otra") && !otra.trim()) next.otra = "Cuéntanos esa otra necesidad.";
+      if (!answerOf("zona-general").opciones.length) next["zona-general"] = "Elige una zona.";
+      if (hairDetail && byId("zona") && !answerOf("zona").opciones.length) next.zona = "Elige la zona del cuero.";
+      if (!answerOf("desde-cuando").opciones.length) next["desde-cuando"] = "Elige hace cuánto lo notas.";
     }
-    await loadSlots(modality, sede);
-    setStep(3);
+    if (index === 1) {
+      if (!answerOf("antes").opciones.length) next.antes = "Elige una opción.";
+      if (showTriedDetail && byId("probado") && !answerOf("probado").opciones.length && !answerOf("probado").texto.trim()) {
+        next.probado = "Cuéntanos qué probaste.";
+      }
+      if (!answerOf("resultado").opciones.length) next.resultado = "Elige el cambio que buscas.";
+      if (picked.includes("caida-cabello") && byId("satisfecha") && !answerOf("satisfecha").opciones.length) {
+        next.satisfecha = "Elige una opción.";
+      }
+      if (!answerOf("cuando").opciones.length) next.cuando = "Elige un momento.";
+      if (byId("decision") && !answerOf("decision").opciones.length) next.decision = "Elige qué te ayudaría a decidir.";
+    }
+    if (index === 2) {
+      if (!modality) next.modalidad = "Elige cómo quieres la valoración.";
+      if (modality === "virtual" && !virtualMode) next.virtual = "Elige si es ahora o con hora.";
+      if (needsSede && !sede) next.sede = "Elige una sede.";
+      if (preview && wantsSlot && slots.length > 0 && !slot) next.horario = "Elige un horario de ejemplo, o espera la confirmación.";
+    }
+    if (index === 3) {
+      for (const id of picked) {
+        const need = extras.find((item) => item.id === id);
+        if (!need) continue;
+        const pendingQuestion = need.questions.find((question) => {
+          const value = extraAnswers[id]?.[question.id] ?? empty();
+          return value.opciones.length === 0 && !value.texto.trim();
+        });
+        if (pendingQuestion) next[`extra-${id}`] = "Responde esta necesidad o desmárcala en el primer paso.";
+      }
+      if (preview && upsell === null) next.upsell = "Dinos si quieres ver la oferta después.";
+      if (patient.nombre.trim().length < 2) next.nombre = "Escribe tu nombre.";
+      if (patient.celular.replace(/\D/g, "").length < 7) next.celular = "Escribe un celular de al menos 7 dígitos.";
+      if (!consent) next.consentimiento = "Hace falta la autorización para contactarte.";
+    }
+    setErrors(next);
+    return Object.values(next).every((value) => !value);
   }
 
-  async function continueFromAgenda() {
-    if (!slot || !modality) return;
-    const channel = modality === "presencial" ? "sede" : "meet";
-    const reserved = await agenda.reserve(slot, channel);
-    setReservationId(reserved.reservationId);
-    setMeet(reserved.meet);
-    setStep(4);
+  function go(nextStep: number) {
+    setStep(nextStep);
+    setErrors({});
   }
 
   function pack(question: LandingQuestion, value: Answer | undefined): CrmAnswer {
@@ -122,358 +212,522 @@ export function ValuationWizard({
     return { id: question.id, pregunta: question.prompt, opciones: current.opciones, texto: current.texto.trim() };
   }
 
-  async function save() {
+  async function finish() {
+    if (!validate(3) || !modality) return;
+    setPending(true);
+    setNote("");
+    let reserved = reservationId;
+    if (preview && slot && wantsSlot) {
+      try {
+        const channel = modality === "presencial" ? "sede" : "meet";
+        const result = await agenda.reserve(slot, channel);
+        reserved = result.reservationId;
+        setReservationId(result.reservationId);
+        setMeet(result.meet);
+      } catch {
+        reserved = null;
+      }
+    }
+    const shared = [ZONA, ANTES, RESULTADO, ...bank].filter((question, index, list) => list.findIndex((item) => item.id === question.id) === index);
+    const confirmed = Boolean(reserved && !reserved.startsWith("ejemplo-"));
     await blockedPayment.createIntent({ concept: "valoracion" });
-    const result = submitCrmLead({
-      paciente: {
-        nombre: patient.nombre.trim(),
-        celular: patient.celular.trim(),
-        email: patient.email.trim() || null,
-      },
+    const crm = submitCrmLead({
+      paciente: { nombre: patient.nombre.trim(), celular: patient.celular.trim(), email: patient.email.trim() || null },
       fuente: { utm_source: utm.source, utm_campaign: utm.campaign, path },
       necesidad: needId,
+      origen: origin,
+      confirmacion: confirmed ? "cita-confirmada" : "solicitud-recibida",
       necesidades: [
-        { id: needId, principal: true, respuestas: questions.map((question) => pack(question, answers[question.id])) },
+        {
+          id: needId,
+          principal: true,
+          respuestas: [
+            ...shared.map((question) => pack(question, answers[question.id])),
+            ...(otra.trim() ? [{ id: "otra", pregunta: "Otra necesidad", opciones: [], texto: otra.trim() }] : []),
+          ],
+        },
         ...picked.flatMap((id) => {
+          if (id === needId) return [];
           const need = extras.find((item) => item.id === id);
           if (!need) return [];
           return [{ id, principal: false, respuestas: need.questions.map((question) => pack(question, extraAnswers[id]?.[question.id])) }];
         }),
       ],
-      modalidad: { tipo: modality ?? "presencial", virtual: modality === "virtual" ? virtualMode : null },
-      slot:
-        slot && reservationId
-          ? { id: slot.id, start: slot.start, end: slot.end, reservationId }
-          : null,
+      modalidad: { tipo: modality, virtual: modality === "virtual" ? virtualMode : null },
+      slot: slot && reserved ? { id: slot.id, start: slot.start, end: slot.end, reservationId: reserved } : null,
       sede: needsSede ? sede : null,
       upsell: upsell === null ? null : { accepted: upsell, pay: null, receive: null },
       pago: { status: "no-disponible", amount: null, currency: "COP" },
     });
-    if (result.ok) setSaved(true);
+    const chosen = sedes.find((item) => item.slug === sede);
+    if (deliverWhatsapp && chosen?.whatsapp) {
+      const response = await fetch("/api/leads", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          nombre: patient.nombre.trim(),
+          celular: patient.celular.trim(),
+          sede: chosen.slug,
+          tratamiento: origin?.name || needId,
+          promo: promo ?? "",
+          consentimiento: true,
+          website,
+        }),
+      });
+      setPending(false);
+      if (!response.ok) {
+        const payload = (await response.json().catch(() => null)) as { error?: string } | null;
+        setNote(payload?.error || "No pudimos enviar tus datos. Inténtalo de nuevo.");
+        return;
+      }
+      window.open(
+        agendaLink({
+          sede: chosen.name,
+          whatsapp: chosen.whatsapp,
+          tratamiento: `${origin?.name || "una valoración"}. Me llamo ${patient.nombre.trim()}. Celular ${patient.celular.trim()}`,
+          url: window.location.href,
+        }),
+        "_blank",
+        "noopener,noreferrer",
+      );
+    } else {
+      setPending(false);
+    }
+    setNote(
+      crm.ok
+        ? "Quedó en la consola de este navegador. No se envió a un servicio."
+        : "El envío al CRM aún no está conectado. No guardamos estos datos.",
+    );
+    setPhase("recibida");
   }
 
-  const titles = ["Tu necesidad", "Otras necesidades", "Modalidad", "Fecha y hora", "Después de agendar", "Pago"];
+  const summary = [
+    ["Necesidad", cards.filter((item) => picked.includes(item.slug)).map((item) => item.name).concat(otra.trim() ? [otra.trim()] : []).join(", ")],
+    ["Zona", answerOf("zona-general").opciones.join(", ")],
+    ["Preferencias", [answerOf("antes").opciones[0], answerOf("resultado").opciones[0], answerOf("cuando").opciones[0]].filter(Boolean).join(" · ")],
+    ["Sede", sedes.find((item) => item.slug === sede)?.name ?? ""],
+    ["Modalidad", modality ? `${modality}${virtualMode ? ` · ${virtualMode}` : ""}` : ""],
+    ["Origen", origin ? `${origin.name} (${origin.id})` : ""],
+    ["Horario", slot ? `${slot.dayLabel} ${slot.label}${preview ? " · ejemplo, sin confirmar" : ""}` : preview ? "" : "Te confirmaremos la disponibilidad"],
+  ].filter(([, value]) => value);
 
-  return (
-    <section id="valoracion" className="lp-wizard glass" aria-labelledby="wizard-title">
-      <ol className="lp-progress">
-        {titles.map((title, index) => (
-          <li key={title} aria-current={index === step ? "step" : undefined}>
-            {title}
-          </li>
-        ))}
-      </ol>
-      <h2 id="wizard-title" className="display">
-        {titles[step]}
-      </h2>
-
-      {step === 0 ? (
-        <div className="lp-step">
-          <div className="lp-patient">
-            <label>
-              Nombre
-              <input value={patient.nombre} autoComplete="name" onChange={(event) => setPatient({ ...patient, nombre: event.target.value })} />
-            </label>
-            <label>
-              Celular
-              <input value={patient.celular} autoComplete="tel" inputMode="tel" onChange={(event) => setPatient({ ...patient, celular: event.target.value })} />
-            </label>
-            <label>
-              Correo, si quieres
-              <input value={patient.email} autoComplete="email" inputMode="email" onChange={(event) => setPatient({ ...patient, email: event.target.value })} />
-            </label>
-          </div>
-          {questions.map((question) => (
-            <Question
-              key={question.id}
-              question={question}
-              value={answerOf(question.id)}
-              onToggle={(label) => toggle(question.id, label)}
-              onText={(texto) => setAnswers({ ...answers, [question.id]: { ...answerOf(question.id), texto } })}
-            />
+  const shell = (
+    <div className={`vx ${frame === "dialog" ? "is-dialog" : ""}`}>
+      <aside className="vx-side">
+        {/* provisional: stock */}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={STEPS[step].photo} alt="" />
+        <div>
+          <p>{STEPS[step].kicker}</p>
+          <h2 className="display">{STEPS[step].line}</h2>
+          <span className="lp-badge">Foto provisional</span>
+        </div>
+      </aside>
+      <div className="vx-main">
+        <header className="vx-top">
+          <p>Valoración personalizada</p>
+          <p>
+            0{step + 1} / 04
+          </p>
+        </header>
+        <div className="vx-progress" aria-hidden="true">
+          {STEPS.map((item, index) => (
+            <span key={item.title} className={index <= step ? "is-done" : ""} />
           ))}
-          <button type="button" className="btn-coral" disabled={!stepOneReady} onClick={() => setStep(1)}>
-            Continuar
-          </button>
         </div>
-      ) : null}
-
-      {step === 1 ? (
-        <div className="lp-step">
-          <p>¿Tienes alguna otra necesidad? Puedes marcar varias. Si no, sigue sin agregarlas.</p>
-          <ul className="lp-need-grid">
-            {extras.map((need) => {
-              const on = picked.includes(need.id);
-              return (
-                <li key={need.id}>
-                  <button
-                    type="button"
-                    className={on ? "is-on" : ""}
-                    aria-pressed={on}
-                    onClick={() => setPicked(on ? picked.filter((id) => id !== need.id) : [...picked, need.id])}
-                  >
-                    <strong>{need.name}</strong>
-                    <span>{need.text}</span>
-                    <span>{need.treatments.join(" · ")}</span>
-                  </button>
-                </li>
-              );
-            })}
-          </ul>
-          {picked.map((id) => {
-            const need = extras.find((item) => item.id === id);
-            if (!need) return null;
-            return (
-              <fieldset key={id} className="lp-extra">
-                <legend className="display">{need.name}</legend>
-                {need.questions.map((question) => {
-                  const value = extraAnswers[id]?.[question.id] ?? empty();
-                  return (
-                    <Question
-                      key={question.id}
-                      question={question}
-                      value={value}
-                      onToggle={(label) => {
-                        const opciones = value.opciones.includes(label)
-                          ? value.opciones.filter((item) => item !== label)
-                          : [...value.opciones, label];
-                        setExtraAnswers({ ...extraAnswers, [id]: { ...extraAnswers[id], [question.id]: { ...value, opciones } } });
-                      }}
-                      onText={(texto) =>
-                        setExtraAnswers({ ...extraAnswers, [id]: { ...extraAnswers[id], [question.id]: { ...value, texto } } })
-                      }
-                    />
-                  );
-                })}
-              </fieldset>
-            );
-          })}
-          <div className="lp-actions">
-            <button type="button" className="btn-line" onClick={() => setStep(0)}>
-              Atrás
-            </button>
-            <button
-              type="button"
-              className="btn-line"
-              onClick={() => {
-                setPicked([]);
-                setStep(2);
-              }}
-            >
-              No, continuar
-            </button>
-            <button type="button" className="btn-coral" disabled={picked.length === 0 || !stepTwoReady} onClick={() => setStep(2)}>
-              Continuar
-            </button>
-          </div>
+        <div className="vx-scroll thin-scroll">
+          {phase === "recibida" ? (
+            <div className="vx-step">
+              <h3 className="display">Solicitud recibida</h3>
+              <p>El equipo te contacta para confirmar la disponibilidad. Esta pantalla no es una cita confirmada.</p>
+              <ul className="vx-summary">
+                {summary.map(([label, value]) => (
+                  <li key={label}>
+                    <span>{label}</span>
+                    <strong>{value}</strong>
+                  </li>
+                ))}
+              </ul>
+              <p>{note || "Siguiente paso: te escribimos al celular que dejaste para acordar la sede y la hora."}</p>
+            </div>
+          ) : (
+            <div className="vx-step" key={step}>
+              <h3 className="display">{STEPS[step].title}</h3>
+              <p className="vx-sub">{STEPS[step].subtitle}</p>
+              {step === 0 ? <StepOne /> : null}
+              {step === 1 ? <StepTwo /> : null}
+              {step === 2 ? <StepThree /> : null}
+              {step === 3 ? <StepFour /> : null}
+            </div>
+          )}
         </div>
-      ) : null}
-
-      {step === 2 ? (
-        <div className="lp-step">
-          <div className="lp-modes" role="group" aria-label="Modalidad">
-            {(
-              [
-                ["presencial", "Presencial", "Siempre queda agendada. Eliges una sede."],
-                ["virtual", "Virtual", "Videollamada. Puedes pedirla ahora o dejar una hora."],
-                ["hibrida", "Híbrida", "Una parte en sede y otra por videollamada."],
-              ] as const
-            ).map(([id, name, text]) => (
-              <button key={id} type="button" className={modality === id ? "is-on" : ""} aria-pressed={modality === id} onClick={() => setModality(id)}>
-                <strong>{name}</strong>
-                <span>{text}</span>
-                {preview ? <span className="lp-badge">Beneficio por definir</span> : null}
+        {phase === "form" ? (
+          <div className="vx-nav">
+            {step > 0 ? (
+              <button type="button" className="btn-line" onClick={() => go(step - 1)}>
+                Volver
               </button>
-            ))}
-          </div>
-          {modality === "virtual" ? (
-            <div className="lp-modes" role="group" aria-label="Cuándo">
+            ) : (
+              <span />
+            )}
+            {step < 3 ? (
               <button
                 type="button"
-                className={virtualMode === "ahora" ? "is-on" : ""}
-                aria-pressed={virtualMode === "ahora"}
-                disabled={!preview}
-                onClick={() => setVirtualMode("ahora")}
+                className="btn-coral"
+                onClick={() => {
+                  if (validate(step)) go(step + 1);
+                }}
               >
-                <strong>Atenderme ahora</strong>
-                <span>Videollamada inmediata, con fila de espera, solo en horario de asesora.</span>
-                {preview ? <span className="lp-badge">Horario de asesora por definir</span> : <span>Aún no hay horario publicado.</span>}
+                Continuar
               </button>
-              <button type="button" className={virtualMode === "agendar" ? "is-on" : ""} aria-pressed={virtualMode === "agendar"} onClick={() => setVirtualMode("agendar")}>
-                <strong>Agendar hora</strong>
-                <span>Dejas un cupo y el enlace de Meet queda pendiente de conectar.</span>
+            ) : (
+              <button type="button" className="btn-coral" disabled={pending} onClick={finish}>
+                {pending ? "Enviando…" : "Enviar solicitud"}
               </button>
-            </div>
-          ) : null}
-          {preview && modality === "virtual" && virtualMode === "ahora" ? (
-            <p className="lp-queue">
-              <span className="lp-badge">Fila de ejemplo</span>
-              Lugar ilustrativo. No hay una asesora conectada.
-            </p>
-          ) : null}
-          {needsSede ? (
-            <fieldset className="lp-sedes">
-              <legend>Elige una sede</legend>
-              {sedes.map((item) => (
-                <label key={item.slug} className={sede === item.slug ? "is-on" : ""}>
-                  <input type="radio" name="sede" checked={sede === item.slug} onChange={() => setSede(item.slug)} />
-                  {item.name}
-                </label>
-              ))}
-            </fieldset>
-          ) : null}
-          <div className="lp-actions">
-            <button type="button" className="btn-line" onClick={() => setStep(1)}>
-              Atrás
-            </button>
-            <button type="button" className="btn-coral" disabled={!stepThreeReady} onClick={continueFromModality}>
-              Continuar
+            )}
+          </div>
+        ) : null}
+      </div>
+    </div>
+  );
+
+  function FieldError({ id }: { id: string }) {
+    if (!errors[id]) return null;
+    return (
+      <p id={`${id}-error`} className="vx-error" role="alert">
+        {errors[id]}
+      </p>
+    );
+  }
+
+  function StepOne() {
+    const desde = byId("desde-cuando");
+    const detalle = byId("zona");
+    return (
+      <>
+        <fieldset className="vx-field" aria-describedby={errors.mejorar ? "mejorar-error" : undefined}>
+          <legend>¿Qué te gustaría mejorar?</legend>
+          <div className="vx-cards">
+            {cards.map((need) => {
+              const on = picked.includes(need.slug);
+              return (
+                <button
+                  key={need.slug}
+                  type="button"
+                  className={on ? "is-on" : ""}
+                  aria-pressed={on}
+                  onClick={() => setPicked(on ? picked.filter((id) => id !== need.slug) : [...picked, need.slug])}
+                >
+                  <NeedMark id={need.slug} />
+                  <span>{need.name}</span>
+                  {on ? <i aria-hidden="true">✓</i> : null}
+                </button>
+              );
+            })}
+            <button
+              type="button"
+              className={picked.includes("otra") ? "is-on" : ""}
+              aria-pressed={picked.includes("otra")}
+              onClick={() => setPicked(picked.includes("otra") ? picked.filter((id) => id !== "otra") : [...picked, "otra"])}
+            >
+              <NeedMark id="otra" />
+              <span>Otra necesidad</span>
             </button>
           </div>
-        </div>
-      ) : null}
+          <FieldError id="mejorar" />
+        </fieldset>
+        {picked.includes("otra") ? (
+          <label className="vx-field">
+            Cuéntanos esa otra necesidad
+            <input value={otra} onChange={(event) => setOtra(event.target.value)} />
+            <FieldError id="otra" />
+          </label>
+        ) : null}
+        <OneField question={ZONA} />
+        {hairDetail && detalle ? <ManyField question={detalle} /> : null}
+        {desde ? <OneField question={desde} /> : null}
+      </>
+    );
+  }
 
-      {step === 3 ? (
-        <div className="lp-step">
-          {modality === "virtual" && virtualMode === "ahora" ? (
-            <p>No hace falta elegir hora. La fila de esta vista es de ejemplo.</p>
-          ) : preview && slots.length ? (
-            <>
-              <p>
-                <span className="lp-badge">Horarios de ejemplo</span>
-                Todavía no salen de Google Calendar.
-              </p>
-              <div className="lp-days" role="group" aria-label="Día">
+  function StepTwo() {
+    const probado = byId("probado");
+    const satisfecha = byId("satisfecha");
+    const cuando = byId("cuando");
+    const decision = byId("decision");
+    return (
+      <>
+        <OneField question={ANTES} />
+        {showTriedDetail && probado ? <ManyField question={probado} /> : null}
+        <OneField question={RESULTADO} />
+        {picked.includes("caida-cabello") && satisfecha ? <ManyField question={satisfecha} /> : null}
+        {cuando ? <OneField question={cuando} /> : null}
+        {decision ? <ManyField question={decision} /> : null}
+      </>
+    );
+  }
+
+  function StepThree() {
+    return (
+      <>
+        {promo ? <p className="agenda-summary">{promo}</p> : null}
+        <div className="vx-cards" role="group" aria-label="Modalidad">
+          {(
+            [
+              ["presencial", "Presencial", "Siempre queda agendada. Eliges una sede."],
+              ["virtual", "Virtual", "Videollamada ahora, en horario de asesora, o con hora."],
+              ["hibrida", "Híbrida", "Una parte en sede y otra por videollamada."],
+            ] as const
+          ).map(([id, name, text]) => (
+            <button key={id} type="button" className={modality === id ? "is-on" : ""} aria-pressed={modality === id} onClick={() => setModality(id)}>
+              <strong>{name}</strong>
+              <span>{text}</span>
+              {preview ? <em className="lp-badge">Beneficio por definir</em> : null}
+            </button>
+          ))}
+        </div>
+        <FieldError id="modalidad" />
+        {modality === "virtual" ? (
+          <div className="vx-chips" role="group" aria-label="Cuándo">
+            <button type="button" className={virtualMode === "ahora" ? "is-on" : ""} disabled={!preview} aria-pressed={virtualMode === "ahora"} onClick={() => setVirtualMode("ahora")}>
+              Atenderme ahora
+            </button>
+            <button type="button" className={virtualMode === "agendar" ? "is-on" : ""} aria-pressed={virtualMode === "agendar"} onClick={() => setVirtualMode("agendar")}>
+              Agendar hora
+            </button>
+          </div>
+        ) : null}
+        {preview && modality === "virtual" ? <span className="lp-badge">Horario de asesora por definir</span> : null}
+        {preview && modality === "virtual" && virtualMode === "ahora" ? <p>Fila de ejemplo. No hay una asesora conectada.</p> : null}
+        <FieldError id="virtual" />
+        {needsSede ? (
+          <fieldset className="vx-field">
+            <legend>Sede</legend>
+            <div className="vx-chips">
+              {["chico", "modelia", "restrepo", "venecia", "colina"]
+                .map((slug) => sedes.find((item) => item.slug === slug))
+                .filter((item): item is Sede => Boolean(item))
+                .map((item) => (
+                  <button key={item.slug} type="button" className={sede === item.slug ? "is-on" : ""} aria-pressed={sede === item.slug} onClick={() => setSede(item.slug)}>
+                    {item.name}
+                  </button>
+                ))}
+            </div>
+            <FieldError id="sede" />
+          </fieldset>
+        ) : null}
+        {modality && wantsSlot ? (
+          preview && slots.length ? (
+            <div>
+              <span className="lp-badge">Horarios de ejemplo</span>
+              <div className="vx-chips">
                 {days.map((item) => (
-                  <button key={item} type="button" className={day === item ? "is-on" : ""} aria-pressed={day === item} onClick={() => setDay(item)}>
+                  <button key={item} type="button" className={day === item ? "is-on" : ""} onClick={() => { setDay(item); setSlot(null); }}>
                     {slots.find((slotItem) => slotItem.day === item)?.dayLabel}
                   </button>
                 ))}
               </div>
-              <div className="lp-times" role="radiogroup" aria-label="Hora">
-                {slots
-                  .filter((item) => item.day === day)
-                  .map((item) => (
-                    <button key={item.id} type="button" role="radio" aria-checked={slot?.id === item.id} className={slot?.id === item.id ? "is-on" : ""} onClick={() => setSlot(item)}>
-                      {item.label}
-                    </button>
-                  ))}
+              <div className="vx-chips">
+                {slots.filter((item) => item.day === day).map((item) => (
+                  <button key={item.id} type="button" className={slot?.id === item.id ? "is-on" : ""} onClick={() => setSlot(item)}>
+                    {item.label}
+                  </button>
+                ))}
               </div>
-            </>
+            </div>
           ) : (
-            <p className="lp-blocked">Los horarios se publicarán al conectar el calendario. Aún no hay cupos.</p>
-          )}
-          {modality !== "presencial" ? <MeetPanel preview={preview} meet={meet} /> : null}
-          <div className="lp-actions">
-            <button type="button" className="btn-line" onClick={() => setStep(2)}>
-              Atrás
+            <p>Te confirmaremos la disponibilidad. No hay horarios publicados.</p>
+          )
+        ) : null}
+        <FieldError id="horario" />
+        {modality && modality !== "presencial" ? (
+          <aside className="lp-meet">
+            <p>Google Meet</p>
+            {preview ? <span className="lp-badge">Enlace por definir</span> : null}
+            <p>La videollamada usará Google Meet. El enlace no se crea hasta conectar la cuenta.</p>
+            <button type="button" disabled>
+              {nextMeetLabel(nextMeetSafe(meet))}
             </button>
-            <button
-              type="button"
-              className="btn-coral"
-              disabled={wantsSlot && !slot}
-              onClick={wantsSlot ? continueFromAgenda : () => setStep(4)}
-            >
-              Continuar
-            </button>
-          </div>
-        </div>
-      ) : null}
+          </aside>
+        ) : null}
+      </>
+    );
+  }
 
-      {step === 4 ? (
-        <div className="lp-step">
-          {preview ? (
-            <article className="lp-upsell">
-              <span className="lp-badge">Montos por definir</span>
-              <h3 className="display">Paga un monto por definir y recibe un paquete por definir en tratamientos</h3>
-              <p>La oferta se escribe cuando existan los valores. Aquí no hay un precio.</p>
-              <div className="lp-actions">
-                <button type="button" className={upsell ? "btn-coral" : "btn-line"} aria-pressed={upsell === true} onClick={() => setUpsell(true)}>
-                  Quiero verla después
-                </button>
-                <button type="button" className={upsell === false ? "btn-coral" : "btn-line"} aria-pressed={upsell === false} onClick={() => setUpsell(false)}>
-                  No, gracias
-                </button>
-              </div>
-            </article>
-          ) : (
-            <p className="lp-blocked">Esta oferta aún no está publicada.</p>
-          )}
-          <div className="lp-actions">
-            <button type="button" className="btn-line" onClick={() => setStep(3)}>
-              Atrás
-            </button>
-            <button type="button" className="btn-coral" disabled={preview && upsell === null} onClick={() => setStep(5)}>
-              Continuar
-            </button>
-          </div>
-        </div>
-      ) : null}
+  function StepFour() {
+    return (
+      <>
+        <ul className="vx-summary">
+          {summary.map(([label, value]) => (
+            <li key={label}>
+              <span>{label}</span>
+              <strong>{value}</strong>
+              <button type="button" onClick={() => go(label === "Sede" || label === "Modalidad" || label === "Horario" ? 2 : label === "Preferencias" ? 1 : 0)}>
+                Editar
+              </button>
+            </li>
+          ))}
+        </ul>
+        {picked.map((id) => {
+          const need = extras.find((item) => item.id === id);
+          if (!need || need.questions.length === 0) return null;
+          return (
+            <fieldset key={id} className="vx-field">
+              <legend>¿Tienes alguna otra necesidad? {need.name}</legend>
+              {need.questions.map((question) => {
+                const value = extraAnswers[id]?.[question.id] ?? empty();
+                return (
+                  <div key={question.id}>
+                    <p>{question.prompt}</p>
+                    <div className="vx-chips">
+                      {question.choices.map((choice) => {
+                        const on = value.opciones.includes(choice.label);
+                        return (
+                          <button
+                            key={choice.id}
+                            type="button"
+                            className={on ? "is-on" : ""}
+                            aria-pressed={on}
+                            onClick={() => {
+                              const opciones = on ? value.opciones.filter((item) => item !== choice.label) : [...value.opciones, choice.label];
+                              setExtraAnswers({ ...extraAnswers, [id]: { ...extraAnswers[id], [question.id]: { ...value, opciones } } });
+                            }}
+                          >
+                            {choice.label}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                );
+              })}
+              <FieldError id={`extra-${id}`} />
+            </fieldset>
+          );
+        })}
+        {preview ? (
+          <article className="lp-upsell">
+            <span className="lp-badge">Montos por definir</span>
+            <h4 className="display">Paga un monto por definir y recibe un paquete por definir</h4>
+            <div className="vx-chips">
+              <button type="button" className={upsell ? "is-on" : ""} aria-pressed={upsell === true} onClick={() => setUpsell(true)}>
+                Quiero verla después
+              </button>
+              <button type="button" className={upsell === false ? "is-on" : ""} aria-pressed={upsell === false} onClick={() => setUpsell(false)}>
+                No, gracias
+              </button>
+            </div>
+            <FieldError id="upsell" />
+          </article>
+        ) : (
+          <p>Esta oferta aún no está publicada.</p>
+        )}
+        <p>El pago en línea todavía no tiene pasarela.</p>
+        <button type="button" className="btn-coral" disabled>
+          Pago en línea próximamente
+        </button>
+        <label className="vx-field">
+          Nombre completo
+          <input autoComplete="name" value={patient.nombre} onChange={(event) => setPatient({ ...patient, nombre: event.target.value })} />
+          <FieldError id="nombre" />
+        </label>
+        <label className="vx-field">
+          Celular
+          <input autoComplete="tel" inputMode="tel" value={patient.celular} onChange={(event) => setPatient({ ...patient, celular: event.target.value })} />
+          <FieldError id="celular" />
+        </label>
+        <label className="vx-field">
+          Correo, si quieres
+          <input autoComplete="email" inputMode="email" value={patient.email} onChange={(event) => setPatient({ ...patient, email: event.target.value })} />
+        </label>
+        <label className="vx-check">
+          <input type="checkbox" checked={consent} onChange={(event) => setConsent(event.target.checked)} />
+          <span>
+            Autorizo el tratamiento de mis datos para que Luvania me contacte sobre esta valoración, según la{" "}
+            <Link href="/politicas/datos-personales">política de datos</Link>.
+          </span>
+        </label>
+        <FieldError id="consentimiento" />
+        <label className="absolute -left-[9999px]" aria-hidden="true">
+          Sitio web
+          <input value={website} tabIndex={-1} autoComplete="off" onChange={(event) => setWebsite(event.target.value)} />
+        </label>
+        {note ? <p role="status">{note}</p> : null}
+      </>
+    );
+  }
 
-      {step === 5 ? (
-        <div className="lp-step">
-          <p>El pago en línea todavía no tiene pasarela.</p>
-          <button type="button" className="btn-coral" disabled>
-            Pago en línea próximamente
-          </button>
-          {preview ? (
-            <button type="button" className="btn-line" onClick={save}>
-              Registrar solicitud en este navegador
+  function OneField({ question }: { question: LandingQuestion }) {
+    const current = answerOf(question.id).opciones[0];
+    return (
+      <fieldset className="vx-field" aria-describedby={errors[question.id] ? `${question.id}-error` : undefined}>
+        <legend>{question.prompt}</legend>
+        <div className="vx-chips">
+          {question.choices.map((choice) => (
+            <button key={choice.id} type="button" className={current === choice.label ? "is-on" : ""} aria-pressed={current === choice.label} onClick={() => chooseOne(question, choice.label)}>
+              {choice.label}
             </button>
-          ) : (
-            <p className="lp-blocked">El envío al CRM aún no está conectado. No guardamos estos datos.</p>
-          )}
-          {saved ? <p className="lp-saved">Quedó en la consola de este navegador. No se envió a ningún servicio.</p> : null}
-          <button type="button" className="btn-line" onClick={() => setStep(4)}>
-            Atrás
-          </button>
+          ))}
         </div>
-      ) : null}
+        <FieldError id={question.id} />
+      </fieldset>
+    );
+  }
+
+  function ManyField({ question }: { question: LandingQuestion }) {
+    const current = answerOf(question.id);
+    return (
+      <fieldset className="vx-field">
+        <legend>{question.prompt}</legend>
+        <div className="vx-chips">
+          {question.choices.map((choice) => {
+            const on = current.opciones.includes(choice.label);
+            return (
+              <button key={choice.id} type="button" className={on ? "is-on" : ""} aria-pressed={on} onClick={() => toggleMany(question, choice.label)}>
+                {choice.label}
+              </button>
+            );
+          })}
+        </div>
+        <label>
+          Si quieres agregar algo
+          <textarea rows={2} value={current.texto} onChange={(event) => setAnswers({ ...answers, [question.id]: { ...current, texto: event.target.value } })} />
+        </label>
+        <FieldError id={question.id} />
+      </fieldset>
+    );
+  }
+
+  if (frame === "dialog") return shell;
+  return (
+    <section id="valoracion" className="ficha-block vx-wrap">
+      {shell}
     </section>
   );
 }
 
-function Question({
-  question,
-  value,
-  onToggle,
-  onText,
-}: {
-  question: LandingQuestion;
-  value: Answer;
-  onToggle: (label: string) => void;
-  onText: (value: string) => void;
-}) {
-  return (
-    <fieldset className="lp-question">
-      <legend>{question.prompt}</legend>
-      <div className="lp-chips">
-        {question.choices.map((choice) => {
-          const on = value.opciones.includes(choice.label);
-          return (
-            <button key={choice.id} type="button" className={on ? "is-on" : ""} aria-pressed={on} onClick={() => onToggle(choice.label)}>
-              {choice.label}
-            </button>
-          );
-        })}
-      </div>
-      <label>
-        Si quieres agregar algo
-        <textarea value={value.texto} rows={2} onChange={(event) => onText(event.target.value)} />
-      </label>
-    </fieldset>
-  );
+function nextMeetSafe(meet: MeetStatus | null) {
+  return meet;
 }
 
-function MeetPanel({ preview, meet }: { preview: boolean; meet: MeetStatus | null }) {
+function nextMeetLabel(meet: MeetStatus | null) {
+  return meet ? "Meet pendiente de conectar" : "Abrir Meet";
+}
+
+function NeedMark({ id }: { id: string }) {
+  const path =
+    id === "manchas"
+      ? "M8 16c2-6 6-8 8-8s6 2 8 8-2 8-8 8-6-2-8-8Z"
+      : id === "flacidez"
+        ? "M6 18c4-6 8-6 12 0s8 6 12 0"
+        : id === "acne"
+          ? "M12 7a2 2 0 1 1 0 4 2 2 0 0 1 0-4ZM7 14a1.4 1.4 0 1 1 0 2.8A1.4 1.4 0 0 1 7 14ZM16 15a1.6 1.6 0 1 1 0 3.2 1.6 1.6 0 0 1 0-3.2Z"
+          : id === "grasa-localizada"
+            ? "M8 10h8v8H8Z"
+            : "M12 6v12M6 12h12";
   return (
-    <aside className="lp-meet">
-      <p className="lp-kicker">Google Meet</p>
-      {preview ? <span className="lp-badge">Enlace por definir</span> : null}
-      <p>La videollamada usará Google Meet. El enlace no se crea hasta conectar la cuenta.</p>
-      <button type="button" disabled>
-        {meet ? "Meet pendiente de conectar" : "Abrir Meet"}
-      </button>
-    </aside>
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d={path} />
+    </svg>
   );
 }

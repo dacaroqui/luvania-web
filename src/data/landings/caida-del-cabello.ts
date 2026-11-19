@@ -6,13 +6,19 @@ const landing: Landing = {
   treatmentSlug: "hair-loss",
   title: "Caída del cabello: valoración | Luvania",
   description: "Valoración de la caída del cabello en Luvania. El plan se confirma en la cita, sin un plazo prometido.",
+  heroKicker: "Valoración",
+  heroTitle: "Caída del cabello",
+  promoFilter: "related",
+  simulation: true,
+  showResults: true,
+  showDoctor: true,
   questions: [
     {
       id: "desde-cuando",
       prompt: "¿Hace cuánto empezaste a notar esta necesidad?",
       choices: [
         { id: "semanas", label: "Hace unas semanas" },
-        { id: "meses", label: "Unos meses" },
+        { id: "meses", label: "Hace unos meses" },
         { id: "ano", label: "Más de un año" },
         { id: "no-se", label: "No estoy segura" },
       ],
@@ -52,9 +58,9 @@ const landing: Landing = {
       id: "cuando",
       prompt: "¿Cuándo te gustaría empezar?",
       choices: [
-        { id: "semana", label: "Esta semana, urge" },
-        { id: "mes", label: "El próximo mes" },
-        { id: "tres", label: "En los próximos 3 meses" },
+        { id: "semana", label: "Lo antes posible" },
+        { id: "mes", label: "En el próximo mes" },
+        { id: "tres", label: "Solo estoy explorando" },
       ],
     },
     {

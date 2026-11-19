@@ -131,7 +131,7 @@ export function SiteHeader() {
             </svg>
           </button>
           <CartSlot />
-          <BookButton className="btn-coral magnetic max-lg:!hidden">Agenda tu valoración</BookButton>
+          <BookButton className="btn-coral max-lg:!hidden">Agenda tu valoración</BookButton>
           <button
             type="button"
             className="menu-toggle lg:hidden"
@@ -171,7 +171,7 @@ export function SiteHeader() {
             <div className="mega-side">
               <MegaSearch onNavigate={() => setMega(false)} inputId="mega-search" />
               <p className="mega-also">También puedes explorar</p>
-              <ExploreLinks onPick={() => setMega(false)} />
+              <ExploreLinks pathname={pathname} onPick={() => setMega(false)} />
             </div>
           </div>
         </div>
@@ -180,6 +180,9 @@ export function SiteHeader() {
       {menu ? (
         <nav id="menu-movil" className="mobile-nav" aria-label="Móvil">
           <MegaSearch onNavigate={() => setMenu(false)} inputId="mobile-search" />
+          <div onClick={() => setMenu(false)}>
+            <BookButton className="btn-coral w-full">Agenda tu valoración</BookButton>
+          </div>
           <Link href="/tratamientos" onClick={() => setMenu(false)} className="mobile-link">
             Ver todos los tratamientos
           </Link>
@@ -198,9 +201,8 @@ export function SiteHeader() {
           <Link href="/sedes" onClick={() => setMenu(false)} className="mobile-link">Sedes</Link>
           <Link href="/sobre-luvania" onClick={() => setMenu(false)} className="mobile-link">Sobre Luvania</Link>
           <Link href="/blog" onClick={() => setMenu(false)} className="mobile-link">Blog</Link>
-          <Link href="/promociones" onClick={() => setMenu(false)} className="mobile-link">Promociones</Link>
-          <Link href="/franquicias" onClick={() => setMenu(false)} className="mobile-link">Franquicias</Link>
-          <Link href="/pqrs" onClick={() => setMenu(false)} className="mobile-link">PQRS</Link>
+          <p className="mega-also">También puedes explorar</p>
+          <ExploreLinks pathname={pathname} onPick={() => setMenu(false)} />
         </nav>
       ) : null}
     </header>
@@ -276,7 +278,7 @@ function LinkList({ links, onPick }: { links: { href: string; name: string }[]; 
   );
 }
 
-function ExploreLinks({ onPick }: { onPick: () => void }) {
+function ExploreLinks({ pathname, onPick }: { pathname: string; onPick: () => void }) {
   const cards = [
     { href: "/promociones", name: "Promociones", image: "/stock/faciales.webp", alt: "" },
     { href: "/franquicias", name: "Franquicias", image: "/stock/experiencia.webp", alt: "" },
@@ -284,17 +286,25 @@ function ExploreLinks({ onPick }: { onPick: () => void }) {
   ];
   return (
     <ul className="mega-explore">
-      {cards.map((card) => (
-        <li key={card.href}>
-          <Link href={card.href} onClick={onPick}>
-            <span>{card.name}</span>
-            <span className="mega-chevron" aria-hidden="true">›</span>
-            {/* provisional: stock */}
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={card.image} alt={card.alt} />
-          </Link>
-        </li>
-      ))}
+      {cards.map((card) => {
+        const current = pathname === card.href;
+        return (
+          <li key={card.href}>
+            <Link
+              href={card.href}
+              className={current ? "glass-card is-current" : "glass-card"}
+              aria-current={current ? "page" : undefined}
+              onClick={onPick}
+            >
+              <span>{card.name}</span>
+              <span className="mega-chevron" aria-hidden="true">›</span>
+              {/* provisional: stock */}
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={card.image} alt={card.alt} />
+            </Link>
+          </li>
+        );
+      })}
     </ul>
   );
 }

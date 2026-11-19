@@ -15,7 +15,9 @@ export type CrmPayload = {
   paciente: { nombre: string; celular: string; email: string | null };
   fuente: { utm_source: string | null; utm_campaign: string | null; path: string };
   necesidad: string;
+  origen: { id: string; name: string } | null;
   necesidades: CrmNeed[];
+  confirmacion: "solicitud-recibida" | "cita-confirmada";
   modalidad: { tipo: "presencial" | "virtual" | "hibrida"; virtual: "ahora" | "agendar" | null };
   slot: { id: string; start: string; end: string; reservationId: string } | null;
   sede: string | null;

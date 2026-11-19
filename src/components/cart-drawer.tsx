@@ -5,6 +5,7 @@ import type { AgendaSede } from "@/data/types";
 import { cop, waLink } from "@/lib/format";
 import Link from "next/link";
 import { useEffect, useId, useRef } from "react";
+import { CloseButton } from "./close-button";
 import { useCart } from "./cart-store";
 
 export function CartDrawer({ sedes }: { sedes: AgendaSede[] }) {
@@ -54,9 +55,7 @@ export function CartDrawer({ sedes }: { sedes: AgendaSede[] }) {
     >
       <header className="cart-bar">
         <h2 id={titleId}>Carrito</h2>
-        <button type="button" className="cart-close" onClick={() => cart.setOpen(false)}>
-          Cerrar
-        </button>
+        <CloseButton onClick={() => cart.setOpen(false)} />
       </header>
       {items.length === 0 ? (
         <div className="cart-empty">
@@ -66,7 +65,7 @@ export function CartDrawer({ sedes }: { sedes: AgendaSede[] }) {
           </Link>
         </div>
       ) : (
-        <ul className="cart-list">
+        <ul className="cart-list thin-scroll">
           {items.map(({ line, product }) => (
             <li key={line.slug}>
               {/* eslint-disable-next-line @next/next/no-img-element */}

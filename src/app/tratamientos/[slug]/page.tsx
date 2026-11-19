@@ -200,7 +200,7 @@ export default async function TratamientoPage({ params }: { params: Promise<Para
             <h1 className="display">{treatment.name}</h1>
             {summary ? <p className="ficha-summary">{summary}</p> : null}
             <div className="ficha-hero-actions">
-              <BookButton tratamiento={treatment.name} promo={promoLabel}>Agenda tu valoración</BookButton>
+              <BookButton tratamiento={treatment.name} tratamientoId={treatment.slug} necesidad={treatment.needs[0]} promo={promoLabel}>Agenda tu valoración</BookButton>
               {showHow ? (
                 <a className="ficha-how" href="#como-funciona">
                   <span className="ficha-play" aria-hidden="true">
@@ -251,7 +251,7 @@ export default async function TratamientoPage({ params }: { params: Promise<Para
                 <p className="ficha-validity">Sujeto a valoración y vigencia.</p>
               </>
             ) : null}
-            <BookButton className="btn-coral ficha-book" tratamiento={treatment.name} promo={promoLabel}>
+            <BookButton className="btn-coral ficha-book" tratamiento={treatment.name} tratamientoId={treatment.slug} necesidad={treatment.needs[0]} promo={promoLabel}>
               Agenda tu valoración
             </BookButton>
             {offer ? <FichaAddButton slug={treatment.slug} nombre={treatment.name} /> : null}
@@ -464,7 +464,7 @@ export default async function TratamientoPage({ params }: { params: Promise<Para
 
       <div className="ficha-mobile-bar">
         {offer ? <p className="ficha-mobile-price">{cop(offer.priceNow)}</p> : null}
-        <BookButton className="btn-coral" tratamiento={treatment.name} promo={promoLabel}>
+        <BookButton className="btn-coral" tratamiento={treatment.name} tratamientoId={treatment.slug} necesidad={treatment.needs[0]} promo={promoLabel}>
           Agenda tu valoración
         </BookButton>
       </div>

@@ -9,7 +9,7 @@ import { CartProvider } from "./cart-store";
 import { DemoCartProvider } from "./demo-cart";
 import { SedeGate } from "./sede-gate";
 
-type AgendaRequest = { tratamiento?: string; sede?: string; promo?: string };
+type AgendaRequest = { tratamiento?: string; tratamientoId?: string; necesidad?: string; sede?: string; promo?: string };
 
 type AgendaApi = {
   openAgenda: (request?: AgendaRequest) => void;
@@ -36,11 +36,15 @@ export function Providers({
 }) {
   const [open, setOpen] = useState(false);
   const [tratamiento, setTratamiento] = useState<string | undefined>();
+  const [tratamientoId, setTratamientoId] = useState<string | undefined>();
+  const [necesidad, setNecesidad] = useState<string | undefined>();
   const [sede, setSede] = useState<string | undefined>();
   const [promo, setPromo] = useState<string | undefined>();
 
   const openAgenda = useCallback((request?: AgendaRequest) => {
     setTratamiento(request?.tratamiento);
+    setTratamientoId(request?.tratamientoId);
+    setNecesidad(request?.necesidad);
     setSede(request?.sede);
     setPromo(request?.promo);
     setOpen(true);
@@ -72,7 +76,10 @@ export function Providers({
           <SedeGate sedes={sedes} />
           <AgendaSheet
             open={open}
+            preview={demoCart}
             tratamientoInicial={tratamiento}
+            tratamientoId={tratamientoId}
+            necesidadId={necesidad}
             sedeInicial={sede}
             promoInicial={promo}
             sedes={sedes}

@@ -10,6 +10,7 @@ import { matchCatalog } from "@/lib/search";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useId, useMemo, useRef, useState } from "react";
+import { CloseButton } from "./close-button";
 import { TreatmentMedia } from "./treatment-media";
 
 const VISIBLE = 6;
@@ -192,14 +193,19 @@ export function CatalogBrowser({ products }: { products: CommerceProduct[] }) {
         </div>
       </div>
 
-      <dialog ref={dialog} className="catalog-sheet" aria-label="Filtros">
+      <dialog
+        ref={dialog}
+        className="catalog-sheet"
+        aria-label="Filtros"
+        onClick={(event) => {
+          if (event.target === dialog.current) dialog.current?.close();
+        }}
+      >
         <div className="catalog-sheet-bar">
           <p>Filtros</p>
-          <button type="button" onClick={() => dialog.current?.close()}>
-            Cerrar
-          </button>
+          <CloseButton onClick={() => dialog.current?.close()} />
         </div>
-        <div className="catalog-sheet-body">
+        <div className="catalog-sheet-body thin-scroll">
           <FilterStack
             facets={facets}
             necesidad={necesidad}

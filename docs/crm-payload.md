@@ -13,6 +13,8 @@ La landing `/lp/[necesidad]` arma este objeto al terminar el wizard. Hoy no sale
   "paciente": { "nombre": "", "celular": "", "email": null },
   "fuente": { "utm_source": null, "utm_campaign": null, "path": "/lp/caida-del-cabello" },
   "necesidad": "caida-cabello",
+  "origen": { "id": "hair-loss", "name": "Caída del cabello" },
+  "confirmacion": "solicitud-recibida",
   "necesidades": [
     {
       "id": "caida-cabello",
@@ -39,7 +41,10 @@ La landing `/lp/[necesidad]` arma este objeto al terminar el wizard. Hoy no sale
 | --- | --- |
 | `paciente` | Nombre, celular y correo opcional. Se piden una sola vez, en la necesidad principal. |
 | `fuente` | `utm_source`, `utm_campaign` y la ruta. Si el anuncio no trae UTM, van en `null`. |
-| `necesidad` | Id de la landing (`caida-cabello`). |
+| `necesidad` | Id de la landing (`caida-cabello`). En el modal sin ficha de origen es `valoracion`. |
+| `origen` | Id y nombre del tratamiento desde el que se abrió la valoración. `null` si no hay ficha. |
+| `confirmacion` | `solicitud-recibida` mientras el equipo no confirme. `cita-confirmada` solo si un agendador real confirma. Un id `ejemplo-…` nunca confirma. |
+| `zona` | Respuesta `zona-general` (Rostro, Cuerpo, Cabello, No lo sé). Si hay caída o Cabello, también `zona` del cuero. |
 | `necesidades` | La principal y las otras que la persona marcó. Cada una trae sus respuestas. Si eligió «No, continuar», el array solo tiene la principal. |
 | `respuestas` | Id estable, texto de la pregunta, chips elegidos y el campo libre. |
 | `modalidad` | `presencial`, `virtual` o `hibrida`. En virtual, `virtual` es `ahora` o `agendar`. |
@@ -53,6 +58,20 @@ La landing `/lp/[necesidad]` arma este objeto al terminar el wizard. Hoy no sale
 `AgendaProvider` (`src/lib/agenda/provider.ts`) expone `getSlots` y `reserve`. El mock solo corre fuera de producción y marca los cupos como ejemplo. Para conectarlo a Google Calendar o al CRM, se reemplaza esa implementación. La reserva de videollamada deja `meet.provider = "google-meet"` y `meet.url = null`: la interfaz está, el enlace no se inventa.
 
 `PaymentProvider` (`src/lib/payment/provider.ts`) expone `createIntent`. Hoy devuelve `no-disponible` y el botón de la landing permanece deshabilitado.
+
+## De los campos anteriores a los cuatro pasos
+
+| Antes | Ahora |
+| --- | --- |
+| Seis preguntas de la caída en un solo paso | `desde-cuando` y `zona` en el paso 1; `probado`, `satisfecha`, `cuando` y `decision` en el paso 2 |
+| «Unos meses» | «Hace unos meses» (id `meses`) |
+| «Esta semana, urge» | «Lo antes posible» (id `semana`) |
+| «En los próximos 3 meses» | «Solo estoy explorando» (id `tres`) |
+| Nombre, celular y correo al inicio | Paso 4. El correo sigue opcional |
+| Otras necesidades, modalidad, agenda, upsell y pago en pasos propios | Paso 3 (sede, modalidad, agenda, Meet) y paso 4 (otras necesidades, upsell, pago, datos) |
+| — | Nuevos: `zona-general`, `antes`, `resultado`, `origen`, `confirmacion` |
+
+El texto del consentimiento enlaza a `/politicas/datos-personales` y está pendiente de validación legal. No es el texto definitivo.
 
 ## Al conectar el CRM
 

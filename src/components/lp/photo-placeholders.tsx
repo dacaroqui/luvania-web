@@ -1,34 +1,40 @@
-"use client";
-
-import { CompareSlider } from "./compare-slider";
-
 export function PhotoPlaceholders() {
   return (
-    <section className="lp-block" aria-labelledby="antes-despues">
+    <section className="ficha-card lp-frames" aria-labelledby="antes-despues">
       <div className="lp-block-head">
         <h2 id="antes-despues" className="display">
           Antes y después
         </h2>
         <span className="lp-badge">Foto real autorizada pendiente</span>
       </div>
-      <CompareSlider
-        label="Comparar el antes y el después cuando existan las fotos autorizadas"
-        before={<div className="lp-photo-ph">Antes</div>}
-        after={<div className="lp-photo-ph is-after">Después</div>}
-      />
+      <div className="lp-frame-row">
+        <figure>
+          <FrameIcon />
+          <figcaption>Antes</figcaption>
+        </figure>
+        <figure className="is-after">
+          <FrameIcon />
+          <figcaption>Después</figcaption>
+        </figure>
+      </div>
     </section>
   );
 }
 
 export function DoctorPlaceholder() {
   return (
-    <div className="lp-doctor">
-      <svg viewBox="0 0 160 220" aria-hidden="true">
-        <path d="M80 18a22 22 0 1 1 0 44 22 22 0 0 1 0-44Z" />
-        <path d="M48 78c8-14 20-20 32-20s24 6 32 20l18 78c2 10-6 18-16 18H46c-10 0-18-8-16-18l18-78Z" />
-        <path d="M70 96h20M80 88v28" />
-      </svg>
+    <div className="lp-doctor glass">
+      <FrameIcon />
       <span className="lp-badge">Foto real pendiente</span>
     </div>
+  );
+}
+
+function FrameIcon() {
+  return (
+    <svg viewBox="0 0 64 64" aria-hidden="true">
+      <circle cx="32" cy="24" r="8" />
+      <path d="M18 50c2-8 8-12 14-12s12 4 14 12" />
+    </svg>
   );
 }

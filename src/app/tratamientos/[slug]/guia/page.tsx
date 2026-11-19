@@ -198,7 +198,7 @@ function TreatmentBridge({
   treatment,
   summary,
 }: {
-  treatment: { slug: string; name: string };
+  treatment: { slug: string; name: string; needs?: string[] };
   summary: string;
 }) {
   return (
@@ -210,7 +210,7 @@ function TreatmentBridge({
       </div>
       <div className="guia-bridge-actions">
         <Link href={`/tratamientos/${treatment.slug}`}>Conoce el tratamiento</Link>
-        <BookButton tratamiento={treatment.name}>Agenda tu valoración</BookButton>
+        <BookButton tratamiento={treatment.name} tratamientoId={treatment.slug} necesidad={treatment.needs?.[0]}>Agenda tu valoración</BookButton>
       </div>
     </aside>
   );

@@ -39,6 +39,13 @@ export function CompareSlider({
       </div>
       <span className="compare-tag is-before">{beforeLabel}</span>
       <span className="compare-tag is-after">{afterLabel}</span>
+      <span className="compare-handle" style={{ left: `${pos}%` }} aria-hidden="true">
+        <i>
+          <svg viewBox="0 0 24 24">
+            <path d="M9 7 5 12l4 5M15 7l4 5-4 5" />
+          </svg>
+        </i>
+      </span>
       <input
         className="compare-range"
         type="range"
