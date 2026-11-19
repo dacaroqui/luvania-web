@@ -1,10 +1,11 @@
-import { pageMeta } from "@/lib/seo";
+import { clampMeta, pageMeta } from "@/lib/seo";
 import Link from "next/link";
 
 export const metadata = pageMeta({
   title: "Blog | Luvania",
-  description: "El blog de Luvania está por abrir. Todavía no hay artículos publicados.",
+  description: clampMeta("El blog de Luvania está por abrir. Todavía no hay artículos publicados."),
   path: "/blog",
+  index: false,
 });
 
 export default function BlogPage() {

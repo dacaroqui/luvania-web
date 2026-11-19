@@ -5,6 +5,7 @@ import { TreatmentView } from "@/components/treatment-view";
 import { FichaAddButton, FichaTabs } from "@/components/treatment-ficha";
 import { Valoracion } from "@/components/valoracion";
 import { getTreatment, isIndexable, relatedTreatments, treatments } from "@/data";
+import { getGuide } from "@/data/guides";
 import { discountPercent, offerForTreatment } from "@/data/offers";
 import { priceCaption, purchaseTerms } from "@/data/purchase";
 import { resolveSedes } from "@/data/sedes";
@@ -13,7 +14,9 @@ import { especialidadBySlug, needById, zoneById } from "@/data/taxonomy";
 import { cop } from "@/lib/format";
 import { needPages, zonePages } from "@/lib/hubs";
 import { publicText } from "@/lib/public-copy";
+import { clinicalVisible } from "@/lib/review";
 import { pageMeta } from "@/lib/seo";
+import { treatmentSeo } from "@/lib/treatment-seo";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -31,16 +34,16 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
   const { slug } = await params;
   const treatment = getTreatment(slug);
   if (!treatment) return {};
+  const seo = treatmentSeo(treatment);
   return {
     ...pageMeta({
-      title: `${treatment.name} en Bogotá | Luvania`,
-      description: publicText(
-        treatment.status === "VERIFIED" ? treatment.summary : treatment.neutralSummary,
-        treatment.name,
-      ),
+      title: seo.title,
+      description: seo.description,
       path: `/tratamientos/${treatment.slug}`,
+      image: treatment.image,
+      imageAlt: treatment.name,
+      index: isIndexable(treatment),
     }),
-    robots: isIndexable(treatment) ? { index: true, follow: true } : { index: false, follow: true },
   };
 }
 
@@ -118,6 +121,15 @@ export default async function TratamientoPage({ params }: { params: Promise<Para
   }));
   const sedes = resolveSedes().map((sede) => ({ name: sede.name, href: `/sedes/${sede.slug}` }));
   const related = verified ? relatedTreatments(treatment).filter((item) => item.status === "VERIFIED").slice(0, 3) : [];
+  const guide = getGuide(treatment.slug);
+  const showGuide = Boolean(guide && clinicalVisible(guide.medicalReview));
+  const clinicalOrder = ["procedimiento", "preparacion", "cuidados", "efectos"];
+  const clinicalCards =
+    showGuide && guide
+      ? clinicalOrder
+          .map((id) => guide.blocks.find((block) => block.id === id && block.card))
+          .filter((block): block is NonNullable<typeof block> => Boolean(block))
+      : [];
   const heroBenefits = beneficios.slice(0, 4);
 
   const sections = [
@@ -125,6 +137,11 @@ export default async function TratamientoPage({ params }: { params: Promise<Para
     queEs ? { id: "que-es", label: "Qué es" } : null,
     beneficios.length ? { id: "beneficios", label: "Beneficios" } : null,
     paraQuien ? { id: "para-quien", label: "¿Para quién es?" } : null,
+    clinicalCards.some((block) => block.id === "procedimiento") ? { id: "procedimiento", label: "Procedimiento" } : null,
+    sesiones || duracion ? { id: "sesiones", label: "Sesiones" } : null,
+    clinicalCards.some((block) => block.id === "preparacion") ? { id: "preparacion", label: "Antes" } : null,
+    clinicalCards.some((block) => block.id === "cuidados") ? { id: "cuidados", label: "Después" } : null,
+    clinicalCards.some((block) => block.id === "efectos") ? { id: "efectos", label: "Efectos" } : null,
     riesgos ? { id: "riesgos", label: "Riesgos" } : null,
     faqs.length ? { id: "preguntas", label: "Preguntas frecuentes" } : null,
   ].filter((item): item is { id: string; label: string } => Boolean(item));
@@ -251,6 +268,7 @@ export default async function TratamientoPage({ params }: { params: Promise<Para
               </li>
               {sesiones ? (
                 <li>
+                  <span aria-hidden="true" />
                   <div>
                     <h2>Sesiones</h2>
                     <p>{sesiones}</p>
@@ -259,6 +277,7 @@ export default async function TratamientoPage({ params }: { params: Promise<Para
               ) : null}
               {duracion ? (
                 <li>
+                  <span aria-hidden="true" />
                   <div>
                     <h2>Duración</h2>
                     <p>{duracion}</p>
@@ -283,6 +302,7 @@ export default async function TratamientoPage({ params }: { params: Promise<Para
               <div>
                 <h2 className="display">Qué es</h2>
                 <p>{queEs}</p>
+                {showGuide ? <GuideLink slug={treatment.slug} anchor="que-es" /> : null}
               </div>
               {treatment.image ? (
                 <figure>
@@ -319,9 +339,58 @@ export default async function TratamientoPage({ params }: { params: Promise<Para
                 <section id="riesgos" className="ficha-card ficha-card-soft">
                   <h2 className="display">Riesgos y contraindicaciones</h2>
                   <p>{riesgos}</p>
+                  {showGuide ? <GuideLink slug={treatment.slug} anchor="efectos" /> : null}
                 </section>
               ) : null}
             </div>
+          ) : null}
+
+          {clinicalCards
+            .filter((block) => block.id === "procedimiento")
+            .map((block) => (
+              <section key={block.id} id="procedimiento" className="ficha-card ficha-card-soft">
+                <h2 className="display">Cómo es el procedimiento</h2>
+                <p>{block.card}</p>
+                <GuideLink slug={treatment.slug} anchor={block.id} />
+              </section>
+            ))}
+
+          {sesiones || duracion ? (
+            <section id="sesiones" className="ficha-card">
+              <h2 className="display">Sesiones y duración</h2>
+              {sesiones ? <p>{sesiones}</p> : null}
+              {duracion ? <p>{duracion}</p> : null}
+              {showGuide ? <GuideLink slug={treatment.slug} anchor="sesiones" /> : null}
+            </section>
+          ) : null}
+
+          {clinicalCards
+            .filter((block) => block.id !== "procedimiento")
+            .map((block) => (
+              <section key={block.id} id={block.id} className="ficha-card">
+                <h2 className="display">
+                  {block.id === "preparacion"
+                    ? "Cuidados antes"
+                    : block.id === "cuidados"
+                      ? "Cuidados después"
+                      : "Efectos y contraindicaciones"}
+                </h2>
+                <p>{block.card}</p>
+                {guide?.medicalReview === "pendiente" ? <p className="ficha-review-note">Contenido en revisión médica</p> : null}
+                <GuideLink slug={treatment.slug} anchor={block.id} />
+              </section>
+            ))}
+
+          {showGuide ? (
+            <aside className="ficha-guide-cta">
+              <p className="ficha-guide-kicker">Para leer con calma</p>
+              <h2 className="display">Lee la guía completa de {treatment.name}</h2>
+              <p>El artículo largo reúne el archivo de la ficha anterior, reescrito sin promesas de resultado, y lo que ya está publicado aquí.</p>
+              {guide?.medicalReview === "pendiente" ? <p className="ficha-review-note">Contenido en revisión médica</p> : null}
+              <Link href={`/tratamientos/${treatment.slug}/guia`}>
+                Abrir la guía <span aria-hidden="true">↗</span>
+              </Link>
+            </aside>
           ) : null}
 
           {faqs.length ? (
@@ -356,7 +425,7 @@ export default async function TratamientoPage({ params }: { params: Promise<Para
                   <Link href={`/tratamientos/${item.slug}`} className="ficha-related-card">
                     {item.image ? (
                       // eslint-disable-next-line @next/next/no-img-element
-                      <img src={item.image} alt="" />
+                      <img src={item.image} alt={item.name} />
                     ) : (
                       <span className="ficha-related-empty" />
                     )}
@@ -382,6 +451,14 @@ export default async function TratamientoPage({ params }: { params: Promise<Para
         </BookButton>
       </div>
     </main>
+  );
+}
+
+function GuideLink({ slug, anchor }: { slug: string; anchor: string }) {
+  return (
+    <p className="ficha-guide-more">
+      <Link href={`/tratamientos/${slug}/guia#${anchor}`}>Leer esta parte en la guía</Link>
+    </p>
   );
 }
 

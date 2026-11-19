@@ -3,12 +3,12 @@ import { Breadcrumbs, breadcrumbLd } from "@/components/breadcrumbs";
 import { FlorLuvania } from "@/components/flor-luvania";
 import { JsonLd } from "@/components/json-ld";
 import { commerceCatalog } from "@/data/commerce";
-import { pageMeta } from "@/lib/seo";
+import { clampMeta, pageMeta } from "@/lib/seo";
 import { Suspense } from "react";
 
 export const metadata = pageMeta({
   title: "Tratamientos estéticos en Bogotá | Luvania",
-  description: "Catálogo publicado de Luvania. Filtra por necesidad, zona o especialidad, o busca por nombre.",
+  description: clampMeta("Catálogo publicado de Luvania. Filtra por necesidad, zona o especialidad, o busca por nombre."),
   path: "/tratamientos",
 });
 

@@ -6,7 +6,7 @@ import { BookButton } from "./book-button";
 
 export function StickyCta() {
   const path = usePathname();
-  const isFicha = /^\/tratamientos\/[^/]+$/.test(path);
+  const isFicha = /^\/tratamientos\/[^/]+(\/guia)?$/.test(path);
   const [show, setShow] = useState(path !== "/" && !isFicha);
 
   useEffect(() => {

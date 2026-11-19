@@ -2,12 +2,12 @@ import { Breadcrumbs, breadcrumbLd } from "@/components/breadcrumbs";
 import { JsonLd } from "@/components/json-ld";
 import { PqrsForm } from "@/components/pqrs-form";
 import { site } from "@/data/site";
-import { pageMeta } from "@/lib/seo";
+import { clampMeta, pageMeta } from "@/lib/seo";
 
 export const metadata = pageMeta({
   title: "Peticiones, quejas y reclamos | Luvania",
   description:
-    "Radica una petición, queja, reclamo o recurso ante Luvania. La solicitud se arma en tu correo, sin pasar por un servidor nuestro.",
+    clampMeta("Radica una petición, queja, reclamo o recurso ante Luvania. La solicitud se arma en tu correo, sin pasar por un servidor nuestro."),
   path: "/pqrs",
 });
 

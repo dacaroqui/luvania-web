@@ -3,7 +3,7 @@ import { Breadcrumbs, breadcrumbLd } from "@/components/breadcrumbs";
 import { JsonLd } from "@/components/json-ld";
 import { TreatmentCard } from "@/components/treatment-card";
 import { forNeed, needPages } from "@/lib/hubs";
-import { pageMeta } from "@/lib/seo";
+import { clampMeta, pageMeta } from "@/lib/seo";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
@@ -17,9 +17,16 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
   const { slug } = await params;
   const need = needPages.find((item) => item.slug === slug);
   if (!need) return {};
+  const titles: Record<string, string> = {
+    acne: "Acné: cómo se valora | Luvania",
+    ojeras: "Ojeras y mirada cansada | Luvania",
+    celulitis: "Celulitis en piernas y glúteos | Luvania",
+    "caida-cabello": "Caída del cabello: primeras pistas | Luvania",
+    manchas: "Manchas: por dónde empezar | Luvania",
+  };
   return pageMeta({
-    title: `${need.name} en Bogotá | Luvania`,
-    description: need.text,
+    title: titles[need.slug] ?? `${need.name} en Bogotá | Luvania`,
+    description: clampMeta(`${need.name} en Luvania. ${need.text}`),
     path: `/necesidades/${need.slug}`,
   });
 }

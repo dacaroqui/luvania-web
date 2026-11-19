@@ -3,7 +3,7 @@ import { JsonLd } from "@/components/json-ld";
 import { BookButton } from "@/components/book-button";
 import { TreatmentCard } from "@/components/treatment-card";
 import { forZone, zonePages } from "@/lib/hubs";
-import { pageMeta } from "@/lib/seo";
+import { clampMeta, pageMeta } from "@/lib/seo";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
@@ -18,8 +18,8 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
   const zone = zonePages.find((item) => item.slug === slug);
   if (!zone) return {};
   return pageMeta({
-    title: `${zone.name} en Bogotá | Luvania`,
-    description: zone.text,
+    title: zone.slug === "intima" ? "Zona íntima en Bogotá | Luvania" : `Zona ${zone.name} en Bogotá | Luvania`,
+    description: clampMeta(`Tratamientos de ${zone.name} en Luvania. ${zone.text}`),
     path: `/zonas/${zone.slug}`,
   });
 }

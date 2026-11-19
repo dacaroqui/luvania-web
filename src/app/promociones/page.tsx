@@ -4,12 +4,12 @@ import { JsonLd } from "@/components/json-ld";
 import { OfferCard } from "@/components/offer-card";
 import { offers } from "@/data/offers";
 import { shopProduct } from "@/data/shop";
-import { pageMeta } from "@/lib/seo";
+import { clampMeta, pageMeta } from "@/lib/seo";
 
 export const metadata = pageMeta({
   title: "Promociones de tratamientos estéticos | Luvania",
   description:
-    "Ofertas de tratamientos en Luvania, con el precio de referencia y el precio actual. Sujetas a valoración y vigencia.",
+    clampMeta("Ofertas de tratamientos en Luvania, con el precio de referencia y el precio actual. Sujetas a valoración y vigencia."),
   path: "/promociones",
 });
 

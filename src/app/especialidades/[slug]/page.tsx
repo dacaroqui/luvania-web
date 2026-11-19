@@ -3,7 +3,7 @@ import { JsonLd } from "@/components/json-ld";
 import { TreatmentCard } from "@/components/treatment-card";
 import { treatments } from "@/data";
 import { especialidadBySlug, especialidades } from "@/data/taxonomy";
-import { pageMeta } from "@/lib/seo";
+import { clampMeta, pageMeta } from "@/lib/seo";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
@@ -18,8 +18,8 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
   const item = especialidadBySlug(slug);
   if (!item) return {};
   return pageMeta({
-    title: `${item.name} en Bogotá | Luvania`,
-    description: item.description,
+    title: `${item.name} | Luvania Bogotá`,
+    description: clampMeta(item.description),
     path: `/especialidades/${item.slug}`,
   });
 }

@@ -1,12 +1,12 @@
 import { resolveSedes } from "@/data/sedes";
 import { site } from "@/data/site";
 import { especialidades } from "@/data/taxonomy";
-import { pageMeta } from "@/lib/seo";
+import { clampMeta, pageMeta } from "@/lib/seo";
 import Link from "next/link";
 
 export const metadata = pageMeta({
   title: "Sobre Luvania | Clínica estética en Bogotá",
-  description: "Luvania Innovación Estética es una marca de CIFES, con cinco sedes en Bogotá.",
+  description: clampMeta("Luvania Innovación Estética es una marca de CIFES, con cinco sedes en Bogotá."),
   path: "/sobre-luvania",
 });
 

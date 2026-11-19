@@ -2,12 +2,12 @@ import { Breadcrumbs, breadcrumbLd } from "@/components/breadcrumbs";
 import { JsonLd } from "@/components/json-ld";
 import { site } from "@/data/site";
 import { franchiseLink } from "@/lib/whatsapp";
-import { pageMeta } from "@/lib/seo";
+import { clampMeta, pageMeta } from "@/lib/seo";
 
 export const metadata = pageMeta({
   title: "Franquicias Luvania en Colombia",
   description:
-    "Información para franquiciarte con Luvania, marca de CIFES. La conversación sigue por WhatsApp con el equipo de expansión.",
+    clampMeta("Información para franquiciarte con Luvania, marca de CIFES. La conversación sigue por WhatsApp con el equipo de expansión."),
   path: "/franquicias",
 });
 

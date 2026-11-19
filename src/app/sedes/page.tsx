@@ -3,13 +3,13 @@ import { JsonLd } from "@/components/json-ld";
 import { sedes } from "@/data/sedes";
 import { sedeAlt, sedePhoto } from "@/data/sede-photos";
 import { isInternal } from "@/lib/public-copy";
-import { pageMeta } from "@/lib/seo";
+import { clampMeta, pageMeta } from "@/lib/seo";
 import Link from "next/link";
 
 export const metadata = pageMeta({
   title: "Sedes de Luvania en Bogotá",
   description:
-    "Restrepo, Modelia, Chicó, Venecia y Colina. Direcciones, horarios y WhatsApp de cada clínica Luvania.",
+    clampMeta("Restrepo, Modelia, Chicó, Venecia y Colina. Direcciones, horarios y WhatsApp de cada clínica Luvania."),
   path: "/sedes",
 });
 

@@ -3293,3 +3293,56 @@ body:has(dialog[open]) .ficha-mobile-bar {
     top: 8.6rem;
   }
 }
+
+.ficha-guide-more { margin: 0.85rem 0 0; }
+.ficha-guide-more a { color: var(--color-clay); font-weight: 700; }
+.ficha-review-note {
+  display: inline-block;
+  margin: 0.7rem 0 0;
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  background: #f6e7c8;
+  color: var(--color-ink);
+  font-size: 0.78rem;
+}
+.ficha-guide-cta {
+  margin-top: 1.25rem;
+  padding: 1.4rem 1.3rem;
+  border-radius: 1.4rem;
+  background: var(--color-ink);
+  color: var(--color-cream);
+}
+.ficha-guide-cta h2 { margin: 0.2rem 0 0.45rem; font-size: clamp(1.8rem, 3vw, 2.6rem); }
+.ficha-guide-cta p { max-width: 40rem; }
+.ficha-guide-kicker { letter-spacing: 0.16em; text-transform: uppercase; font-size: 0.72rem; font-weight: 700; }
+.ficha-guide-cta a { color: var(--color-peach); font-weight: 700; }
+
+.guia-hero { padding: 1.4rem 0 1.8rem; }
+.guia-wrap { width: min(74rem, calc(100% - 2rem)); margin-inline: auto; }
+.guia-kicker { letter-spacing: 0.16em; text-transform: uppercase; font-size: 0.75rem; font-weight: 700; color: var(--color-clay); }
+.guia-hero h1 { margin: 0.35rem 0 0.6rem; font-size: clamp(2.4rem, 6vw, 4.4rem); max-width: 16ch; }
+.guia-lead { max-width: 42rem; }
+.guia-back { margin-top: 0.8rem; }
+.guia-back a { font-weight: 700; }
+.guia-layout { display: grid; gap: 1.5rem; padding-bottom: 4rem; }
+.guia-toc {
+  padding: 1rem 1rem 0.4rem;
+  border-radius: 1.2rem;
+  background: white;
+}
+.guia-toc p { margin: 0 0 0.4rem; font-size: 0.75rem; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 700; }
+.guia-toc ol { margin: 0; padding: 0; list-style: none; }
+.guia-toc a { display: block; padding: 0.45rem 0; border-top: 1px solid rgba(26, 26, 26, 0.08); }
+.guia-body section { margin-top: 2rem; }
+.guia-body h2 { font-size: clamp(1.8rem, 3vw, 2.5rem); margin-bottom: 0.6rem; }
+.guia-body p { max-width: 42rem; }
+.guia-links, .guia-related { margin-top: 2.4rem; padding-top: 1rem; border-top: 1px solid rgba(26, 26, 26, 0.1); }
+.guia-links ul, .guia-related ul { list-style: none; padding: 0; }
+.guia-links a, .guia-related a { font-weight: 700; }
+.guia-related li, .guia-links li { margin: 0.35rem 0; }
+.guia-cta { margin-top: 1.6rem; }
+
+@media (min-width: 960px) {
+  .guia-layout { grid-template-columns: 16rem minmax(0, 1fr); align-items: start; }
+  .guia-toc { position: sticky; top: 6.5rem; }
+}

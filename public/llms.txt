@@ -1,0 +1,24 @@
+# Luvania
+
+Luvania Innovación Estética es una clínica de CIFES con cinco sedes en Bogotá: Restrepo, Modelia, Chicó, Venecia y Colina. La valoración es presencial. Esta web no promete resultados, plazos ni porcentajes.
+
+## Páginas
+
+- Inicio: https://luvania.com/
+- Tratamientos: https://luvania.com/tratamientos
+- Promociones: https://luvania.com/promociones
+- Sedes: https://luvania.com/sedes
+- Sobre Luvania: https://luvania.com/sobre-luvania
+- Franquicias: https://luvania.com/franquicias
+- PQRS: https://luvania.com/pqrs
+
+## Especialidades
+
+- https://luvania.com/especialidades/rejuvenecimiento-facial
+- https://luvania.com/especialidades/contorno-y-grasa-localizada
+- https://luvania.com/especialidades/piel
+- https://luvania.com/especialidades/capilar
+- https://luvania.com/especialidades/corporal
+- https://luvania.com/especialidades/bienestar
+
+Cada tratamiento publicado tiene su ficha en /tratamientos/{slug}. Las guías largas solo se enlazan cuando la revisión médica está aprobada.

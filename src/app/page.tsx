@@ -9,13 +9,13 @@ import { Valoracion } from "@/components/valoracion";
 import { benefitLines } from "@/data/hero";
 import { offers } from "@/data/offers";
 import { site } from "@/data/site";
-import { pageMeta } from "@/lib/seo";
+import { clampMeta, pageMeta } from "@/lib/seo";
 import Link from "next/link";
 
 export const metadata = pageMeta({
   title: "Clínica estética en Bogotá | Luvania",
   description:
-    "Tratamientos estéticos personalizados en cinco sedes de Bogotá. Agenda tu valoración en Luvania.",
+    clampMeta("Tratamientos estéticos personalizados en cinco sedes de Bogotá. Agenda tu valoración en Luvania."),
   path: "/",
 });
 

@@ -6,7 +6,7 @@ import { sedeAlt, sedePhoto } from "@/data/sede-photos";
 import { site } from "@/data/site";
 import { isInternal } from "@/lib/public-copy";
 import { agendaLink } from "@/lib/whatsapp";
-import { pageMeta } from "@/lib/seo";
+import { clampMeta, pageMeta } from "@/lib/seo";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -23,7 +23,7 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
   if (!sede) return {};
   return pageMeta({
     title: `Luvania ${sede.name}: clínica estética en ${sede.neighborhood}`,
-    description: `Luvania ${sede.name}, ${sede.address}, Bogotá. Horario, WhatsApp y valoración.`,
+    description: clampMeta(`Luvania ${sede.name}, ${sede.address}, Bogotá. Horario, WhatsApp y valoración.`),
     path: `/sedes/${sede.slug}`,
   });
 }
