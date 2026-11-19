@@ -3569,6 +3569,25 @@ body:has(dialog[open]) .ficha-mobile-bar {
 .guia-body section { margin-top: 2rem; }
 .guia-body h2 { font-size: clamp(1.8rem, 3vw, 2.5rem); margin-bottom: 0.6rem; }
 .guia-body p { max-width: 42rem; }
+.guia-figure {
+  max-width: 42rem;
+  margin: 1rem 0 0.2rem;
+}
+.guia-figure svg { display: block; width: 100%; height: auto; }
+.guia-figure figcaption { margin-top: 0.55rem; color: #3d4445; font-size: 0.95rem; }
+.guia-figure figcaption span {
+  display: block;
+  margin-bottom: 0.15rem;
+  color: #8d3d2c;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.guia-refs ol { max-width: 42rem; margin: 0.4rem 0 0; padding-left: 1.2rem; }
+.guia-refs li { margin: 0.7rem 0; }
+.guia-refs a { font-weight: 700; }
+.guia-refs span { display: block; color: #3d4445; font-size: 0.92rem; }
 .guia-links, .guia-related { margin-top: 2.4rem; padding-top: 1rem; border-top: 1px solid rgba(26, 26, 26, 0.1); }
 .guia-links ul, .guia-related ul { list-style: none; padding: 0; }
 .guia-links a, .guia-related a { font-weight: 700; }

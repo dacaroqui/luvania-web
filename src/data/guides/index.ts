@@ -15,8 +15,9 @@ export function allGuides(): Guide[] {
 
 export function readingMinutes(guide: Guide) {
   const words = [
-    ...guide.blocks.flatMap((block) => block.paragraphs),
+    ...guide.blocks.flatMap((block) => [...block.paragraphs, block.figure?.caption ?? ""]),
     ...guide.faqs.flatMap((faq) => [faq.q, faq.a]),
+    ...guide.references.map((source) => source.title),
   ]
     .join(" ")
     .split(/\s+/)

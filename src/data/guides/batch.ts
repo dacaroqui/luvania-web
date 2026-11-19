@@ -6,286 +6,424 @@ const pendiente = {
   fechaRevision: null,
 };
 
+const toxinaRefs: Guide["references"] = [
+  {
+    title: "Padda IS, Tadi P. Botulinum Toxin. StatPearls.",
+    publisher: "NCBI Bookshelf",
+    href: "https://www.ncbi.nlm.nih.gov/books/NBK557387/",
+  },
+  {
+    title: "Botulinum toxin therapy: Overview.",
+    publisher: "American Academy of Dermatology",
+    href: "https://www.aad.org/public/cosmetic/wrinkles/botulinum-toxin-overview",
+  },
+  {
+    title: "Botulinum toxin therapy: FAQs.",
+    publisher: "American Academy of Dermatology",
+    href: "https://www.aad.org/public/cosmetic/wrinkles/botulinum-toxin-faqs",
+  },
+  {
+    title: "Botox Cosmetic (onabotulinumtoxinA). Etiquetado.",
+    publisher: "DailyMed, U.S. National Library of Medicine",
+    href: "https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=485d9b71-6881-42c5-a620-a4360c7192ab",
+  },
+];
+
+const acneRefs: Guide["references"] = [
+  {
+    title: "Sutaria AH, Masood S, Saleh HM, Schlessinger J. Acne Vulgaris. StatPearls.",
+    publisher: "NCBI Bookshelf",
+    href: "https://www.ncbi.nlm.nih.gov/books/NBK459173/",
+  },
+  {
+    title: "Acne: Who gets and causes.",
+    publisher: "American Academy of Dermatology",
+    href: "https://www.aad.org/public/diseases/acne/causes/acne-causes",
+  },
+  {
+    title: "Acne: Signs and symptoms.",
+    publisher: "American Academy of Dermatology",
+    href: "https://www.aad.org/public/diseases/acne/really-acne/symptoms",
+  },
+];
+
+const ojeraRefs: Guide["references"] = [
+  {
+    title: "Vrcek I, Ozgur O, Nakra T. Infraorbital Dark Circles: A Review of the Pathogenesis, Evaluation and Treatment. J Clin Aesthet Dermatol. 2016.",
+    publisher: "PubMed Central",
+    href: "https://pmc.ncbi.nlm.nih.gov/articles/PMC4924417/",
+  },
+  {
+    title: "Sarkar R y colaboradores. Periorbital Hyperpigmentation: A Comprehensive Review. J Clin Aesthet Dermatol. 2016.",
+    publisher: "PubMed Central",
+    href: "https://pmc.ncbi.nlm.nih.gov/articles/PMC4756872/",
+  },
+];
+
+const labioRefs: Guide["references"] = [
+  {
+    title: "Walker K, Basehore BM, Goyal A, Zito PM. Hyaluronic Acid. StatPearls.",
+    publisher: "NCBI Bookshelf",
+    href: "https://www.ncbi.nlm.nih.gov/books/NBK482440/",
+  },
+  {
+    title: "Piccinin MA, Zito PM. Anatomy, Head and Neck, Lips. StatPearls.",
+    publisher: "NCBI Bookshelf",
+    href: "https://www.ncbi.nlm.nih.gov/books/NBK507900/",
+  },
+  {
+    title: "Juvéderm Ultra XC. Etiquetado para pacientes, aumento de labios.",
+    publisher: "U.S. Food and Drug Administration",
+    href: "https://www.accessdata.fda.gov/cdrh_docs/pdf5/P050047S044c.pdf",
+  },
+];
+
+const celulitisRefs: Guide["references"] = [
+  {
+    title: "Friedmann DP, Vick GL, Mishra V. Cellulite: a review with a focus on subcision. Clin Cosmet Investig Dermatol. 2017.",
+    publisher: "PubMed Central",
+    href: "https://pmc.ncbi.nlm.nih.gov/articles/PMC5234561/",
+  },
+  {
+    title: "Cellulite treatments: What really works?",
+    publisher: "American Academy of Dermatology",
+    href: "https://www.aad.org/public/cosmetic/fat-removal/cellulite-treatments-what-really-works",
+  },
+];
+
+const gluteoRefs: Guide["references"] = [
+  {
+    title: "Elzanie A, Borger J. Anatomy, Bony Pelvis and Lower Limb, Gluteus Maximus Muscle. StatPearls.",
+    publisher: "NCBI Bookshelf",
+    href: "https://www.ncbi.nlm.nih.gov/books/NBK538193/",
+  },
+];
+
+const peloRefs: Guide["references"] = [
+  {
+    title: "Al Aboud AM, Syed HA, Zito PM. Alopecia. StatPearls.",
+    publisher: "NCBI Bookshelf",
+    href: "https://www.ncbi.nlm.nih.gov/books/NBK538178/",
+  },
+  {
+    title: "Hughes EC, Syed HA, Saleh D. Telogen Effluvium. StatPearls.",
+    publisher: "NCBI Bookshelf",
+    href: "https://www.ncbi.nlm.nih.gov/books/NBK430848/",
+  },
+  {
+    title: "Hair loss: Who gets and causes.",
+    publisher: "American Academy of Dermatology",
+    href: "https://www.aad.org/public/diseases/hair-loss/causes/18-causes",
+  },
+];
+
 export const guides: Guide[] = [
   {
     slug: "toxina-botulinica-tipo-a",
     h1: "Guía de la toxina botulínica, el bótox",
     title: "Botox en Bogotá: guía de la toxina | Luvania",
     description:
-      "Qué es el bótox, cómo se aplica la toxina botulínica y qué cuidados describía la ficha anterior. La dosis se define en la valoración de Luvania.",
+      "Qué es la toxina botulínica tipo A, cómo frena la orden del nervio al músculo y qué no rellena. La dosis se define en la valoración de Luvania.",
     keyword: "botox",
     secondary: ["toxina botulinica", "toxina botulínica tipo A", "botox bogota"],
     ...pendiente,
+    references: toxinaRefs,
     blocks: [
       {
         id: "que-es",
-        title: "Qué es, con el nombre que la gente busca",
+        title: "Qué es, con el nombre que se busca",
         paragraphs: [
-          "Bótox es el nombre con el que casi todo el mundo busca este procedimiento. En la ficha el nombre es toxina botulínica tipo A: un fármaco que relaja, de forma temporal, músculos que marcan líneas al gesticular. La página publicada lo describe para frente, entrecejo y patas de gallo.",
-          "La ficha anterior también hablaba de hiperhidrosis y de bruxismo. No es el mismo punto ni la misma dosis que una arruga de expresión. Papada y flacidez no son su indicación principal: eso ya está dicho en la pregunta publicada de la ficha.",
+          "Bótox es la palabra con la que casi todo el mundo busca este procedimiento. El nombre del fármaco es toxina botulínica tipo A: una proteína que fabrica la bacteria Clostridium botulinum. En estética se usa una forma purificada, en una dosis muy pequeña, para que un músculo de la cara se mueva menos durante un tiempo.",
+          "Cuando frunces el ceño o cierras los ojos con fuerza, ese músculo tira de la piel y la línea se marca. Si la orden baja, la línea de movimiento se suaviza. No rellena un surco que ya está ahí con la cara quieta, ni cambia el volumen del rostro. Para eso se miran otros protocolos. En la ficha de Luvania el uso publicado es frente, entrecejo y patas de gallo.",
         ],
       },
       {
         id: "como-funciona",
-        title: "Cómo funciona",
+        title: "De dónde viene y cómo actúa",
+        figure: {
+          kind: "union",
+          alt: "Ilustración de la unión entre nervio y músculo: vesículas de acetilcolina, la proteína SNAP-25 cortada y un músculo que no recibe la orden.",
+          caption:
+            "Esquema de la unión neuromuscular. La toxina corta SNAP-25, la vesícula no suelta acetilcolina y el músculo se queda sin la orden de contraerse. No es una foto ni un resultado.",
+        },
         paragraphs: [
-          "La toxina disminuye la orden que el nervio le manda al músculo. Si el músculo se mueve menos, la línea de expresión se marca menos. La intención publicada es modular el gesto, no dejar la cara quieta.",
-          "La página anterior la presentaba como una sustancia usada desde hace años en medicina, y separaba marcas y presentaciones. Esa lista no se repite aquí como catálogo de compra: la presentación la elige quien aplica, en la valoración.",
+          "El uso clínico de esta neurotoxina viene de finales de la década de 1970, según la revisión de StatPearls. El etiquetado de Botox Cosmetic en DailyMed, que recoge el rótulo de la FDA, marca una aprobación inicial en Estados Unidos en 1989 y la describe como un inhibidor de la liberación de acetilcolina: un bloqueo neuromuscular temporal.",
+          "En la unión entre el nervio y el músculo hay vesículas llenas de acetilcolina. Para soltarla, unas proteínas llamadas SNARE tienen que pegar la vesícula a la membrana. La toxina corta una de ellas, SNAP-25. Sin esa unión, el músculo no recibe la orden de contraerse. StatPearls lo explica como una inhibición reversible: el efecto se acaba cuando el nervio repone esas proteínas. Por eso no es permanente.",
+          "La misma molécula tiene otros usos médicos. La AAD describe el sudor excesivo de las axilas cuando lo que se pone en la piel no alcanza. Esa no es la indicación que publica esta ficha. La dosis y el punto cambian. Papada y flacidez tampoco son su trabajo principal.",
         ],
       },
       {
         id: "procedimiento",
         title: "Cómo es el procedimiento",
-        card: "Se aplica con aguja fina en músculos de expresión. Los puntos y la dosis se acuerdan antes, para modular el gesto y no borrarlo.",
+        card: "Se inyecta una cantidad pequeña en músculos que elegiste con el médico. La intención es relajar el que se marca y dejar el resto de la expresión.",
         paragraphs: [
-          "En la ficha publicada el procedimiento es una aplicación con aguja fina. A veces se usa anestesia tópica. Hay quien solo siente el pinchazo.",
-          "La página anterior insistía en que la dosis importa: poca o mal puesta no cumple el encargo, y de más puede cambiar un gesto que no se quería tocar. Por eso el mapa de puntos se habla antes de abrir el frasco.",
+          "La aplicación es con aguja fina. A veces se usa anestesia en crema. Hay quien solo siente el pinchazo. El mapa de puntos se habla antes, porque el músculo que se toca es el que va a moverse menos.",
+          "Las unidades de una marca no se convierten a las de otra. El etiquetado de la FDA lo dice, y StatPearls lo repite. Por eso la dosis de tu cara no sale de una tabla de internet.",
         ],
       },
       {
         id: "preparacion",
         title: "Preparación",
-        card: "Hay que contar enfermedades, medicamentos y una sospecha de embarazo. La ficha anterior pedía evitar anticoagulantes, alcohol, picante y café antes de la cita.",
+        card: "Cuenta enfermedades, medicamentos, alergias y un embarazo posible. Esa conversación va antes de la primera inyección.",
         paragraphs: [
-          "La ficha anterior decía que no pedía muestras de sangre ni de orina por no ser cirugía. Sí pedía contar el estado de salud: enfermedades, medicamentos, alergias y sospecha de embarazo.",
-          "También recomendaba, antes de la cita, no tomar antiinflamatorios con efecto anticoagulante (nombraba la aspirina), ni alcohol, picante o café, por el efecto sobre los vasos. Eso era una recomendación del texto viejo, no una orden nueva: confírmala en la sede.",
+          "No es una cirugía y esta guía no pide exámenes de sangre. Sí pide que el médico sepa si tienes un trastorno neuromuscular, una alergia al producto o una infección en la zona. StatPearls lista el embarazo, la lactancia y las enfermedades del nervio y del músculo entre lo que se revisa antes.",
+          "Si tomas algo que facilite el moretón, dilo. La sede te dirá qué suspender, si hace falta. Esta página no deja una lista fija de café o de aspirina: eso se confirma con quien te va a tratar.",
         ],
       },
       {
         id: "cuidados",
         title: "Cuidados posteriores",
-        card: "El texto anterior pedía permanecer erguido las primeras horas, no masajear la zona y cuidar el sol, para que el producto no se desplace.",
+        card: "No frotes la zona y espera antes de un esfuerzo fuerte, para que el producto no se corra a un músculo vecino.",
         paragraphs: [
-          "Después de la aplicación, la página anterior pedía no acostarse durante las primeras horas y mantenerse erguido. Pedía no masajear el área durante un par de días y no frotar ni tocar la zona el primer día, para que la toxina no pasara a un músculo vecino.",
-          "También pedía evitar el sol directo y usar protección. Esas ventanas de tiempo salían del texto viejo. Mientras esta guía no tenga revisión médica, no las tomes como instrucción vigente: te las confirman por escrito al salir.",
+          "La AAD pide no masajear donde te inyectaron. Si te maquillas, no aprietes. También pide esperar unas dos horas antes de un ejercicio que suba el pulso.",
+          "Esas precauciones salen de la academia. Al salir, la sede te las deja por escrito para tu caso. Si el párpado, la ceja o la sonrisa se sienten distintos de lo acordado, vuelve. No lo corrijas masajeando.",
         ],
       },
       {
         id: "efectos",
         title: "Efectos y contraindicaciones",
-        card: "Puede haber marca del pinchazo. Si el producto se mueve, el gesto cambia. Embarazo, enfermedad activa y los medicamentos se revisan antes. No es un procedimiento sin riesgo.",
+        card: "Puede haber moretón o molestia del pinchazo. Si el producto llega a un músculo vecino, el gesto cambia. Embarazo, infección y enfermedades neuromusculares se revisan antes.",
         paragraphs: [
-          "La ficha publicada ya dice que duele como un pinchazo breve. El texto anterior añadía que, si la toxina migra, puede afectar un músculo que no estaba en el plan. Por eso el cuidado de no tocar es parte del procedimiento, no un detalle.",
-          "No se publica como algo sin riesgo ni con resultado garantizado. Embarazo, infección en la zona y cualquier medicamento —sobre todo los que alteran la coagulación— se conversan antes. Quien aplica tiene que ser personal médico: la página anterior lo decía y la ficha actual no lo contradice.",
+          "StatPearls describe los efectos estéticos más frecuentes como moderados y limitados: moretón, hinchazón o dolor en el punto. Menos veces, una ceja o un párpado caídos, ligados a la técnica. La AAD añade enrojecimiento y, como evento raro, debilidad de un músculo vecino.",
+          "Es un fármaco, no un cuidado indiferente. El resultado tampoco está cerrado de antemano: se busca modular el gesto, y eso se acuerda antes de abrir el frasco.",
         ],
       },
       {
         id: "sesiones",
         title: "Sesiones y duración",
         paragraphs: [
-          "La página anterior daba plazos concretos: cambios a los pocos días y una duración de unos meses, más larga cuando el uso era hiperhidrosis. Esos números eran una promesa de calendario.",
-          "Aquí no se repiten. El efecto es temporal —el músculo vuelve a moverse— y el momento de repetir se decide en el control, con lo que se vea en tu cara, no con una fecha impresa.",
+          "Dos fuentes describen el tiempo de forma distinta. La AAD dice que la mayoría nota el cambio entre tres y siete días, y que la mejoría dura unos tres o cuatro meses. StatPearls habla de cerca de dos semanas para que el efecto se complete y de tres a cinco meses en la práctica estética.",
+          "Ninguna de esas cifras es una fecha tuya. El músculo vuelve a moverse, y el momento de repetir se decide en el control, mirando tu cara.",
         ],
       },
       {
         id: "cuando-consultar",
         title: "Cuándo consultar",
         paragraphs: [
-          "Pide valoración si las líneas que te molestan aparecen al mover la cara, o si el sudor de axilas, manos o cara ya se habló como hiperhidrosis. Si lo que ves es papada, flacidez o un surco quieto, la propia ficha te manda a otro protocolo.",
-          "Si después de una aplicación el párpado, la ceja o la sonrisa se sienten distintos de lo acordado, vuelve a la sede. No lo corrijas masajeando.",
+          "Pide valoración si las líneas que te molestan aparecen al mover la cara. Si lo que ves es papada, flacidez o un surco quieto, la ficha te orienta a otro protocolo.",
+          "Si después de una aplicación algo no cuadra con lo que acordaste, la sede es el lugar. Un párpado caído no se arregla con masaje casero.",
         ],
       },
     ],
     faqs: [
       {
         q: "¿Me va a quedar la cara quieta?",
-        a: "La intención es modular el músculo, no borrar el gesto. Eso se acuerda antes.",
+        a: "La AAD lo dice así: se pone lo justo para relajar el músculo elegido y dejar la expresión. Eso se acuerda antes, en tu cara, no en una foto de otra persona.",
       },
       {
         q: "¿Duele?",
-        a: "Se usa una aguja fina. A veces, anestesia tópica. Hay quien siente un pinchazo breve.",
+        a: "Se usa una aguja fina. A veces, anestesia en crema. Hay quien siente un pinchazo breve.",
       },
       {
         q: "¿Sirve para la papada?",
-        a: "No es su indicación principal. Papada y flacidez se valoran con otros protocolos.",
+        a: "No es la indicación de esta ficha. Papada y flacidez se valoran con otros protocolos.",
       },
       {
         q: "¿Bótox y toxina botulínica son cosas distintas?",
-        a: "Bótox es el nombre con el que se busca. La ficha habla de toxina botulínica tipo A. La marca y la presentación se confirman en la cita.",
+        a: "Bótox es el nombre con el que se busca. El fármaco es toxina botulínica tipo A. La marca y la presentación se confirman en la cita, porque las unidades no se convierten entre marcas.",
       },
     ],
   },
   {
     slug: "acne",
-    h1: "Guía del acné: brote, marca y qué no prometer",
+    h1: "Guía del acné",
     title: "Guía del acné en Bogotá | Luvania",
     description:
-      "Cómo se forma el brote, qué describía la ficha anterior y por qué un plan facial no reemplaza la dermatología si el acné es médico. En Luvania.",
+      "Cómo se tapa el folículo, por qué sale el brote y qué puede hacer un plan estético. Si el acné es médico, esta guía no reemplaza la dermatología.",
     keyword: "acne",
     secondary: ["acné tratamiento", "marcas de acné", "acné facial"],
     ...pendiente,
+    references: acneRefs,
     blocks: [
       {
         id: "que-es",
-        title: "Qué es el acné, sin el porcentaje",
+        title: "Qué es el acné",
         paragraphs: [
-          "La ficha publicada lo deja en una frase: es un plan facial para brotes, marca y textura, y no sustituye un tratamiento dermatológico cuando el acné es médico. La página anterior abría con una cifra de pacientes «curados». Esa cifra no se usa.",
-          "El texto viejo explicaba el brote desde la unidad pilosebácea: el folículo se tapa, se inflama y, si se lastima, deja marca. Separaba acné leve o comedónico, moderado con pápulas y pústulas, severo, y la cicatriz que queda después.",
+          "El acné es una inflamación del folículo donde nace el vello y desemboca la glándula de sebo. La AAD lo resume en una frase útil: el poro se tapa. Lo que cambia es con qué se tapa, y por eso no todos los brotes se ven iguales.",
+          "StatPearls describe cuatro hechos que se juntan: más sebo, un tapón de queratina, la bacteria Cutibacterium acnes y la inflamación. El primer paso, casi invisible, es el microcomedón. De ahí salen el punto blanco, el punto negro, la pápula y, si la pared se rompe, el nódulo.",
         ],
       },
       {
         id: "como-funciona",
-        title: "Cómo se aborda en cabina",
+        title: "Qué pasa dentro del poro",
+        figure: {
+          kind: "foliculo",
+          alt: "Ilustración de un folículo con tapón de queratina, glándula de sebo e inflamación alrededor. No es una foto de un brote.",
+          caption:
+            "Corte esquemático de la piel. El sebo no sale, el poro se tapa y la pared se inflama. El punto negro no es suciedad.",
+        },
         paragraphs: [
-          "La página anterior nombraba mascarilla salicílica, extracción y, en otro apartado, detoxificación y medicamentos tópicos. También advertía lo que pasa cuando alguien exprima el brote sin formación: más inflamación y más marca.",
-          "La ficha actual es más estrecha: la extracción, si se hace, es selectiva. Lastimar la piel empeora la marca. No toda aparatología se aplica sobre un brote infectado. Se puede ir a la valoración con el brote activo; otra cosa es tratarlo ese día.",
+          "En la pubertad, unas hormonas llamadas andrógenos agrandan la glándula sebácea y ella fabrica más grasa. Esa grasa es alimento para C. acnes, una bacteria que ya vive en la piel sana y que puede empujar la inflamación. No es que la cara esté sucia.",
+          "El punto negro tampoco es tierra. La AAD explica que el color oscuro aparece cuando el contenido del poro reacciona con el aire, parecido a lo que le pasa a una manzana cortada. Exprimirlo no lo limpia: empuja el contenido hacia adentro.",
+          "El plan de Luvania es estético: limpieza, activos y, si cabe, aparatología como Dermapen, para un brote leve o para la marca que ya quedó. Si hay nódulos, dolor o un acné que no cede, se orienta a dermatología. Una sesión de cabina no sustituye ese tratamiento.",
         ],
       },
       {
         id: "procedimiento",
         title: "Cómo es el procedimiento",
-        card: "Valoración del brote y, si cabe, limpieza selectiva. No se exprime todo. Si el acné es médico, el plan facial no lo reemplaza.",
+        card: "Se mira el tipo de brote. La extracción, si se hace, es selectiva. Lastimar el poro empeora la marca.",
         paragraphs: [
-          "No hay una secuencia única publicada. Lo que sí está escrito es el límite: no se exprime todo el rostro, y un brote con infección no es terreno para cualquier aparato.",
-          "La página anterior detallaba cómo actuaría una mascarilla salicílica sobre el folículo. Ese mecanismo se deja como antecedente del texto viejo. El protocolo del día lo arma quien te ve, no esta página.",
+          "La ficha no publica una receta única de mascarilla ni de antibiótico. Quien te ve decide si ese día toca limpiar, un activo o esperar, porque no toda aparatología se pone sobre una infección.",
+          "Exprimir en casa empuja el contenido hacia la dermis. StatPearls describe esa ruptura como el paso que agranda la inflamación. Por eso la mano que no sabe se queda quieta.",
         ],
       },
       {
         id: "preparacion",
         title: "Preparación",
-        card: "No te automediques ni toques el brote antes de la cita. Lleva la lista de cremas y medicamentos que ya estás usando.",
+        card: "Llega sin maquillaje espeso y cuenta si usas isotretinoína, antibióticos o tienes un brote infectado.",
         paragraphs: [
-          "La ficha anterior pedía no automedicarse y no tocar la zona ni los alrededores, con las manos o con productos, hasta tener indicación.",
-          "También recomendaba jabón neutro, evitar jabones abrasivos, alcohol y el roce constante, y apartar cosméticos con base aceitosa. Esas son pautas del texto viejo para quien ya está en un plan, no una receta para empezar solo.",
+          "La isotretinoína y un brote quístico se revisan con un médico antes de cualquier aparatología. Dilo en la valoración, aunque te parezca un detalle.",
+          "Esta guía no deja una lista de productos de casa. La ficha sí pide pauta y fotoprotección, porque el sol oscurece la marca que el brote deja.",
         ],
       },
       {
         id: "cuidados",
         title: "Cuidados posteriores",
-        card: "La página anterior pedía jabón neutro, cosméticos que no sean aceitosos y no tapar el folículo con cremas oclusivas.",
+        card: "Un jabón que no reseque de más, nada aceitoso que vuelva a tapar el poro, y protector solar.",
         paragraphs: [
-          "Después de una limpieza, la piel queda más sensible. El texto viejo pedía no volver a irritarla con alcohol, almohadillas abrasivas o el cabello pegado a la frente.",
-          "Si en la valoración te formulaban un tópico, el mismo texto decía que algunos resecan y que ciertos antibióticos orales aumentan la sensibilidad al sol. Luvania no publica aquí una fórmula. Si hay medicamento, lo explica quien lo prescribe, con la fotoprotección que corresponda.",
+          "Después de una extracción o de una aparatología, la piel puede estar sensible. Si la sede te pidió no tapar el folículo ese día, se cumple.",
+          "La mancha que queda se puede atenuar. El plazo depende de qué tan profunda sea. No hay una fecha impresa.",
         ],
       },
       {
         id: "efectos",
         title: "Efectos y contraindicaciones",
-        card: "Según el texto anterior, algunos tópicos resecan y enrojecen. Un brote infectado no se trata con cualquier aparatología.",
+        card: "Puede haber enrojecimiento según el activo. Un brote infectado no es terreno para toda aparatología. Manipular el grano aumenta la marca.",
         paragraphs: [
-          "La página anterior ataba los efectos al producto: resequedad, enrojecimiento y, con algunos antibióticos orales, reacción al sol. No los presentaba como raros ni como inexistentes.",
-          "No entra en un plan de cabina quien necesite dermatología por un acné severo, ni una aparatología sobre infección. Embarazo y medicamentos se dicen en la valoración. La promesa de que el brote «se quita» o de un porcentaje de pacientes no está en esta guía.",
+          "Los efectos dependen de lo que sí te apliquen. Esta guía no inventa la lista de un producto que la ficha no cierra. Lo que sí dicen la AAD y StatPearls es que manipular el brote aumenta la inflamación y la cicatriz.",
+          "Si el acné duele, deja cicatriz o no cede, el camino es dermatológico. El plan estético se queda corto ahí, y decirlo a tiempo es parte del cuidado.",
         ],
       },
       {
         id: "sesiones",
         title: "Sesiones y duración",
         paragraphs: [
-          "La ficha publicada dice que las manchas del acné se pueden atenuar y que el plazo depende de la profundidad de la marca. No da un número de sesiones.",
-          "La página anterior hablaba de notar cambios a las pocas semanas, de un empeoramiento inicial y de seguir meses o años. Esos calendarios no se republican. El plan se escribe cuando se ve el brote.",
+          "Un plan de piel se mide en semanas, no en una cita. La ficha lo dice y esta guía no le pone un número que el equipo médico no haya cerrado.",
+          "A veces el brote se ve más rojo al empezar un activo. Si pasa, se avisa en el control. No es una señal de que debas exprimirlo.",
         ],
       },
       {
         id: "cuando-consultar",
         title: "Cuándo consultar",
         paragraphs: [
-          "Ven a valoración si hay brotes, marca o textura que quieras trabajar en cabina. Ven también —y dilo— si el acné es nodular, duele o no ha respondido a lo que ya probaste: ahí el camino puede ser médico, no estético.",
-          "No esperes a que esta página te diga el jabón exacto. La ficha anterior ya pedía especialista antes que automedicación.",
+          "Ven a la valoración con comedones, un brote leve o marcas. Si hay nódulos, pus profundo o estás en isotretinoína, dilo antes de que alguien te programe aparatología.",
+          "Una mancha después del brote es otra conversación: se puede trabajar, y no se borra por decreto.",
         ],
       },
     ],
     faqs: [
       {
         q: "¿Me lo van a exprimir todo?",
-        a: "La extracción, si se hace, es selectiva. Lastimar la piel empeora la marca.",
+        a: "La extracción, si se hace, es selectiva. Lastimar la pared del folículo empeora la inflamación y la marca.",
       },
       {
         q: "¿Puedo venir con brote activo?",
-        a: "Sí a la valoración. No toda aparatología se aplica sobre infección.",
+        a: "Sí a la valoración. No toda aparatología se aplica sobre una infección.",
       },
       {
         q: "¿Quitan las manchas del acné?",
-        a: "Se pueden atenuar. El plazo depende de la profundidad de la marca.",
+        a: "Se pueden atenuar. El plazo depende de la profundidad de la marca y no se promete una fecha.",
+      },
+      {
+        q: "¿El punto negro es suciedad?",
+        a: "No. La AAD explica que el color oscuro es una reacción del contenido del poro con el aire.",
       },
     ],
   },
   {
     slug: "eliminar-ojeras",
-    h1: "Guía de ojeras: color, surco y lo que no es una bolsa",
+    h1: "Guía de las ojeras",
     title: "Guía de ojeras en Bogotá | Luvania",
     description:
-      "La ojera puede ser pigmento, circulación o surco. La ficha anterior listaba tipos y cuidados; el plan se escribe en la valoración, en Bogotá.",
+      "La ojera puede ser pigmento, un vaso que se ve a través de la piel o la sombra de un surco. Por eso no todo se trata con el mismo gesto en Luvania.",
     keyword: "ojeras",
-    secondary: ["eliminar ojeras", "ojeras bogotá", "surco de ojera"],
+    secondary: ["eliminar ojeras", "ojeras bogotá", "surco lagrimal"],
     ...pendiente,
+    references: ojeraRefs,
     blocks: [
       {
         id: "que-es",
         title: "Qué es una ojera",
         paragraphs: [
-          "La ficha publicada separa tres motivos: pigmento, circulación superficial o un surco hundido. No todo se trata igual. Una bolsa no es una ojera: la bolsa es volumen y tiene ficha aparte.",
-          "La página anterior abría el abanico: ojera por flacidez, hundida, pigmentada, circulatoria y transitoria. Esa clasificación ayuda a no pedir el mismo gesto para causas distintas. No autoriza a prometer que la mirada «se borra».",
+          "La ojera no es una sola cosa. Una revisión de Vrcek y colaboradores, en 2016, junta tres familias de causa: el pigmento, lo que se transparenta a través de una piel muy delgada —vaso y músculo— y la sombra de un surco o de una bolsa.",
+          "Por eso el mismo corrector no le sirve a todo el mundo. Luvania separa el motivo en la valoración y recién ahí propone despigmentación, calidad de piel o soporte. Borrar una ojera genética en una cita no es un encargo real.",
         ],
       },
       {
         id: "como-funciona",
-        title: "Cómo se decide el camino",
+        title: "Por qué se ve oscuro",
+        figure: {
+          kind: "parpado",
+          alt: "Ilustración del párpado inferior: piel delgada, un vaso, pigmento y la sombra de un surco. No es la foto de un paciente.",
+          caption:
+            "Tres motivos que se parecen en el espejo y no se tratan igual: pigmento, un vaso que se ve a través de la piel y la sombra de un surco.",
+        },
         paragraphs: [
-          "Hoy la ficha dice que, después de separar el motivo, se propone despigmentación, calidad de piel o soporte. La página anterior nombraba ácido hialurónico en el reborde, peeling y otras tecnologías. Esas técnicas no se listan aquí como menú cerrado: varias no tienen ficha verificada propia.",
-          "El texto viejo decía que el resultado de un relleno se veía enseguida y duraba años, y que otras técnicas hacían desaparecer las bolsas. Esas frases son promesas. No se repiten. Cada piel y cada profundidad cambian lo que se puede hacer, y eso se dice en la cita.",
+          "La piel del párpado es de las más finas y casi no tiene grasa debajo. Lo que está debajo se ve: el músculo orbicular y la red de vasitos. Si además hay pigmento, por herencia o por una inflamación previa, el color se suma. Si el reborde se hunde, la luz hace una sombra aunque la piel no esté más oscura.",
+          "Otra revisión, la de Sarkar y colaboradores en 2016, suma el edema y la herencia a esa lista. Una bolsa de grasa es volumen y tiene ficha aparte. Confundirlas es el error más común.",
         ],
       },
       {
         id: "procedimiento",
         title: "Cómo es el procedimiento",
-        card: "Primero se distingue color, vasitos o surco. Recién ahí se propone piel, pigmento o soporte. Una bolsa no se trata como una ojera.",
+        card: "Primero se nombra la causa: color, vaso o surco. El plan puede ser tópico, de aparatología o de soporte, y se escribe ese día.",
         paragraphs: [
-          "No hay un paso a paso único en la ficha actual. Lo estable es el orden: historia de la zona, tipo de ojera y recién entonces la técnica.",
-          "Si el camino fuera un producto inyectado o un peeling, la página anterior pedía historia clínica previa, incluyendo medicamentos y tratamientos estéticos anteriores. La piel oscura y el melasma se nombraban como un cuidado especial, porque algunas luces pueden empeorar la mancha.",
+          "Si el camino fuera un gel de soporte, el mecanismo es el del ácido hialurónico: ocupa un lugar y el cuerpo lo va reabsorbiendo. La marca y la cantidad se confirman en la cita. Esta guía no abre un menú cerrado de peelings ni de luces.",
+          "La piel oscura y el melasma piden más cuidado, porque algunas luces pueden oscurecer en vez de aclarar. Por eso la fotoprotección pesa más aquí que en casi cualquier otra zona.",
         ],
       },
       {
         id: "preparacion",
         title: "Preparación",
-        card: "La ficha anterior pedía evitar el sol los días previos y decir si tomas algo fotosensible o si tienes melasma.",
+        card: "Cuenta alergias, tiroides, medicamentos y qué te has puesto bajo el ojo. Llega sin maquillaje espeso.",
         paragraphs: [
-          "El texto viejo pedía evitar el sol antes de la cita y ser explícito con medicamentos fotosensibles. También pedía contar cualquier procedimiento estético reciente.",
-          "Si hay manchas o melasma, dilo aunque no sea el motivo de la cita. La misma página advertía que un equipo de luz puede oscurecerlas.",
+          "Si la ojera cambia con la sal, el sueño o la alergia, dilo. El edema deja un tono violáceo y no se trata como una mancha.",
+          "Una foto sin filtro, de frente y con luz pareja, ayuda más que un recuerdo. El color real se mira en la sede.",
         ],
       },
       {
         id: "cuidados",
         title: "Cuidados posteriores",
-        card: "El material anterior pedía protector en la zona y no hacer peelings ni otros gestos agresivos en los días siguientes.",
+        card: "Protector solar y las indicaciones escritas de la técnica que sí te hicieron. El maquillaje depende de esa técnica.",
         paragraphs: [
-          "Después, la página anterior pedía protector solar y evitar el sol, y no aplicar peelings ni otros tratamientos agresivos mientras la piel siguiera sensible. Daba una ventana de días. Esa ventana no se convierte aquí en una regla vigente: te la confirman según la técnica que sí te hayan hecho.",
-          "El maquillaje depende de la técnica. La ficha publicada ya dice que lo indican por escrito al salir.",
+          "Después de un soporte puede haber hinchazón los primeros días. El color, si se trabaja, cambia más lento. Son dos velocidades distintas.",
+          "No te pongas un peeling casero en el párpado mientras la piel siga sensible. La sede te dice cuándo puedes volver a maquillarte.",
         ],
       },
       {
         id: "efectos",
         title: "Efectos y contraindicaciones",
-        card: "El texto anterior describía hinchazón y enrojecimiento leves, y una costra si la piel es muy sensible a la luz. No hablaba de un procedimiento sin efectos.",
+        card: "La zona es delicada. Puede haber hinchazón o enrojecimiento. Un vaso, un pigmento y un surco no comparten el mismo riesgo.",
         paragraphs: [
-          "La página anterior esperaba hinchazón y enrojecimiento que bajan en días, y una costra pequeña si la piel reacciona a la luz. También listaba riesgos poco comunes ligados a mala práctica o a un producto indebido: quistes, asimetría, irregularidades.",
-          "No se publica como algo de pocos efectos ni como solución de raíz. El propio texto viejo reconocía que el gesto no quita la causa y que suele haber que repetir. Pigmento casi nunca se resuelve en una sesión: eso ya está en la ficha.",
+          "La revisión de Vrcek insiste en que el plan se arma según la anatomía de esa persona. No hay un resultado cerrado de antemano ni una técnica que sirva para las tres causas.",
+          "Si hay una bolsa que es grasa, un problema de tiroides o una alergia activa, se dice qué sí entra en el protocolo estético y qué se deriva.",
         ],
       },
       {
         id: "sesiones",
         title: "Sesiones y duración",
         paragraphs: [
-          "La ficha dice que en pigmento casi nunca basta una sesión. El plan se escribe en la valoración.",
-          "Los plazos del texto anterior —efecto inmediato, duración de años, bolsas que desaparecen— no se republican. Son el tipo de calendario que esta guía deja fuera.",
+          "El pigmento casi nunca se resuelve en una cita. Un surco con soporte se nota antes, con inflamación inicial.",
+          "Esas dos velocidades pueden convivir en la misma cara. Ninguna se convierte en una fecha prometida.",
         ],
       },
       {
         id: "cuando-consultar",
         title: "Cuándo consultar",
         paragraphs: [
-          "Consulta si el oscuro bajo el ojo te cambia la cara aunque duermas, y si no sabes si es color, vasito o surco. Si lo que cuelga es una bolsa de volumen, mira la ficha de bolsas.",
-          "Alergia, tiroides o una bolsa que es grasa se nombran en la ficha publicada: ahí se dice qué sí entra en un protocolo estético y qué no.",
+          "Consulta si te ves el rostro cansado aun durmiendo bien. Cuenta desde cuándo y si cambia a lo largo del día.",
+          "Dolor, un párpado que se cierra mal o una hinchazón de un solo lado no son una ojera estética. Eso se mira como un problema médico.",
         ],
       },
     ],
     faqs: [
       {
         q: "¿Es lo mismo que las bolsas?",
-        a: "No. La bolsa es volumen; la ojera es color o surco. Hay ficha aparte.",
+        a: "No. La bolsa es volumen de grasa. La ojera es color, un vaso que se transparenta o la sombra de un surco. Hay ficha aparte para las bolsas.",
       },
       {
         q: "¿Con una sesión basta?",
-        a: "Casi nunca en pigmento. El plan se escribe en la valoración.",
+        a: "Casi nunca cuando el motivo es pigmento. El plan se escribe en la valoración, después de separar la causa.",
       },
       {
         q: "¿Puedo maquillarme después?",
@@ -298,186 +436,204 @@ export const guides: Guide[] = [
     h1: "Guía de labios y del ácido hialurónico",
     title: "Ácido hialurónico en labios | Luvania",
     description:
-      "La ficha anterior describía el perfilamiento de labios con ácido hialurónico. La presentación vigente se confirma en la valoración, no en esta guía.",
-    keyword: "acido hialuronico",
-    secondary: ["relleno de labios", "perfilamiento de labios", "aumento de labios"],
+      "Qué es el ácido hialurónico, cómo ocupa un lugar en el labio y por qué ese volumen es temporal. La marca se confirma en la valoración de Luvania.",
+    keyword: "acido hialuronico labios",
+    secondary: ["perfilamiento de labios", "relleno de labios", "ácido hialurónico bogotá"],
     ...pendiente,
+    references: labioRefs,
     blocks: [
       {
         id: "que-es",
-        title: "Qué es, y qué nombre busca la gente",
+        title: "Qué es el perfilamiento",
         paragraphs: [
-          "Quien busca «ácido hialurónico» en Colombia casi siempre está pensando en labios, surcos o pómulos. Esta guía es la del perfilamiento de labios. La ficha publicada habla de diseñar el labio para hidratar, definir el borde o sumar volumen, con criterio médico.",
-          "La página anterior explicaba el ácido hialurónico como un gel que el cuerpo ya fabrica y que, puesto en el labio, se reabsorbe. La ficha actual todavía no cierra marca ni presentación: esa frase sigue en revisión interna. Por eso aquí se cuenta lo que el texto viejo describía, y la cita confirma el producto del día.",
+          "Perfilar un labio es decidir proporción: hidratar, marcar el borde o sumar un volumen que siga siendo el tuyo. En este objetivo lo habitual es un gel de ácido hialurónico. La ficha de Luvania no cierra la marca: eso se confirma en la cita, con el médico.",
+          "El ácido hialurónico es un azúcar que ya está en tu piel, en los ojos y en las articulaciones. StatPearls lo describe como una molécula que, por su carga, atrae agua, se hincha y da soporte. El gel de relleno es una versión modificada y entrecruzada, más resistente a que el cuerpo la deshaga de un día para otro.",
         ],
       },
       {
         id: "como-funciona",
-        title: "Cómo funciona",
+        title: "Cómo ocupa un lugar y cómo se va",
+        figure: {
+          kind: "labio",
+          alt: "Ilustración de un labio con un gel de ácido hialurónico en su interior y gotas que representan el agua que retiene. No es una foto clínica.",
+          caption:
+            "El gel se coloca en el labio, retiene agua y el cuerpo lo va degradando. El volumen que ves al inicio incluye la hinchazón.",
+        },
         paragraphs: [
-          "Según la página anterior, el gel ocupa un espacio, dibuja el borde o da volumen, y con los meses el organismo lo va degradando. El efecto no es definitivo. Eso es lo contrario de una promesa de por vida.",
-          "El encargo publicado es conservar tu gesto. El volumen se acuerda en mililitros y en forma, no en una foto de otra persona.",
+          "Al inyectarlo, el gel ocupa un lugar y retiene agua. StatPearls llama isovolumétrica a una parte de su degradación: mientras se deshace, el agua va ocupando ese sitio, y el volumen baja de a poco. El efecto es temporal.",
+          "El etiquetado para pacientes de Juvéderm Ultra XC, un gel con lidocaína que la FDA indica para labios en adultos mayores de 21 años, dice que el volumen que aporta es temporal. StatPearls, hablando de rellenos en general, sitúa el efecto en unos meses según la zona, la marca y la técnica. No son la misma frase y no son el calendario de tu labio.",
         ],
       },
       {
         id: "procedimiento",
         title: "Cómo es el procedimiento",
-        card: "Se diseña borde y volumen, y se aplica con anestesia. La ficha anterior lo describía con ácido hialurónico; la presentación se confirma en la cita.",
+        card: "Se diseña el borde y el volumen antes de inyectar. El gel va en la submucosa del labio. Puede haber anestesia en crema o la que trae el producto.",
         paragraphs: [
-          "La ficha publicada dice que se usa anestesia tópica o la que trae el producto, y que el labio es una zona sensible.",
-          "La página anterior no pedía exámenes de sangre por no ser cirugía, y sí una historia: enfermedades, medicamentos, alergias, embarazo. El dibujo se hace antes de inyectar. Si el resultado no convence, el mismo texto mencionaba la hialuronidasa como forma de degradar ese gel. No es un botón de deshacer automático ni está ofrecida como servicio publicado: es un dato del archivo.",
+          "StatPearls describe la inyección de labio como submucosa. El etiquetado de ese gel de la FDA pide una técnica limpia y prohíbe inyectar dentro de un vaso.",
+          "Si el resultado no convence, existe una enzima, la hialuronidasa, que degrada este gel. StatPearls la nombra para disolver un exceso o una complicación de vaso. No es un botón de deshacer automático ni un servicio que esta ficha publique aparte.",
         ],
       },
       {
         id: "preparacion",
         title: "Preparación",
-        card: "Cuenta enfermedades, alergias y medicamentos. El texto anterior pedía evitar anticoagulantes, alcohol, picante, café y aceite de pescado.",
+        card: "Cuenta alergias, herpes, medicamentos y un embarazo posible. Un brote de herpes se espera.",
         paragraphs: [
-          "Igual que en otras aplicaciones con aguja, la página anterior pedía suspender —si el médico está de acuerdo— antiinflamatorios que favorecen el moretón, alcohol, picante, café y aceite de pescado.",
-          "Embarazo, lactancia, alergia a anestésicos y enfermedades inmunológicas figuraban como motivos para no hacer el procedimiento. Dilos aunque nadie pregunte a la primera.",
+          "El etiquetado contraindica el gel si hay alergia grave, alergia a proteínas de ciertas bacterias o alergia a la lidocaína, cuando el producto la trae. También pide aplazar la cita si hay infección o inflamación activa en el labio.",
+          "Esta guía no ordena suspender aspirina, café o picante. Si algo de lo que tomas facilita el moretón, se habla en la cita.",
         ],
       },
       {
         id: "cuidados",
         title: "Cuidados posteriores",
-        card: "La página anterior pedía no frotar el labio el primer día, no hacer ejercicio ni sauna, no dormir boca abajo y usar protector.",
+        card: "Hielo si te lo indican, no frotar, y evitar sauna y ejercicio fuerte el primer día.",
         paragraphs: [
-          "El texto viejo pedía no masajear, no presionar y no hacer muecas exageradas el primer día, para que el gel no se mueva. Tampoco ejercicio, sauna o vapor en esas horas, ni dormir boca abajo los primeros días.",
-          "Pedía protector solar. El hielo se mencionaba para bajar la hinchazón. Son cuidados del archivo, pendientes de que el equipo médico los confirme como instrucción actual.",
+          "El etiquetado describe enrojecimiento, hinchazón y sensibilidad como algo de los primeros días, y nota que en el labio esa reacción suele durar más que en un pliegue de la cara. StatPearls pide hielo al terminar para bajar hinchazón y moretón.",
+          "Dormir boca abajo el primer día aplasta el gel. La sede te deja el cuidado escrito. El protector entra en cuanto la piel lo tolere.",
         ],
       },
       {
         id: "efectos",
         title: "Efectos y contraindicaciones",
-        card: "El archivo nombra moretones, hinchazón, bolitas, asimetría, alergia e infección. Embarazo, lactancia y alergia a la anestesia figuraban como contraindicaciones.",
+        card: "Lo esperable es hinchazón y, a veces, un moretón. Lo raro e importante es que el gel entre en un vaso, reactive un herpes o deje un nódulo.",
         paragraphs: [
-          "La página anterior listaba moretones, hinchazón, granulomas, irregularidades, asimetrías, enrojecimiento, infección y reacción al producto. Decía que la alergia es poco frecuente porque el gel se parece a algo del cuerpo. «Poco frecuente» no es «sin riesgo».",
-          "Contraindicado, en ese texto, para enfermedades inmunológicas, alergia a anestésicos, embarazo y lactancia. Un labio que «queda artificial» es justo lo que la ficha publicada dice que se evita acordando forma y cantidad.",
+          "StatPearls lista como efectos muy raros la infección, la necrosis si el gel tapa un vaso, el granuloma y la reactivación del herpes labial. El etiquetado de la FDA advierte lo mismo sobre el vaso: es una urgencia.",
+          "Por eso el procedimiento es médico y se mira la anatomía del labio, no solo la foto. La proporción se acuerda en cantidad y en forma. No hay un molde garantizado.",
         ],
       },
       {
         id: "sesiones",
         title: "Sesiones y duración",
         paragraphs: [
-          "La página anterior decía que el cambio se ve en la sesión y que el gel se reabsorbe en meses, con una horquilla amplia según la persona, el sol, el tabaco y la marca. Publicar esa horquilla como duración garantizada es el tipo de plazo que esta guía no repite.",
-          "Si hace falta un retoque, se decide cuando se ve cómo quedó el labio, no con una fecha de folleto.",
+          "El cambio se ve en la sesión, con la hinchazón encima. El resultado asentado se mira en el control, cuando esa hinchazón baja.",
+          "Se puede avanzar por etapas. Repetir no tiene una fecha obligatoria: se conversa cuando el gel ya se reabsorbió y tú quieres seguir.",
         ],
       },
       {
         id: "cuando-consultar",
         title: "Cuándo consultar",
         paragraphs: [
-          "Pide valoración si quieres definir el borde, hidratar o sumar un volumen que siga siendo tu boca. Trae, si las tienes, fotos de un rato en el que el labio te gustaba, no solo de una tendencia.",
-          "Si ya tienes producto de otra sede y notas bolitas, asimetría o dolor, dilo antes de agregar más.",
+          "Consulta si quieres definir o hidratar y no tienes infección ni un herpes en brote. Una expectativa de cambio extremo en una sola cita se habla antes, no después.",
+          "Dolor que crece, la piel que se pone blanca o un cambio en la vista después de un relleno son motivo para volver de inmediato.",
         ],
       },
     ],
     faqs: [
       {
         q: "¿Queda artificial?",
-        a: "El encargo es conservar tu gesto. El volumen se acuerda en mililitros y en forma.",
+        a: "El encargo es conservar tu gesto. El volumen se acuerda en cantidad y en forma, y se puede hacer por etapas.",
       },
       {
         q: "¿Duele?",
-        a: "Se usa anestesia tópica o la que trae el producto. El labio es una zona sensible.",
+        a: "El labio es sensible. Se usa anestesia en crema o la que trae el producto. StatPearls también nombra el hielo.",
       },
       {
         q: "¿Qué material es?",
-        a: "La página anterior describía ácido hialurónico. La presentación que se usa hoy se confirma en la valoración: la ficha publicada aún no la cierra.",
+        a: "Lo habitual en este objetivo es un gel de ácido hialurónico. La marca y la presentación se confirman en la valoración: la ficha no las cierra.",
+      },
+      {
+        q: "¿Se puede quitar?",
+        a: "StatPearls describe la hialuronidasa, una enzima que degrada el gel. La decide un médico si hace falta. No es un deshacer automático.",
       },
     ],
   },
   {
     slug: "celulitis",
-    h1: "Guía de la celulitis, sin crema milagro",
+    h1: "Guía de la celulitis",
     title: "Guía de celulitis en Bogotá | Luvania",
     description:
-      "Qué describía la ficha anterior sobre la piel de naranja, qué técnicas agrupaba y por qué no se promete quitarla del todo. Valoración en Bogotá.",
+      "Por qué la piel se ve irregular: unos tabiques tiran y la grasa empuja. Qué puede mejorar un plan de cabina y qué no borra una crema en Luvania.",
     keyword: "celulitis",
-    secondary: ["piel de naranja", "tratamiento celulitis", "celulitis en piernas"],
+    secondary: ["piel de naranja", "celulitis en muslos", "celulitis bogotá"],
     ...pendiente,
+    references: celulitisRefs,
     blocks: [
       {
         id: "que-es",
-        title: "Qué es la celulitis en esta ficha",
+        title: "Qué es la celulitis",
         paragraphs: [
-          "La ficha publicada la llama piel de naranja y la ata a circulación, tejido y hábitos. Dice que puede mejorar mucho y no desaparecer. La página anterior la explicaba como un cambio de la microcirculación, no como una imperfección que una crema resuelve.",
-          "Ese texto separaba grados y tipos: flácida, dura, edematosa y fibrosa. La clasificación servía para no tratar todas las pieles con el mismo aparato. No se copia aquí un grado numérico como diagnóstico: eso se mira en la pierna, no en una guía.",
+          "La celulitis es esa piel irregular, de naranja, casi siempre en muslos, cadera y glúteos. No es grasa de más a secas, ni falta de crema. Una revisión de Friedmann y colaboradores, en 2017, la describe como algo de varias causas: la forma del tejido bajo la piel, la tensión de unos tabiques y cambios de circulación que todavía se discuten.",
+          "La ficha de Luvania la trabaja como plan —aparatología, drenaje, activos— y no como una sesión única. Puede mejorar y no desaparecer. La piel tiene memoria y los hábitos pesan.",
         ],
       },
       {
         id: "como-funciona",
-        title: "Qué técnicas agrupaba la página anterior",
+        title: "Por qué se hunde y se abulta",
+        figure: {
+          kind: "septos",
+          alt: "Ilustración de la piel con hoyuelos, tabiques fibrosos que tiran hacia abajo y lóbulos de grasa que empujan. No es una foto de un muslo.",
+          caption:
+            "Esquema del hoyuelo: el tabique fibroso ancla la piel y el lóbulo de grasa empuja al lado. No es una foto de resultado.",
+        },
         paragraphs: [
-          "La ficha vieja metía en el mismo capítulo drenaje linfático manual, presoterapia, cavitación, radiofrecuencia, carboxiterapia y mesoterapia. No todas tienen hoy una ficha verificada. El drenaje sí está publicado, y la ficha de celulitis ya dice que ayuda y que casi nunca alcanza solo.",
-          "El objetivo que ese texto se ponía —«eliminar la celulitis»— no se mantiene. Se mantiene la idea de trabajar circulación y tejido, y de que, si vuelve el hábito que la marcó, la piel puede marcarse otra vez.",
+          "Bajo la dermis hay lóbulos de grasa separados por tabiques que anclan la piel a la fascia. En muchas mujeres esos tabiques van más perpendiculares. Cuando la grasa empuja y el tabique tira, la superficie se hunde en unos puntos y se abulta en otros. La revisión cuenta que la resonancia ha visto tabiques más gruesos justo debajo de los hoyuelos.",
+          "La AAD es franca con los tratamientos: unas técnicas que cortan el tabique tienen estudios, y muchas cremas y masajes dan un cambio breve o ninguno. El plan de cabina de Luvania no es una subcisión ni una cirugía. Busca circulación, tejido y constancia. No borra el hoyuelo por decreto.",
         ],
       },
       {
         id: "procedimiento",
         title: "Cómo es el procedimiento",
-        card: "Se mira el tipo de piel de naranja y se arma un plan de cabina. El drenaje ayuda y casi nunca alcanza como único gesto.",
+        card: "Se mira el grado: qué se ve de pie y qué aparece al pellizcar. El drenaje puede ser la base. La aparatología se suma si cabe.",
         paragraphs: [
-          "No hay una secuencia única vigente. La valoración dice qué técnica cabe. La página anterior usaba el drenaje como base y sumaba aparatología según el caso.",
-          "Beber agua antes de la sesión salía en ese texto, para facilitar el trabajo linfático. Es una recomendación del archivo, no un requisito que esta página imponga.",
+          "No hay una receta única publicada. Quien te ve dice qué técnica entra ese día y cuál no, sobre todo si hay venas marcadas.",
+          "La secuencia de tu sesión se confirma en la valoración. Esta guía no la inventa para llenar el hueco.",
         ],
       },
       {
         id: "preparacion",
         title: "Preparación",
-        card: "Cuenta si hay problemas de circulación, corazón, embarazo o una infección. El texto viejo pedía agua antes del drenaje.",
+        card: "Cuenta enfermedad, infección, embarazo, lactancia y cualquier procedimiento reciente en la zona.",
         paragraphs: [
-          "Antes de cualquier aparatología de cuerpo, la página anterior pedía decir si hay enfermedad, y en particular procesos oncológicos, infección, embarazo o lactancia.",
-          "Para el drenaje listaba motivos para no hacerlo: edemas de origen cardíaco, hipotensión, flebitis, trombosis, inflamación aguda, insuficiencia cardíaca descompensada y enfermedad renal. La presoterapia sumaba problemas circulatorios e hipertensión. Si alguno te suena, dilo antes de acostarte en la camilla.",
+          "Llega sin una crema espesa en el muslo, para que se pueda ver la textura.",
+          "Esta guía no inventa una dieta con nombre. El movimiento y el peso cambian cómo se ve la piel. Un músculo más firme puede cambiar la superficie, y eso no es lo mismo que cortar el tabique.",
         ],
       },
       {
         id: "cuidados",
         title: "Cuidados posteriores",
-        card: "La ficha publicada insiste en los hábitos. El texto anterior no daba una crema de cierre: decía que la piel puede volver a marcarse.",
+        card: "Agua, movimiento suave y la pauta escrita. Algunas técnicas dejan la zona sensible ese día.",
         paragraphs: [
-          "No hay en el archivo un ritual largo de cremas posteriores. Lo que sí hay, en la ficha actual, es la frase de que la piel tiene memoria y los hábitos pesan.",
-          "Si la técnica fue con microinyección, el texto viejo esperaba moretón, ardor o dolor leve. Eso se cuida como cualquier punción: no lo tapes con un ungüento que nadie te indicó.",
+          "No se publica un número de días de reposo. Si hubo aparatología que calienta o presiona, la sede te dice qué evitar.",
+          "Una crema no sostiene sola lo que la cabina empezó. El hábito de la semana pesa.",
         ],
       },
       {
         id: "efectos",
         title: "Efectos y contraindicaciones",
-        card: "En microinyección, el archivo nombra moretones, ardor e irregularidades. Embarazo, infección y varias enfermedades de la circulación quedaban fuera.",
+        card: "Puede doler el tejido y puede salir un moretón. Poco invasivo no significa indiferente. Venas marcadas, infección y embarazo se revisan aparte.",
         paragraphs: [
-          "La página anterior decía que las técnicas de cabina eran poco invasivas y, en el mismo párrafo, que una microinyección mal hecha sí puede hacer daño. Las dos frases no se resumen como «sin riesgo».",
-          "Efectos que ese texto asociaba a las microinyecciones: hematomas, ardor, dolor leve o moderado, reacciones de la piel y hundidos. Contraindicaciones generales: pacientes oncológicos, infección activa, y embarazo o lactancia solo con el médico del control prenatal.",
+          "La AAD muestra que los resultados de muchas técnicas de cabina son modestos o temporales. Leer eso antes evita comprar un paquete como si fuera una cura.",
+          "Una microinyección mal hecha sí puede hacer daño. Por eso la técnica, si entra, la hace quien está formado para ella.",
         ],
       },
       {
         id: "sesiones",
         title: "Sesiones y duración",
         paragraphs: [
-          "Ni la ficha actual ni esta guía dan un número de sesiones. La página anterior condicionaba cualquier resultado a un diagnóstico bien hecho y advertía que un ciclo terminado no impide que la piel de naranja vuelva.",
-          "Por eso la pregunta publicada —«¿se quita del todo?»— se responde igual aquí: puede mejorar y no desaparecer.",
+          "Es de los protocolos que piden constancia. Un ciclo terminado no impide que la textura vuelva si el hábito y el tejido siguen iguales.",
+          "No hay un número cerrado de sesiones en la ficha. Se fija cuando se ve el grado, de pie y al pellizcar.",
         ],
       },
       {
         id: "cuando-consultar",
         title: "Cuándo consultar",
         paragraphs: [
-          "Ven si la textura de muslos, cadera o glúteos te importa y quieres saber qué técnica de las publicadas cabe. No vengas buscando que una sesión deje la piel lisa.",
-          "Si estás embarazada, en tratamiento oncológico o con una trombosis reciente, la valoración tiene que empezar por ahí, no por el aparato.",
+          "Consulta si te incomoda la textura, no si buscas bajar diez kilos. Esas son dos metas distintas.",
+          "Dolor de una pierna, una vena que se inflama o un hoyuelo que crece rápido no son celulitis estética.",
         ],
       },
     ],
     faqs: [
       {
         q: "¿Se quita del todo?",
-        a: "Puede mejorar mucho y no desaparecer. La piel tiene memoria y los hábitos pesan.",
+        a: "Puede mejorar y no desaparecer. Los tabiques y los hábitos siguen ahí cuando termina un ciclo.",
       },
       {
         q: "¿Duele?",
-        a: "Algunas técnicas de tejido se sienten. Se avisa cuáles.",
+        a: "Algunas técnicas de tejido se sienten. Se avisa cuáles entran en tu sesión.",
       },
       {
         q: "¿Sirve el drenaje solo?",
-        a: "Ayuda. Casi nunca alcanza como único gesto.",
+        a: "Ayuda a la circulación. La AAD muestra que varias técnicas de masaje o de aparato, cuando cambian algo, lo hacen por poco tiempo. Casi nunca alcanza como único gesto.",
       },
     ],
   },
@@ -486,91 +642,99 @@ export const guides: Guide[] = [
     h1: "Guía del levantamiento de glúteos",
     title: "Guía de glúteos sin cirugía | Luvania",
     description:
-      "La ficha anterior mezclaba metaloterapia, mesoterapia virtual y corrientes rusas. No prometía tallas ni un plazo. La secuencia se confirma en la cita.",
-    keyword: "gluteos",
-    secondary: ["levantamiento de glúteos", "glúteos sin cirugía", "flacidez de glúteos"],
+      "Qué sostiene la forma del glúteo y qué puede buscar un protocolo no quirúrgico. No es un implante. La mezcla se confirma en la valoración de Luvania.",
+    keyword: "levantamiento de gluteos",
+    secondary: ["gluteos sin cirugia", "glúteos bogotá", "firmeza de glúteos"],
     ...pendiente,
+    references: gluteoRefs,
     blocks: [
       {
         id: "que-es",
         title: "Qué es este protocolo",
         paragraphs: [
-          "La búsqueda «glúteos» en Trends es amplia: incluye ejercicio, no solo clínica. Esta guía es solo el protocolo no quirúrgico de Luvania para firmeza y forma. La ficha publicada dice que combina técnicas de la red y que no promete varias tallas.",
-          "La página anterior abría con «tiempo récord» y con olvidarse de la cirugía. Esas dos frases se archivan y no se usan. Lo que sigue en pie es que no es una cirugía y que la forma, si cambia, no tiene un número de tallas.",
+          "El levantamiento de glúteos de Luvania es un protocolo no quirúrgico para firmeza y forma. La ficha lo describe sin implantes y sin un relleno inyectado por defecto. No aumenta una talla por decreto.",
+          "La forma que ves la arman tres capas: la piel, la grasa y el músculo. StatPearls describe el glúteo mayor como el más superficial y el más grande de los tres, y como el músculo que extiende la cadera cuando te levantas, subes o corres. Un masaje no lo reemplaza. Un implante tampoco es lo que esta ficha ofrece.",
         ],
       },
       {
         id: "como-funciona",
-        title: "Qué técnicas nombraba la ficha anterior",
+        title: "De qué está hecha la forma",
+        figure: {
+          kind: "gluteo",
+          alt: "Ilustración esquemática del glúteo: piel, grasa y el músculo glúteo mayor. No es una foto de un cuerpo.",
+          caption:
+            "Esquema de las tres capas. La forma depende de la piel, la grasa y el glúteo mayor. No representa un antes ni un después.",
+        },
         paragraphs: [
-          "El texto viejo agrupaba metaloterapia, mesoterapia virtual y corrientes rusas. Las corrientes rusas tienen ficha propia. El EMS de alta intensidad también, y la pregunta publicada ya los distingue: EMS no es este protocolo.",
-          "La causa de la flacidez, en esa página, no era una sola. Por eso la técnica no se elige desde aquí. Se elige cuando se ve el tejido.",
+          "Si el músculo está poco activo, la piel cede o la grasa se reparte de otra forma, el contorno cambia. Un protocolo de cabina puede buscar tono, circulación y piel. La mezcla exacta de cada sesión se confirma en la valoración, porque la ficha no cierra una secuencia única.",
+          "Esta guía no te presta el resultado de una cirugía ni el de un aparato que aquí no está publicado. La firmeza que se pueda ganar convive con el movimiento que hagas el resto de la semana.",
         ],
       },
       {
         id: "procedimiento",
         title: "Cómo es el procedimiento",
-        card: "No es cirugía ni un aumento de tallas. La ficha anterior mezclaba varias técnicas de cabina; la secuencia vigente se confirma en la valoración.",
+        card: "Se mira simetría, piel y qué técnica entra ese día. No es una prótesis ni, por defecto, un relleno.",
         paragraphs: [
-          "La ficha actual todavía marca como pendiente la secuencia exacta. Hasta que el equipo la cierre, esta guía no inventa el orden de los aparatos.",
-          "Lo que el texto viejo sí pedía durante la cita es una historia: medicamentos y procedimientos anteriores. Sin eso, no hay forma de elegir una técnica que no choque con lo que ya te hicieron.",
+          "La sesión se explica antes: qué se va a sentir y qué no. Hay técnicas que son un masaje y otras que se sienten más.",
+          "Entrenar no es lo mismo que una cita, y la cita no reemplaza el entrenamiento. StatPearls describe el glúteo mayor como el músculo que entra en juego al levantarte, al subir y al correr.",
         ],
       },
       {
         id: "preparacion",
         title: "Preparación",
-        card: "El archivo pedía hidratación, decir qué medicamentos tomas y qué tratamientos te han hecho antes.",
+        card: "Cuenta embarazo, infección de la piel, una cirugía reciente y si tienes un implante en la zona.",
         paragraphs: [
-          "La página anterior sugería llegar hidratado y con una alimentación que no fuera un atracón ese día. No daba una dieta con nombre.",
-          "Pedía ser explícito con medicamentos y con cualquier tratamiento previo en la zona. Eso sigue siendo lo mínimo para armar la historia clínica.",
+          "Llega hidratada. No hace falta una dieta con nombre. Sí hace falta decir si el glúteo duele o si hubo un procedimiento médico reciente.",
+          "Si buscas varias tallas, dilo al empezar. El protocolo publicado no está hecho para esa meta.",
         ],
       },
       {
         id: "cuidados",
         title: "Cuidados posteriores",
+        card: "Movimiento suave y la pauta de la sede. El músculo se mantiene con uso, no solo con la cita.",
         paragraphs: [
-          "El texto viejo no dejaba una lista larga de cuidados de las horas siguientes. Ataba la duración de lo que se viera a los hábitos: comida y movimiento.",
-          "Si la técnica del día incluye corriente o un producto sobre la piel, los cuidados concretos te los dan al salir. No los copies de otra ficha.",
+          "Si la técnica dejó la zona sensible, se evita el esfuerzo fuerte ese día. El plazo te lo escriben al salir.",
+          "Caminar, subir y entrenar son parte de conservar el tono. La cabina no los sustituye.",
         ],
       },
       {
         id: "efectos",
         title: "Efectos y contraindicaciones",
-        card: "La ficha dice que unas técnicas se sienten y otras son un masaje. No hay una promesa de glúteo firme ni un plazo.",
+        card: "Puede haber molestia o un moretón según la técnica. Embarazo, infección y una cirugía reciente se dicen antes.",
         paragraphs: [
-          "La pregunta publicada responde el dolor así: hay técnicas que se sienten y otras que son un masaje. Se explica la secuencia antes de empezar.",
-          "La página anterior no traía un apartado propio de efectos secundarios. No se rellena con una lista inventada. Embarazo, infección en la piel y un implante o una cirugía reciente en la zona se dicen en la valoración, igual que en el resto de protocolos de cuerpo.",
+          "No se inventa aquí una lista de efectos de un aparato que la ficha no cierra. Lo que sí se dice es que puede mejorar la forma y el tono, y puede no alcanzar lo que imaginaste.",
+          "Esa conversación es la valoración, no una sorpresa al final de un paquete.",
         ],
       },
       {
         id: "sesiones",
         title: "Sesiones y duración",
         paragraphs: [
-          "La página anterior decía que la duración cambia según la técnica y que un estilo de vida con movimiento ayuda a conservar lo que se haya ganado. No daba un número de sesiones ni un «tiempo récord».",
-          "La ficha actual tampoco lo da. Cualquier calendario queda para la cita.",
+          "La duración cambia con la técnica y con el movimiento de la semana. La ficha no publica un número de sesiones ni un plazo récord.",
+          "El control decide si se repite, mirando simetría y piel, no una talla de pantalón.",
         ],
       },
       {
         id: "cuando-consultar",
         title: "Cuándo consultar",
         paragraphs: [
-          "Consulta si buscas forma o tono sin cirugía y aceptas que no hay una talla prometida. Si lo que quieres es volumen con implante o con grasa propia, este protocolo no es esa cirugía: la ficha lo dice al llamarlo no quirúrgico.",
-          "Si ya haces electroestimulación de alta intensidad, pregunta en qué se diferencia antes de sumar otra cosa. La ficha separa el EMS de este plan.",
+          "Consulta si quieres un glúteo más firme y entiendes que el músculo también se construye caminando, subiendo y entrenando.",
+          "Dolor que impide sentarte, un moretón que crece o fiebre después de una sesión se avisan el mismo día.",
         ],
       },
     ],
     faqs: [
       {
         q: "¿Aumenta varias tallas?",
-        a: "No es una promesa. Puede mejorar forma y tono.",
+        a: "No es una promesa. Puede mejorar forma y tono. Un implante es otra conversación, y no es este protocolo.",
       },
       {
         q: "¿Duele?",
-        a: "Hay técnicas que se sienten y otras que son un masaje. Se explica la secuencia.",
+        a: "Hay técnicas que se sienten y otras que son un masaje. Se explica la secuencia antes de empezar.",
       },
       {
-        q: "¿En qué se diferencia del EMS?",
-        a: "EMS es electroestimulación de alta intensidad. Este protocolo, en la ficha anterior, mezclaba varias técnicas.",
+        q: "¿Reemplaza el ejercicio?",
+        a: "No. StatPearls describe el glúteo mayor como el músculo que trabaja al levantarte y al subir. La cabina no hace ese trabajo por ti.",
       },
     ],
   },
@@ -579,92 +743,99 @@ export const guides: Guide[] = [
     h1: "Guía de la caída del cabello",
     title: "Guía de caída del cabello | Luvania",
     description:
-      "Causas distintas, un protocolo estético de cuero cabelludo y los plazos que la página anterior prometía y esta guía no repite. Cita en Bogotá.",
+      "El cabello crece por ciclos. Esta guía separa la caída difusa de la que encoge el folículo, y qué puede mirar un protocolo estético de Luvania.",
     keyword: "caida del cabello",
-    secondary: ["pérdida de cabello", "hair loss", "alopecia"],
+    secondary: ["caída del cabello bogotá", "alopecia", "efluvio telógeno"],
     ...pendiente,
+    references: peloRefs,
     blocks: [
       {
         id: "que-es",
-        title: "Qué es este protocolo",
+        title: "Qué es esta caída",
         paragraphs: [
-          "En la oferta el nombre es «Pérdida de cabello» y en el menú viejo, Hair Loss. La ficha publicada lo pasa al español y conserva el enlace. El protocolo es estético: se mira el cuero cabelludo y, según el caso, se usan activos, plasma o aparatología.",
-          "La página anterior lo presentaba como la solución para detener la caída y recuperar abundancia. Esa promesa no sigue. La caída tiene causas distintas —hormonal, déficit, tracción, estrés, piel del cuero— y no toda responde igual. Si el camino es médico, se dice.",
+          "El cabello no crece todo el tiempo. Cada folículo pasa por una fase de crecimiento, una de frenado y una de reposo en la que el pelo se suelta. La revisión de alopecias de StatPearls llama a esas fases anagén, catagén y telogén.",
+          "Caída no es una sola enfermedad. La AAD separa, entre otras, la pérdida hereditaria —el folículo se encoge—, la caída difusa después de un estrés, un parto o una enfermedad, la tracción de un peinado apretado y las infecciones del cuero. Luvania publica un protocolo estético después de mirar el cuero cabelludo. Si la causa es médica, se dice.",
         ],
       },
       {
         id: "como-funciona",
-        title: "Cómo lo explicaba la ficha anterior",
+        title: "Dos caminos distintos",
+        figure: {
+          kind: "ciclo",
+          alt: "Ilustración de tres folículos en anagén, catagén y telogén. El pelo largo crece, el intermedio se detiene y el corto se suelta. No es una foto de un cuero cabelludo.",
+          caption:
+            "El ciclo del folículo: crece, se detiene y se suelta. Una caída abundante puede ser muchos folículos entrando juntos a la fase de reposo.",
+        },
         paragraphs: [
-          "El texto viejo separaba tipos de alopecia: androgenética, areata, cicatricial y universal. No son lo mismo ni se tratan igual en una cabina. Nombrarlas sirve para no meter todo en un champú.",
-          "Hablaba de bioestimulación del folículo que todavía está. La ficha actual es coherente con eso: en una zona calva antigua no siempre hay folículo activo, y entonces no hay crecimiento que estimular.",
+          "En la pérdida hereditaria, que la AAD llama la causa más común, el folículo se va achicando y el pelo sale más fino y más corto. En el hombre suele empezar en las entradas o en la coronilla. En la mujer, en la raya que se abre. StatPearls añade que, en las caídas que no dejan cicatriz, el folículo sigue ahí: a veces puede volver a dar un pelo, y a veces ya no.",
+          "El efluvio telógeno es otra historia. Un disparador —fiebre, parto, déficit, un susto grande— manda muchos folículos a la fase de reposo. StatPearls sitúa la caída abundante unos meses después del evento. La AAD dice que, si el disparador cesa, muchas personas ven volver el volumen en unos meses. Eso describen esas fuentes. No es una fecha para tu almohada y no promete una melena.",
         ],
       },
       {
         id: "procedimiento",
         title: "Cómo es el procedimiento",
-        card: "Empieza por el cuero cabelludo. Puede incluir plasma u otros activos. No promete poblar una zona calva antigua.",
+        card: "Se mira el cuero, el patrón y la historia. El protocolo estético puede incluir activos, plasma o aparatología. Si hay punción, se explica antes.",
         paragraphs: [
-          "La ficha publicada no fija una sola técnica. Puede incluir plasma. Si hay microinyección, duele de otra forma que un tópico, y se explica antes.",
-          "La página anterior no dejaba un paso a paso cerrado de la sesión. Esta guía tampoco lo inventa.",
+          "Esta guía no inventa una secuencia cerrada. Lo que sí exige es distinguir una caída que puede verse en cabina de una que se deriva.",
+          "El nombre de la oferta publicada es Pérdida de cabello. El precio, si está vigente, se confirma en Promociones. No se decide en esta página.",
         ],
       },
       {
         id: "preparacion",
         title: "Preparación",
-        card: "Cuenta desde cuándo cae, si es por parches, si hubo estrés, hormonas, tracción o un déficit. La historia clínica va antes del aparato.",
+        card: "Cuenta partos, fiebres, dietas, peinados apretados, medicamentos y antecedentes en la familia.",
         paragraphs: [
-          "La página anterior pedía una historia clínica sincera. Sin ella no se distingue una caída de telógeno de una alopecia que no es de cabina.",
-          "Llega con lo que ya te tomaste o te pusiste, incluyendo suplementos. El texto viejo no pedía un examen de sangre obligatorio en la página. Si hace falta un laboratorio, lo pide quien te valora, no esta guía.",
+          "Sin esa historia no se distingue un efluvio de una alopecia que no es de cabina.",
+          "Si tienes análisis recientes, tráelos. No los interpretes sola: se leen en la valoración, junto con lo que se ve en el cuero.",
         ],
       },
       {
         id: "cuidados",
         title: "Cuidados posteriores",
-        card: "Si hubo aplicación en el cuero, el texto anterior pedía no frotar ese día y evitar ejercicio, sauna y calor intenso durante unas horas.",
+        card: "Si hubo punción, no frotes el cuero el primer día. El calor de sauna o el esfuerzo fuerte se confirman con la sede.",
         paragraphs: [
-          "La página anterior pedía no frotar, no masajear y no presionar la zona el primer día. También evitar ejercicio, sauna, vapor y calor intenso en esas horas.",
-          "Esas indicaciones viajan con el tipo de técnica. Si el día solo hubo valoración, no aplican. Te lo dicen al salir.",
+          "Un champú no reemplaza el diagnóstico. La ficha empieza por el cuero cabelludo, no por un producto genérico.",
+          "Un peinado que tira todos los días puede apagar el folículo. La AAD llama a eso alopecia por tracción, y advierte que el daño repetido puede ser definitivo.",
         ],
       },
       {
         id: "efectos",
         title: "Efectos y contraindicaciones",
-        card: "El archivo no listaba un efecto único. Sí decía que una causa hormonal no se resuelve solo con la sesión de cabina.",
+        card: "Depende de la técnica. Una microinyección puede doler un momento. Un folículo ya destruido no vuelve a dar pelo.",
         paragraphs: [
-          "No hay en la ficha actual una lista de efectos adversos del protocolo, y la página anterior tampoco los detallaba como un apartado propio. No se inventa una lista para llenar el hueco.",
-          "Lo que sí decía el texto viejo: el pelo que cae por estrés a menudo se recupera, y una causa hormonal o genética pide mantenimiento, no una sesión aislada. «A menudo» no es «siempre». Un folículo cerrado no se reabre por escribirlo.",
+          "No se inventa aquí una lista de efectos de un aparato que la ficha no cierra. Lo que sí se puede decir, con la AAD, es que un folículo dañado por tracción o por una cicatriz no vuelve a producir pelo.",
+          "Una calva antigua, si el folículo ya no está activo, no siempre se repuebla. La ficha lo dice y esta guía lo sostiene. Prometer lo contrario sería inventar.",
         ],
       },
       {
         id: "sesiones",
         title: "Sesiones y duración",
         paragraphs: [
-          "La página anterior prometía menos caída a las tres semanas, más volumen al mes y un cuero más poblado a los cuatro meses. Esos plazos salen de esta guía.",
-          "La ficha publicada no los reemplaza por otros números. El control y las fotos, si se acuerdan, sirven para mirar tu cabeza, no para cumplir un calendario del archivo.",
+          "El pelo nuevo, cuando aparece, tarda meses, porque el ciclo es lento. La ficha no ofrece un plazo de dos semanas.",
+          "Los calendarios cerrados —menos caída en tres semanas, más volumen al mes— no se republican. El control mira tu cuero, no un folleto.",
         ],
       },
       {
         id: "cuando-consultar",
         title: "Cuándo consultar",
         paragraphs: [
-          "Consulta si notas más pelo en el cepillo, una raya más ancha o parches. Di desde cuándo. Si la caída viene con cansancio, reglas muy irregulares o un déficit que ya te mencionaron, puede hacer falta un médico además de la cabina.",
-          "El plasma en cuero cabelludo, cuando se indica, está en la ficha de plasma virtual. No es automático para toda caída.",
+          "Consulta si notas más cabello en la almohada, una raya más amplia o una entrada que avanza, y aceptas que algunas caídas son médicas.",
+          "Placas lisas, pus, dolor del cuero o una caída de cejas y pestañas se miran como enfermedad, no como un protocolo estético.",
         ],
       },
     ],
     faqs: [
       {
-        q: "¿Es la oferta de Pérdida de cabello?",
-        a: "Sí, ese es el nombre en Promociones.",
-      },
-      {
         q: "¿Me crece en zonas calvas antiguas?",
-        a: "No siempre. Depende de si el folículo sigue activo.",
+        a: "No siempre. Depende de si el folículo sigue activo. La AAD explica que, cuando el folículo se dañó de forma definitiva, de ahí no vuelve a salir pelo.",
       },
       {
         q: "¿Duele?",
-        a: "Depende de si hay microinyección. Se explica antes.",
+        a: "Depende de si hay microinyección. Se explica antes de empezar.",
+      },
+      {
+        q: "¿La caída después de una fiebre o un parto es la misma que la hereditaria?",
+        a: "No. StatPearls separa el efluvio telógeno, que es difuso y suele ir detrás de un disparador, de la caída en la que el folículo se encoge.",
       },
     ],
   },

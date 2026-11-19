@@ -1,5 +1,6 @@
 import { BookButton } from "@/components/book-button";
 import { Breadcrumbs, breadcrumbLd } from "@/components/breadcrumbs";
+import { GuideArt } from "@/components/guia-art";
 import { JsonLd } from "@/components/json-ld";
 import { allGuides, getGuide, readingMinutes } from "@/data/guides";
 import { getTreatment } from "@/data";
@@ -77,6 +78,12 @@ export default async function GuiaPage({ params }: { params: Promise<Params> }) 
           about: { "@type": "MedicalProcedure", name: treatment.name, url: fichaUrl },
           mentions: { "@type": "MedicalProcedure", name: treatment.name, url: fichaUrl },
           isPartOf: { "@type": "WebSite", name: site.name, url: site.url },
+          citation: guide.references.map((source) => ({
+            "@type": "CreativeWork",
+            name: source.title,
+            url: source.href,
+            publisher: { "@type": "Organization", name: source.publisher },
+          })),
         }}
       />
       {guide.faqs.length ? (
@@ -120,6 +127,11 @@ export default async function GuiaPage({ params }: { params: Promise<Params> }) 
                 <a href="#preguntas">Mitos y preguntas frecuentes</a>
               </li>
             ) : null}
+            {guide.references.length ? (
+              <li>
+                <a href="#referencias">Referencias</a>
+              </li>
+            ) : null}
           </ol>
         </nav>
         <article className="guia-body">
@@ -129,6 +141,7 @@ export default async function GuiaPage({ params }: { params: Promise<Params> }) 
               {block.paragraphs.map((paragraph) => (
                 <p key={paragraph}>{paragraph}</p>
               ))}
+              {block.figure ? <GuideArt kind={block.figure.kind} alt={block.figure.alt} caption={block.figure.caption} /> : null}
             </section>
           ))}
           {guide.faqs.length ? (
@@ -142,6 +155,23 @@ export default async function GuiaPage({ params }: { params: Promise<Params> }) 
                   </details>
                 ))}
               </div>
+            </section>
+          ) : null}
+
+          {guide.references.length ? (
+            <section id="referencias" className="guia-refs">
+              <h2 className="display">Referencias</h2>
+              <p>Consultadas el 19 de noviembre de 2026. Sirven para sostener el mecanismo y el origen. No son una promesa de resultado.</p>
+              <ol>
+                {guide.references.map((source) => (
+                  <li key={source.href}>
+                    <a href={source.href} rel="noopener noreferrer">
+                      {source.title}
+                    </a>
+                    <span>{source.publisher}</span>
+                  </li>
+                ))}
+              </ol>
             </section>
           ) : null}
 
