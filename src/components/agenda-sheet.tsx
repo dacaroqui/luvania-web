@@ -3,7 +3,6 @@
 import type { AgendaSede } from "@/data/types";
 import { extraNeedsFor } from "@/data/landings";
 import { useEffect, useRef } from "react";
-import { CloseButton } from "./close-button";
 import { ValuationWizard } from "./lp/valuation-wizard";
 
 export function AgendaSheet({
@@ -64,9 +63,6 @@ export function AgendaSheet({
         if (event.target === event.currentTarget) onClose();
       }}
     >
-      <div className="vx-dialog-bar">
-        <CloseButton onClick={onClose} />
-      </div>
       {open ? (
         <ValuationWizard
           frame="dialog"
@@ -80,6 +76,7 @@ export function AgendaSheet({
           promo={promoInicial}
           initialSede={sedeInicial ?? null}
           deliverWhatsapp
+          onClose={onClose}
         />
       ) : null}
     </dialog>

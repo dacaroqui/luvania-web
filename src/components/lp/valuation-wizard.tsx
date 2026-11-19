@@ -9,6 +9,7 @@ import { submitCrmLead, type CrmAnswer } from "@/lib/crm-lead";
 import { blockedPayment } from "@/lib/payment/provider";
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
+import { CloseButton } from "../close-button";
 
 type Answer = { opciones: string[]; texto: string };
 type Modality = "presencial" | "virtual" | "hibrida";
@@ -67,6 +68,7 @@ export function ValuationWizard({
   promo,
   initialSede = null,
   deliverWhatsapp = false,
+  onClose,
 }: {
   preview: boolean;
   needId: string;
@@ -79,6 +81,7 @@ export function ValuationWizard({
   promo?: string;
   initialSede?: string | null;
   deliverWhatsapp?: boolean;
+  onClose?: () => void;
 }) {
   const agenda = useMemo(() => createMockAgenda(preview), [preview]);
   const [step, setStep] = useState(0);
@@ -326,20 +329,27 @@ export function ValuationWizard({
       <div className="vx-main">
         <header className="vx-top">
           <p>Valoración personalizada</p>
-          <p>
-            0{step + 1} / 04
-          </p>
+          <div className="vx-top-end">
+            <p>0{step + 1} / 04</p>
+            {frame === "dialog" && onClose ? <CloseButton onClick={onClose} /> : null}
+          </div>
         </header>
         <div className="vx-progress" aria-hidden="true">
           {STEPS.map((item, index) => (
             <span key={item.title} className={index <= step ? "is-done" : ""} />
           ))}
         </div>
+        <div className="vx-heading vx-step" key={phase === "recibida" ? "recibida" : `titulo-${step}`}>
+          <h3 className="display">{phase === "recibida" ? "Solicitud recibida" : STEPS[step].title}</h3>
+          <p className="vx-sub">
+            {phase === "recibida"
+              ? "El equipo te contacta para confirmar la disponibilidad. Esta pantalla no es una cita confirmada."
+              : STEPS[step].subtitle}
+          </p>
+        </div>
         <div className="vx-scroll thin-scroll">
           {phase === "recibida" ? (
             <div className="vx-step">
-              <h3 className="display">Solicitud recibida</h3>
-              <p>El equipo te contacta para confirmar la disponibilidad. Esta pantalla no es una cita confirmada.</p>
               <ul className="vx-summary">
                 {summary.map(([label, value]) => (
                   <li key={label}>
@@ -352,8 +362,6 @@ export function ValuationWizard({
             </div>
           ) : (
             <div className="vx-step" key={step}>
-              <h3 className="display">{STEPS[step].title}</h3>
-              <p className="vx-sub">{STEPS[step].subtitle}</p>
               {step === 0 ? <StepOne /> : null}
               {step === 1 ? <StepTwo /> : null}
               {step === 2 ? <StepThree /> : null}

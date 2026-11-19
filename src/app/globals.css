@@ -2120,7 +2120,30 @@ body:has(dialog[open]) .ficha-mobile-bar {
   letter-spacing: 0.12em;
   text-transform: uppercase;
 }
-.mega-explore { display: grid; gap: 0.55rem; }
+.mega-explore {
+  display: grid;
+  gap: 0.55rem;
+  padding: 0.7rem;
+  border-radius: 1.2rem;
+  background:
+    radial-gradient(120% 80% at 0% 0%, rgb(255 236 214 / 0.95), transparent 58%),
+    linear-gradient(165deg, rgb(241 206 179 / 0.92), rgb(232 168 140 / 0.55) 48%, rgb(239 220 196 / 0.88));
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.45);
+}
+.mega-explore .glass-card {
+  background: rgb(255 252 247 / 0.34);
+  border: 1px solid rgb(255 255 255 / 0.88);
+  box-shadow: 0 1px 0 rgb(255 255 255 / 0.85) inset, 0 12px 28px rgb(141 61 44 / 0.18);
+  backdrop-filter: blur(18px) saturate(1.45);
+}
+.mega-explore .glass-card:hover {
+  background: rgb(255 252 247 / 0.52);
+  box-shadow: 0 1px 0 rgb(255 255 255 / 0.92) inset, 0 16px 34px rgb(141 61 44 / 0.22);
+}
+.mega-explore .glass-card:active {
+  background: rgb(255 244 232 / 0.4);
+  box-shadow: 0 1px 0 rgb(255 255 255 / 0.7) inset, 0 6px 16px rgb(141 61 44 / 0.16);
+}
 .mega-explore a {
   display: grid;
   grid-template-columns: 1fr auto 5.4rem;
@@ -3906,6 +3929,11 @@ dialog.cart-drawer {
   .guia-toc {
     background: rgb(247 244 234 / 0.96);
   }
+  .mega-explore .glass-card {
+    background: rgb(255 248 241 / 0.9);
+    border-color: rgb(255 255 255 / 0.95);
+    box-shadow: 0 1px 0 rgb(255 255 255 / 0.8) inset, 0 12px 28px rgb(141 61 44 / 0.16);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -4181,7 +4209,15 @@ dialog.sheet.vx-dialog {
   background: #fffdf8;
 }
 
-.vx-dialog-bar { position: absolute; top: 0.4rem; right: 0.4rem; z-index: 4; }
+.vx-top-end { display: flex; flex: none; align-items: center; gap: 0.65rem; }
+.vx.is-dialog {
+  height: min(44rem, calc(100dvh - 2rem));
+  min-height: 0;
+  max-height: calc(100dvh - 2rem);
+  grid-template-rows: auto minmax(0, 1fr);
+}
+.vx.is-dialog .vx-main { min-height: 0; overflow: hidden; }
+.vx.is-dialog .close-x { width: 44px; height: 44px; }
 .vx-wrap { width: min(81rem, calc(100% - 1.5rem)); margin: 0 auto 5.5rem; }
 .vx {
   display: grid;
@@ -4209,22 +4245,30 @@ dialog.sheet.vx-dialog {
 .vx-top, .vx-progress, .vx-nav { padding-inline: 1.15rem; }
 .vx-top {
   display: flex;
+  flex: none;
+  align-items: center;
   justify-content: space-between;
-  padding-top: 1rem;
+  gap: 0.75rem;
+  padding-top: 0.45rem;
+  padding-bottom: 0.15rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   font-size: 0.72rem;
   font-weight: 700;
   color: #8d3d2c;
 }
-.vx-progress { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.35rem; padding-top: 0.55rem; }
+.vx-top p:first-child { min-width: 0; }
+.vx-progress { display: grid; flex: none; grid-template-columns: repeat(4, 1fr); gap: 0.35rem; padding-top: 0.45rem; }
 .vx-progress span { height: 0.28rem; border-radius: 999px; background: #eadfce; }
 .vx-progress .is-done { background: #ee876b; }
-.vx-scroll { min-height: 18rem; max-height: min(62vh, 34rem); overflow: auto; padding: 0.85rem 1.15rem 1rem; }
+.vx-heading { flex: none; padding: 0.85rem 1.15rem 0.2rem; }
+.vx-heading h3,
+.vx-step h3 { margin: 0; font-size: clamp(1.8rem, 3vw, 2.45rem); }
+.vx-scroll { flex: 1 1 auto; min-height: 0; overflow: auto; padding: 0.65rem 1.15rem 1rem; }
+.vx:not(.is-dialog) .vx-scroll { min-height: 16rem; max-height: min(58vh, 32rem); }
 .vx-step { animation: vx-in 220ms ease-out; }
 @keyframes vx-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
-.vx-step h3 { margin: 0; font-size: clamp(1.8rem, 3vw, 2.45rem); }
-.vx-sub { margin: 0.3rem 0 0.85rem; color: #5e534c; }
+.vx-sub { margin: 0.3rem 0 0; color: #5e534c; }
 .vx-field { display: grid; gap: 0.45rem; margin: 0 0 0.95rem; border: 0; padding: 0; min-width: 0; }
 .vx-field legend { font-weight: 700; }
 .vx-cards { display: grid; gap: 0.5rem; }
@@ -4250,7 +4294,7 @@ dialog.sheet.vx-dialog {
   outline-offset: 3px;
 }
 .vx-error { color: #8d3d2c; font-size: 0.85rem; font-weight: 700; }
-.vx-nav { display: flex; justify-content: space-between; gap: 0.6rem; padding-block: 0.8rem 1rem; border-top: 1px solid #eadfce; }
+.vx-nav { display: flex; flex: none; justify-content: space-between; gap: 0.6rem; padding-block: 0.8rem 1rem; border-top: 1px solid #eadfce; }
 .vx input, .vx textarea { width: 100%; border: 1px solid #eadfce; border-radius: 0.85rem; background: #fff; padding: 0.7rem 0.8rem; }
 .vx-check { display: flex; gap: 0.55rem; align-items: flex-start; margin: 0.7rem 0; }
 .vx-check a { text-decoration: underline; }
@@ -4263,6 +4307,7 @@ dialog.sheet.vx-dialog {
   .vx { grid-template-columns: 0.35fr 0.65fr; min-height: 38rem; }
   .vx-side { min-height: 100%; }
   .vx-cards { grid-template-columns: 1fr 1fr; }
+  .vx.is-dialog { grid-template-rows: minmax(0, 1fr); }
 }
 
 @media (max-width: 720px) {
@@ -4273,8 +4318,12 @@ dialog.sheet.vx-dialog {
     border-radius: 1.25rem 1.25rem 0 0;
   }
   dialog.sheet.vx-dialog[open] { position: fixed; inset: auto 0 0 0; }
-  .vx.is-dialog { max-height: 92dvh; }
-  .vx-scroll { max-height: 58dvh; }
+  .vx.is-dialog {
+    height: min(44rem, 92dvh);
+    max-height: 92dvh;
+    grid-template-rows: auto minmax(0, 1fr);
+  }
+  .vx.is-dialog .vx-scroll { max-height: none; }
   .vx-summary li { grid-template-columns: 1fr auto; }
   .vx-summary li span { grid-column: 1 / -1; }
 }
