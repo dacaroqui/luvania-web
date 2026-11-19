@@ -40,9 +40,18 @@ export function SiteHeader() {
   }, []);
 
   useEffect(() => {
+    let frame = 0;
     const onScroll = () => {
-      const next = window.scrollY > 28;
-      setCompact((value) => (value === next ? value : next));
+      if (frame) return;
+      frame = window.requestAnimationFrame(() => {
+        frame = 0;
+        const y = window.scrollY;
+        setCompact((value) => {
+          if (!value && y > 24) return true;
+          if (value && y < 8) return false;
+          return value;
+        });
+      });
     };
     const onKey = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
@@ -64,6 +73,7 @@ export function SiteHeader() {
       window.removeEventListener("scroll", onScroll);
       document.removeEventListener("keydown", onKey);
       document.removeEventListener("pointerdown", onPointer);
+      if (frame) window.cancelAnimationFrame(frame);
     };
   }, []);
 
