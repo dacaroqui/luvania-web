@@ -20,6 +20,25 @@ function patientCopy(value: string | undefined) {
     .join(" ");
 }
 
+function ShortCopy({ text }: { text: string }) {
+  const copy = text.replace(/\s+/g, " ").trim();
+  const words = copy.split(" ");
+  if (words.length <= 26) return <p>{text}</p>;
+  const preview = words.slice(0, 23).join(" ");
+  const end = Array.from(preview.matchAll(/[.!?](?=\s|$)/g)).at(-1)?.index;
+  const split = end !== undefined && end >= 45 ? end + 1 : preview.length;
+
+  return (
+    <>
+      <p>{copy.slice(0, split)}{split === preview.length && !/[.!?]$/.test(preview) ? "…" : ""}</p>
+      <details className="lp-hair-more">
+        <summary>Leer más</summary>
+        <p>{copy.slice(split).trim()}</p>
+      </details>
+    </>
+  );
+}
+
 function Mark({ path }: { path: string }) {
   return (
     <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -91,7 +110,7 @@ export function LandingView({
   const portrait = treatment?.image;
 
   return (
-    <main className="ficha lp-ficha">
+    <main className={landing.simulation ? "ficha lp-ficha lp-capilar" : "ficha lp-ficha"}>
       <section className="ficha-hero" data-tone="cream">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img className="ficha-hero-petal" src="/stock/petalo-b.webp" alt="" />
@@ -105,6 +124,7 @@ export function LandingView({
               <BookButton {...booking}>
                 {landing.simulation ? "Agendar mi valoración capilar" : "Iniciar valoración"}
               </BookButton>
+              {landing.simulation ? <a className="btn-line" href="#como-te-verias">Probar simulación</a> : null}
             </div>
           </div>
           <div className="ficha-hero-visual">
@@ -123,7 +143,7 @@ export function LandingView({
             </div>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img className="ficha-portrait-petal" src="/stock/petalo-a.webp" alt="" />
-            {preview && landing.showDoctor ? <DoctorPlaceholder /> : null}
+            {preview && landing.showDoctor && !landing.simulation ? <DoctorPlaceholder /> : null}
           </div>
         </div>
       </section>
@@ -135,18 +155,19 @@ export function LandingView({
       {landing.simulation && treatment ? (
         <section className="lp-hair-overview" aria-label="Conoce el tratamiento capilar">
           <div className="lp-hair-facts">
-            {queEs ? <section id="que-es"><h2 className="display">Qué es</h2><p>{queEs}</p></section> : null}
+            {queEs ? <section id="que-es"><h2 className="display">Qué es</h2><ShortCopy text={queEs} /></section> : null}
             {beneficios.length ? (
               <section id="beneficios">
                 <h2 className="display">Beneficios</h2>
-                <ul className="lp-benefits">{beneficios.map((item) => <li key={item}>{item}</li>)}</ul>
+                <ul className="lp-benefits">{beneficios.slice(0, 2).map((item) => <li key={item}><ShortCopy text={item} /></li>)}</ul>
+                {beneficios.length > 2 ? <details className="lp-hair-more"><summary>Más beneficios</summary><ul className="lp-benefits">{beneficios.slice(2).map((item) => <li key={item}>{item}</li>)}</ul></details> : null}
               </section>
             ) : null}
             {paraQuien ? (
               <section id="para-quien">
                 <h2 className="display">Para quién</h2>
-                <p>{paraQuien}</p>
-                {duracion ? <p>{duracion}</p> : null}
+                <ShortCopy text={paraQuien} />
+                {duracion ? <details className="lp-hair-more"><summary>Duración</summary><p>{duracion}</p></details> : null}
               </section>
             ) : null}
           </div>
@@ -207,7 +228,14 @@ export function LandingView({
               {duracion ? <p>{duracion}</p> : null}
             </section>
           ) : null}
-          {riesgos ? (
+          {riesgos && landing.simulation ? (
+            <details id="riesgos" className="lp-hair-disclosure">
+              <summary>Riesgos y contraindicaciones</summary>
+              {guide?.medicalReview === "pendiente" ? <p className="ficha-review-note">Contenido en revisión médica</p> : null}
+              <p>{riesgos}</p>
+              <Link href={`/tratamientos/${treatment.slug}/guia`}>Leer la guía</Link>
+            </details>
+          ) : riesgos ? (
             <section id="riesgos" className="ficha-block ficha-card">
               {guide?.medicalReview === "pendiente" ? <p className="ficha-review-note">Contenido en revisión médica</p> : null}
               <h2 className="display">Riesgos y contraindicaciones</h2>

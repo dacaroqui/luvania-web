@@ -4850,3 +4850,47 @@ dialog.sheet.vx-dialog { width: min(57rem, calc(100vw - 1.5rem)); border: 0; pad
   object-fit: cover;
   object-position: center 12%;
 }
+
+
+.lp-capilar {
+  --lp-hair-width: min(76rem, calc(100% - clamp(1.5rem, 5vw, 3rem)));
+  --lp-hair-space: clamp(1.5rem, 3vw, 2.75rem);
+}
+.lp-capilar .ficha-hero-grid {
+  width: var(--lp-hair-width);
+  padding: clamp(1.3rem, 3vw, 2.7rem) 0;
+  gap: clamp(1.25rem, 4vw, 3.2rem);
+}
+.lp-capilar .ficha-hero h1 { max-width: 13ch; font-size: clamp(2.8rem, 5.4vw, 4.8rem); line-height: 0.98; }
+.lp-capilar .ficha-summary { max-width: 36ch; }
+.lp-capilar .ficha-portrait { aspect-ratio: 16 / 11; }
+.lp-capilar .ficha-portrait-petal { opacity: 0.52; }
+.lp-capilar .lp-hair-stage,
+.lp-capilar .lp-hair-overview,
+.lp-capilar .lp-detail,
+.lp-capilar .lp-split.is-promos {
+  width: var(--lp-hair-width);
+  margin: var(--lp-hair-space) auto 0;
+}
+.lp-capilar .lp-detail,
+.lp-capilar .lp-split.is-promos { padding-block: 0; }
+.lp-hair-stage .hair-mirror { gap: 0.6rem; scroll-margin-top: 6rem; }
+.lp-hair-stage .hair-style-picker { width: min(100%, 34rem); }
+.lp-hair-stage .hair-style-picker button { min-height: 2.8rem; }
+.lp-hair-stage .lp-results-frame .compare { height: clamp(16rem, 35vw, 27rem); }
+.lp-hair-stage .compare canvas { object-fit: cover; object-position: center top; }
+.lp-hair-stage .lp-results-frame .compare img.hair-demo-photo { object-position: center 10%; }
+.lp-hair-stage .lp-results-frame .compare img.hair-demo-photo.is-femenino { object-position: center top; }
+.hair-mirror-style-note { margin: 0; color: #625148; font-size: 0.82rem; text-align: center; }
+.lp-hair-more { margin-top: 0.45rem; }
+.lp-hair-more summary,
+.lp-hair-disclosure summary { color: #804936; font-weight: 700; cursor: pointer; }
+.lp-hair-more summary { width: fit-content; font-size: 0.82rem; }
+.lp-hair-more p, .lp-hair-more .lp-benefits { margin-top: 0.4rem; }
+.lp-hair-disclosure {
+  border: 1px solid rgb(129 82 59 / 0.16);
+  border-radius: 0.9rem;
+  padding: 0.85rem 1rem;
+  background: #fffaf2;
+}
+.lp-hair-disclosure p { margin: 0.55rem 0; }

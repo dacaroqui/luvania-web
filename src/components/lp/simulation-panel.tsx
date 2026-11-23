@@ -16,10 +16,7 @@ type Status = "idle" | "opening" | "live" | "loading-photo" | "photo" | "error";
 
 type Example = { before: ReactNode; after: ReactNode; label: string; badge: string };
 
-export function SimulationPanel({ example, onActiveChange }: {
-  example?: Example;
-  onActiveChange?: (active: boolean) => void;
-}) {
+export function SimulationPanel({ examples }: { examples: Record<DensityStyle, Example> }) {
   const [status, setStatus] = useState<Status>("idle");
   const [error, setError] = useState("");
   const video = useRef<HTMLVideoElement>(null);
@@ -347,11 +344,11 @@ export function SimulationPanel({ example, onActiveChange }: {
     if (event.detail > 0) {
       const bounds = canvas.getBoundingClientRect();
       if (!bounds.width || !bounds.height) return;
-      const scale = Math.min(bounds.width / canvas.width, bounds.height / canvas.height);
+      const scale = Math.max(bounds.width / canvas.width, bounds.height / canvas.height);
       const width = canvas.width * scale;
       const height = canvas.height * scale;
       const x = (event.clientX - bounds.left - (bounds.width - width) / 2) / width;
-      const y = (event.clientY - bounds.top - (bounds.height - height) / 2) / height;
+      const y = (event.clientY - bounds.top) / height;
       if (x < 0 || x > 1 || y < 0 || y > 1) return;
       adjustPoint(x, y + (pose.current?.height ?? 0.14) * 0.4);
     }
@@ -380,9 +377,7 @@ export function SimulationPanel({ example, onActiveChange }: {
   const active = status === "live" || status === "photo";
   const opened = active || status === "opening" || status === "loading-photo";
 
-  useEffect(() => {
-    onActiveChange?.(active);
-  }, [active, onActiveChange]);
+  const example = examples[style];
 
   useEffect(() => {
     if (adjusting) aimSurface.current?.focus({ preventScroll: true });
@@ -390,8 +385,7 @@ export function SimulationPanel({ example, onActiveChange }: {
 
   return (
     <div id="como-te-verias" className="hair-mirror">
-      {active ? (
-        <div className="hair-style-picker" role="group" aria-label="Estilo de densidad">
+      <div className="hair-style-picker" role="group" aria-label="Estilo de densidad">
           <button type="button" aria-pressed={style === "masculino"} onClick={() => chooseStyle("masculino")}>
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 16v-4a7 7 0 0 1 14 0v4M5 12l4-2 3 2 3-2 4 2" /></svg>
             <span><strong>Masculino</strong><small>Entradas y línea frontal</small></span>
@@ -400,16 +394,15 @@ export function SimulationPanel({ example, onActiveChange }: {
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 20V12a7 7 0 0 1 14 0v8M12 5c0 5-3 8-7 10m7-10c0 5 3 8 7 10" /></svg>
             <span><strong>Femenino</strong><small>Raya y densidad superior</small></span>
           </button>
-        </div>
-      ) : null}
-      <div id="espejo-capilar" className={active ? "lp-results-frame hair-mirror-live" : "lp-results-frame"} hidden={!example && !active}>
-        {example && !active ? <span className="lp-badge">{example.badge}</span> : null}
+      </div>
+      <div id="espejo-capilar" className={active ? "lp-results-frame hair-mirror-live" : "lp-results-frame"}>
+        {!active ? <span className="lp-badge">{example.badge}</span> : null}
         <CompareSlider
-          label={active ? "Compara tu imagen sin filtro y con filtro" : example?.label ?? "Comparador capilar"}
+          label={active ? "Compara tu imagen sin filtro y con filtro" : example.label}
           beforeLabel={active ? "Antes · Sin filtro" : "Antes"}
           afterLabel={active ? "Después · Con filtro" : "Después"}
-          before={<><canvas ref={beforeCanvas} hidden={!active} aria-hidden="true" />{!active ? example?.before : null}</>}
-          after={<><canvas ref={afterCanvas} hidden={!active} aria-hidden="true" />{!active ? example?.after : null}</>}
+          before={<><canvas ref={beforeCanvas} hidden={!active} aria-hidden="true" />{!active ? example.before : null}</>}
+          after={<><canvas ref={afterCanvas} hidden={!active} aria-hidden="true" />{!active ? example.after : null}</>}
         />
         {active && adjusting ? (
           <button type="button" ref={aimSurface} className="hair-mirror-aim"
@@ -432,6 +425,7 @@ export function SimulationPanel({ example, onActiveChange }: {
       {active && maskStatus !== "error" && (tracking === "loading" || maskStatus === "loading") ? <p className="hair-mirror-message" role="status">Preparando el filtro…</p> : null}
       {active && tracking === "searching" && maskStatus === "ready" ? <p className="hair-mirror-message" role="status">Mira de frente y deja visible la línea del cabello.</p> : null}
       {active && tracking === "unavailable" && maskStatus === "ready" ? <p className="hair-mirror-message" role="status">Usa «Ajustar zona» para colocar el filtro.</p> : null}
+      {active && style === "femenino" && tracking === "ready" && maskStatus === "ready" ? <p className="hair-mirror-style-note">Para apreciar el cambio, encuadra la parte superior con la raya visible.</p> : null}
       {active && maskStatus === "empty" ? <p className="hair-mirror-message" role="status">Acércate para que se vea el cabello.</p> : null}
       {active && maskStatus === "error" ? <p className="hair-mirror-message" role="status">El filtro no cargó. Cierra la vista e inténtalo de nuevo.</p> : null}
       {status === "opening" ? <p className="hair-mirror-message" role="status">Abriendo cámara…</p> : null}

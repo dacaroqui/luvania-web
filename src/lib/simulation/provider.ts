@@ -46,7 +46,8 @@ export function prepareDensityMask(mask: HairMask, style: DensityStyle): Density
   const weights = new Float32Array(pixels.length);
   const offsetX = new Int8Array(pixels.length);
   const offsetY = new Int8Array(pixels.length);
-  const reach = style === "masculino" ? Math.max(3, Math.round(width * 0.028)) : Math.max(2, Math.round(width * 0.015));
+  const feminine = style === "femenino";
+  const reach = Math.max(3, Math.round(width * (feminine ? 0.032 : 0.028)));
 
   for (let y = 1; y < height - 1; y += 1) {
     for (let x = 1; x < width - 1; x += 1) {
@@ -56,11 +57,17 @@ export function prepareDensityMask(mask: HairMask, style: DensityStyle): Density
         const left = x >= distance && pixels[index - distance] === hair;
         const right = x + distance < width && pixels[index + distance] === hair;
         const above = y >= distance && pixels[index - distance * width] === hair;
-        if (style === "femenino") {
-          // Fill a narrow part only when there are real strands on both sides.
-          const otherLeft = x >= reach && pixels[index - reach] === hair;
-          const otherRight = x + reach < width && pixels[index + reach] === hair;
-          if (!(left && otherRight) && !(right && otherLeft)) continue;
+        if (feminine) {
+          if (!left && !right) continue;
+          const side = left ? -1 : 1;
+          let opposite = 1;
+          while (opposite <= reach * 2) {
+            const probe = x - side * opposite;
+            if (probe < 0 || probe >= width || pixels[y * width + probe] === hair) break;
+            opposite += 1;
+          }
+          const probe = x - side * opposite;
+          if (opposite > reach * 2 || probe < 0 || probe >= width) continue;
         } else if (!above && !left && !right) {
           continue;
         }
@@ -89,7 +96,7 @@ export function paintDensity(
   const depth = pose.height * height;
   const left = Math.max(0, Math.floor(x - span * 0.64));
   const right = Math.min(width, Math.ceil(x + span * 0.64));
-  const top = Math.max(0, Math.floor(y - depth * 1.3));
+  const top = Math.max(0, Math.floor(y - depth * (style === "femenino" ? 1.95 : 1.3)));
   const bottom = Math.min(height, Math.ceil(y + depth * 0.66));
   if (right <= left || bottom <= top) return;
 
@@ -99,8 +106,8 @@ export function paintDensity(
   const sin = Math.sin(pose.angle);
   const mx = mask.width / width;
   const my = mask.height / height;
-  const shiftX = (pose.x - maskPose.x) * width;
-  const shiftY = (pose.y - maskPose.y) * height;
+  const shiftX = Math.max(-width * 0.018, Math.min(width * 0.018, (pose.x - maskPose.x) * width));
+  const shiftY = Math.max(-height * 0.018, Math.min(height * 0.018, (pose.y - maskPose.y) * height));
   for (let py = top; py < bottom; py += 1) {
     for (let px = left; px < right; px += 1) {
       const across = (px - x) * cos + (py - y) * sin;
@@ -116,7 +123,7 @@ export function paintDensity(
       if (!weight && !actualHair) continue;
       const output = ((py - top) * patch.width + px - left) * 4;
       if (actualHair) {
-        const tint = 1 - edge * (style === "femenino" ? 0.15 : 0.2);
+        const tint = 1 - edge * (style === "femenino" ? 0.22 : 0.2);
         for (let c = 0; c < 3; c += 1) patch.data[output + c] *= tint;
         continue;
       }
@@ -126,7 +133,7 @@ export function paintDensity(
       const strand = style === "masculino"
         ? 0.73 + 0.22 * Math.sin(across * 2.1 + down * 1.17) ** 2
         : 0.88 + 0.12 * Math.cos(across * 0.8 + down * 0.08) ** 2;
-      const alpha = edge * weight * strand * (style === "masculino" ? 0.88 : 0.73);
+      const alpha = edge * weight * strand * (style === "masculino" ? 0.88 : 0.84);
       for (let c = 0; c < 3; c += 1) {
         patch.data[output + c] = patch.data[output + c] * (1 - alpha) + data.data[reference + c] * alpha;
       }

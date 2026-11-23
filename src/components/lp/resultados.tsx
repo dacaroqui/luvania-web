@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { CompareSlider } from "./compare-slider";
 import { SimulationPanel } from "./simulation-panel";
+import type { DensityStyle } from "@/lib/simulation/provider";
 
 const CASES = [
   {
@@ -69,30 +70,35 @@ function ResultsCarousel() {
 }
 
 function CapillaryExample() {
-  const [active, setActive] = useState(false);
-  const example = {
-    label: "Comparar las dos fotos del ejemplo de densidad",
-    badge: "Ejemplo generado con IA",
-    before: <ExamplePhoto side="antes" />,
-    after: <ExamplePhoto side="despues" />,
+  const examples = {
+    masculino: {
+      label: "Comparar el ejemplo de densidad en entradas",
+      badge: "Ejemplo generado con IA",
+      before: <ExamplePhoto style="masculino" side="antes" />,
+      after: <ExamplePhoto style="masculino" side="despues" />,
+    },
+    femenino: {
+      label: "Comparar el ejemplo de densidad en la raya",
+      badge: "Ejemplo generado con IA",
+      before: <ExamplePhoto style="femenino" side="antes" />,
+      after: <ExamplePhoto style="femenino" side="despues" />,
+    },
   };
 
   return (
-    <section className="lp-split" aria-labelledby="resultados-reales">
-      <div className="lp-split-copy">
-        <h2 id="resultados-reales" className="display">{active ? "Tu espejo capilar" : "Ejemplo de densidad capilar"}</h2>
-        {!active ? <p>Desliza para comparar la densidad en la línea frontal.</p> : null}
-      </div>
-      <SimulationPanel example={example} onActiveChange={setActive} />
+    <section className="lp-hair-stage" aria-label="Comparador de densidad capilar">
+      <SimulationPanel examples={examples} />
     </section>
   );
 }
 
-function ExamplePhoto({ side }: { side: "antes" | "despues" }) {
-  const alt = side === "antes" ? "Retrato ilustrativo con entradas visibles" : "El mismo retrato con mayor densidad frente a las entradas";
+function ExamplePhoto({ side, style }: { side: "antes" | "despues"; style: DensityStyle }) {
+  const area = style === "femenino" ? "la raya" : "las entradas";
+  const alt = side === "antes" ? `Retrato ilustrativo con menor densidad en ${area}` : `El mismo retrato con mayor densidad en ${area}`;
+  const file = style === "femenino" ? "capilar-raya" : "capilar-ejemplo";
   return (
     // eslint-disable-next-line @next/next/no-img-element
-    <img className="hair-demo-photo" src={`/images/capilar-ejemplo-${side}.webp`} alt={alt} width={750} height={750} decoding="async" />
+    <img className={`hair-demo-photo is-${style}`} src={`/images/${file}-${side}.webp`} alt={alt} width={750} height={750} decoding="async" />
   );
 }
 
