@@ -40,7 +40,7 @@ export function SimulationPanel({ example, onActiveChange }: {
   const manual = useRef(false);
   const [tracking, setTracking] = useState<Tracking>("loading");
 
-  function usePose(next: HairPose) {
+  function updatePose(next: HairPose) {
     const current = pose.current;
     if (!current || manual.current) {
       pose.current = next;
@@ -185,7 +185,7 @@ export function SimulationPanel({ example, onActiveChange }: {
               const detected = tracker.current.detectForVideo(element, now);
               const next = locateHairline(detected, element.videoWidth, element.videoHeight, true);
               if (next) {
-                usePose(next);
+                updatePose(next);
                 lastFace = now;
                 setTracking("ready");
               } else if (now - lastFace > 300) {
@@ -238,7 +238,7 @@ export function SimulationPanel({ example, onActiveChange }: {
           if (session.current !== id || manual.current) return;
           const next = locateHairline(model.detect(image), image.width, image.height, false);
           if (next) {
-            usePose(next);
+            updatePose(next);
             draw(image, image.width, image.height, false);
           }
           setTracking(next ? "ready" : "unavailable");
@@ -264,7 +264,7 @@ export function SimulationPanel({ example, onActiveChange }: {
   function adjustPoint(x: number, y: number) {
     manual.current = true;
     const previous = pose.current;
-    usePose({
+    updatePose({
       x: Math.max(0, Math.min(1, x)),
       y: Math.max(0, Math.min(1, y)),
       width: previous?.width ?? 0.3,

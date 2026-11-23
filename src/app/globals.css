@@ -4745,3 +4745,53 @@ dialog.sheet.vx-dialog {
   overscroll-behavior: contain;
 }
 .vx.is-dialog .vx-scroll::-webkit-scrollbar { display: none; }
+
+
+dialog.sheet.vx-dialog { width: min(57rem, calc(100vw - 1.5rem)); border: 0; padding: 0; }
+.vx.is-dialog {
+  height: min(34rem, calc(100dvh - 2rem));
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr);
+}
+.vx.is-dialog .vx-side { display: none; }
+.vx.is-dialog .vx-top,
+.vx.is-dialog .vx-progress,
+.vx.is-dialog .vx-heading,
+.vx.is-dialog .vx-scroll,
+.vx.is-dialog .vx-nav { padding-inline: clamp(1rem, 3vw, 1.75rem); }
+.vx.is-dialog .vx-heading h3 { font-size: clamp(1.85rem, 4vw, 2.65rem); line-height: 1.04; }
+.vx.is-dialog .vx-scroll { padding-top: 1rem; overflow-anchor: auto; }
+.vx.is-dialog .vx-nav { background: #fffdf8; }
+.vx .vx-modalities { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.65rem; margin-bottom: 0.6rem; }
+.vx-modalities button {
+  display: grid;
+  grid-template-columns: 1fr;
+  align-content: start;
+  align-items: start;
+  color: #322520;
+  background: linear-gradient(145deg, #fff, #fff5eb);
+}
+.vx-modalities button svg { box-sizing: content-box; padding: 0.45rem; border-radius: 0.7rem; background: #f7e7da; }
+.vx-modalities button strong { font-size: 1rem; }
+.vx-modalities button > span { font-size: 0.8rem; color: #524239; }
+.vx-optional { margin: 0 0 0.85rem; color: #665147; }
+.vx-optional > summary { width: fit-content; cursor: pointer; color: #8d3d2c; font-size: 0.88rem; font-weight: 700; }
+.vx-optional[open] > summary { margin-bottom: 0.55rem; }
+.vx-contact { display: grid; gap: 0.55rem; }
+.vx-contact .vx-field { margin-bottom: 0.3rem; }
+.vx .vx-check input { width: auto; flex: 0 0 auto; margin-top: 0.25rem; accent-color: #8d3d2c; }
+@media (min-width: 620px) {
+  .vx-contact { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (min-width: 900px) {
+  .vx.is-dialog { grid-template-columns: minmax(0, 0.26fr) minmax(0, 0.74fr); }
+  .vx.is-dialog .vx-side { display: block; }
+}
+@media (max-width: 720px) {
+  dialog.sheet.vx-dialog { width: 100%; }
+  .vx.is-dialog { height: min(36rem, 92dvh); }
+}
+@media (max-width: 375px) {
+  .vx .vx-modalities { gap: 0.35rem; }
+  .vx-modalities button { padding: 0.55rem 0.45rem; }
+}
