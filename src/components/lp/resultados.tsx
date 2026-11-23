@@ -24,17 +24,24 @@ const CASES = [
 
 export function ResultadosReales({ withMirror = false }: { withMirror?: boolean }) {
   const [index, setIndex] = useState(0);
+  const [mirrorActive, setMirrorActive] = useState(false);
   const item = CASES[index];
   const go = (delta: number) => setIndex((current) => (current + delta + CASES.length) % CASES.length);
+
+  const example = {
+    label: `Comparar el caso ${index + 1}. Foto real autorizada pendiente.`,
+    before: <Placeholder tone={item.before} />,
+    after: <Placeholder tone={item.after} />,
+  };
 
   return (
     <section className="lp-split" aria-labelledby="resultados-reales">
       <div className="lp-split-copy">
         <h2 id="resultados-reales" className="display">
-          Resultados reales de Luvania
+          {mirrorActive ? "Tu espejo capilar" : "Resultados reales de Luvania"}
         </h2>
-        <p>Fotos de pacientes pendientes de autorización.</p>
-        <div className="lp-arrows">
+        {!mirrorActive ? <p>Fotos de pacientes pendientes de autorización.</p> : null}
+        <div className="lp-arrows" hidden={mirrorActive}>
           <button type="button" className="lp-arrow" aria-label="Caso anterior" onClick={() => go(-1)}>
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <path d="M14.5 6.5 9 12l5.5 5.5" />
@@ -50,16 +57,14 @@ export function ResultadosReales({ withMirror = false }: { withMirror?: boolean 
           </span>
         </div>
       </div>
-      <div className="lp-results-frame">
-        <span className="lp-badge">Foto real autorizada pendiente</span>
-        <CompareSlider
-          key={item.id}
-          label={`Comparar el caso ${index + 1}. Foto real autorizada pendiente.`}
-          before={<Placeholder tone={item.before} />}
-          after={<Placeholder tone={item.after} />}
-        />
-      </div>
-      {withMirror ? <SimulationPanel /> : null}
+      {withMirror ? (
+        <SimulationPanel example={example} onActiveChange={setMirrorActive} />
+      ) : (
+        <div className="lp-results-frame">
+          <span className="lp-badge">Foto real autorizada pendiente</span>
+          <CompareSlider key={item.id} {...example} />
+        </div>
+      )}
     </section>
   );
 }
