@@ -346,13 +346,23 @@ export function ValuationWizard({
     ["Horario", slot ? `${slot.dayLabel} ${slot.label}${preview && modality !== "virtual" ? " · ejemplo, sin confirmar" : " · hora Colombia"}` : preview ? "" : "Te confirmaremos la disponibilidad"],
   ].filter(([, value]) => value);
 
+  const isCapillaryDialog = frame === "dialog" && path.replace(/\/$/, "") === `/lp/${caidaLanding.slug}`;
+
   const shell = (
-    <div className={`vx ${frame === "dialog" ? "is-dialog" : ""}`}>
-      <aside className="vx-side">
-        {/* provisional: stock */}
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={STEPS[step].photo} alt="" />
-      </aside>
+    <div className={`vx ${frame === "dialog" ? "is-dialog" : ""}${isCapillaryDialog ? " vx-capillary-dialog" : ""}`}>
+      {isCapillaryDialog ? (
+        <aside className="vx-clinician" aria-label="Quién te atiende">
+          <p>Valoración capilar</p>
+          <strong className="display">Equipo Luvania</strong>
+          <span>Profesional por confirmar</span>
+        </aside>
+      ) : (
+        <aside className="vx-side">
+          {/* provisional: stock */}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={STEPS[step].photo} alt="" />
+        </aside>
+      )}
       <div className="vx-main">
         <header className="vx-top">
           <p>Valoración personalizada</p>

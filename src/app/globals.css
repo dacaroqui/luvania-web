@@ -4754,6 +4754,29 @@ dialog.sheet.vx-dialog { width: min(57rem, calc(100vw - 1.5rem)); border: 0; pad
   grid-template-rows: minmax(0, 1fr);
 }
 .vx.is-dialog .vx-side { display: none; }
+.vx.is-dialog.vx-capillary-dialog { grid-template-rows: auto minmax(0, 1fr); }
+.vx-clinician {
+  display: grid;
+  align-content: center;
+  gap: 0.22rem;
+  padding: 0.7rem clamp(1rem, 3vw, 1.75rem);
+  background: #f5e8da;
+  color: #322520;
+}
+.vx-clinician p {
+  color: #8d3d2c;
+  font-size: 0.69rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.vx-clinician strong { font-size: 1.35rem; font-weight: 600; line-height: 1.06; }
+.vx-clinician span { color: #655047; font-size: 0.8rem; }
+@media (min-width: 900px) {
+  .vx.is-dialog.vx-capillary-dialog { grid-template-rows: minmax(0, 1fr); }
+  .vx-clinician { gap: 0.45rem; padding: 1.35rem; }
+  .vx-clinician strong { font-size: 2.15rem; }
+}
 .vx.is-dialog .vx-top,
 .vx.is-dialog .vx-progress,
 .vx.is-dialog .vx-heading,
