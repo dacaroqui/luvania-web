@@ -4865,6 +4865,15 @@ dialog.sheet.vx-dialog { width: min(57rem, calc(100vw - 1.5rem)); border: 0; pad
 .lp-capilar .ficha-summary { max-width: 36ch; }
 .lp-capilar .ficha-portrait { aspect-ratio: 16 / 11; }
 .lp-capilar .ficha-portrait-petal { opacity: 0.52; }
+
+.lp-capillary-hero { background: #efecdb; }
+.lp-capillary-hero .ficha-kicker { padding: 0; background: transparent; }
+.lp-capilar .lp-capillary-hero h1 { max-width: none; }
+.lp-capilar .lp-capillary-hero .ficha-summary { max-width: none; }
+
+@media (min-width: 1024px) {
+  .lp-capillary-hero h1 { white-space: pre-line; }
+}
 .lp-capilar .lp-hair-stage,
 .lp-capilar .lp-hair-overview,
 .lp-capilar .lp-detail,

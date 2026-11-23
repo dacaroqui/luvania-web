@@ -8,7 +8,7 @@ const landing: Landing = {
   description: "Valoración de la caída del cabello en Luvania. El plan se confirma en la cita, sin un plazo prometido.",
   heroKicker: "Valoración capilar en Bogotá",
   heroTitle: "¿Tu cabello pierde densidad?",
-  heroIntro: "Conoce tus opciones frente a la caída del cabello.",
+  heroIntro: "Revisa tu pérdida de volumen y conoce tus opciones.",
   promoFilter: "related",
   simulation: true,
   showResults: true,

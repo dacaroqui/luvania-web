@@ -108,17 +108,22 @@ export function LandingView({
       : null,
   ].filter((item): item is { href: string; title: string; text: string; path: string } => Boolean(item));
   const portrait = treatment?.image;
+  const capillaryHero = landing.slug === "caida-del-cabello";
 
   return (
     <main className={landing.simulation ? "ficha lp-ficha lp-capilar" : "ficha lp-ficha"}>
-      <section className="ficha-hero" data-tone="cream">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img className="ficha-hero-petal" src="/stock/petalo-b.webp" alt="" />
+      <section className={capillaryHero ? "ficha-hero lp-capillary-hero" : "ficha-hero"} data-tone="cream">
+        {!capillaryHero ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img className="ficha-hero-petal" src="/stock/petalo-b.webp" alt="" />
+        ) : null}
         <div className="ficha-hero-grid">
           <div className="ficha-hero-copy">
             <Breadcrumbs items={crumbs} />
             <p className="ficha-kicker">{landing.heroKicker || especialidad?.name || "Valoración"}</p>
-            <h1 className="display">{landing.heroTitle}</h1>
+            <h1 className="display">
+              {capillaryHero ? landing.heroTitle.replace(" pierde", "\npierde") : landing.heroTitle}
+            </h1>
             {intro ? <p className="ficha-summary">{intro}</p> : null}
             <div className="ficha-hero-actions">
               <BookButton {...booking}>
@@ -141,8 +146,10 @@ export function LandingView({
                 </>
               )}
             </div>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img className="ficha-portrait-petal" src="/stock/petalo-a.webp" alt="" />
+            {!capillaryHero ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img className="ficha-portrait-petal" src="/stock/petalo-a.webp" alt="" />
+            ) : null}
             {preview && landing.showDoctor && !landing.simulation ? <DoctorPlaceholder /> : null}
           </div>
         </div>
