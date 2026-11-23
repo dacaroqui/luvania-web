@@ -4877,10 +4877,28 @@ dialog.sheet.vx-dialog { width: min(57rem, calc(100vw - 1.5rem)); border: 0; pad
 .lp-hair-stage .hair-mirror { gap: 0.6rem; scroll-margin-top: 6rem; }
 .lp-hair-stage .hair-style-picker { width: min(100%, 34rem); }
 .lp-hair-stage .hair-style-picker button { min-height: 2.8rem; }
-.lp-hair-stage .lp-results-frame .compare { height: clamp(16rem, 35vw, 27rem); }
+.lp-hair-stage .lp-results-frame .compare {
+  --hair-frame-height: clamp(16rem, 35vw, 27rem);
+  height: var(--hair-frame-height);
+}
 .lp-hair-stage .compare canvas { object-fit: cover; object-position: center top; }
-.lp-hair-stage .lp-results-frame .compare img.hair-demo-photo { object-position: center 10%; }
-.lp-hair-stage .lp-results-frame .compare img.hair-demo-photo.is-femenino { object-position: center top; }
+.lp-hair-stage .lp-results-frame:not(.hair-mirror-live) .compare {
+  background: linear-gradient(180deg, #c6ad95, #d7bda4);
+}
+.lp-hair-stage .lp-results-frame .compare img.hair-demo-photo {
+  display: block;
+  width: min(100%, calc(var(--hair-frame-height) * 1.55));
+  height: 100%;
+  margin-inline: auto;
+  object-fit: cover;
+  object-position: center 10%;
+}
+.lp-hair-stage .lp-results-frame .compare img.hair-demo-photo.is-femenino { object-position: center 4%; }
+@media (min-width: 820px) {
+  .lp-hair-stage .lp-results-frame .compare img.hair-demo-photo {
+    mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+  }
+}
 .hair-mirror-style-note { margin: 0; color: #625148; font-size: 0.82rem; text-align: center; }
 .lp-hair-more { margin-top: 0.45rem; }
 .lp-hair-more summary,
