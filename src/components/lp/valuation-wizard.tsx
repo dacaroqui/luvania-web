@@ -7,7 +7,7 @@ import { createMockAgenda, type AgendaSlot, type MeetStatus } from "@/lib/agenda
 import { agendaLink } from "@/lib/whatsapp";
 import { submitCrmLead, type CrmAnswer } from "@/lib/crm-lead";
 import { blockedPayment } from "@/lib/payment/provider";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { CloseButton } from "../close-button";
 
@@ -84,6 +84,7 @@ export function ValuationWizard({
   onClose?: () => void;
 }) {
   const agenda = useMemo(() => createMockAgenda(preview), [preview]);
+  const scrollArea = useRef<HTMLDivElement>(null);
   const [step, setStep] = useState(0);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [patient, setPatient] = useState({ nombre: "", celular: "", email: "" });
@@ -206,6 +207,7 @@ export function ValuationWizard({
   }
 
   function go(nextStep: number) {
+    if (scrollArea.current) scrollArea.current.scrollTop = 0;
     setStep(nextStep);
     setErrors({});
   }
@@ -347,7 +349,7 @@ export function ValuationWizard({
               : STEPS[step].subtitle}
           </p>
         </div>
-        <div className="vx-scroll thin-scroll">
+        <div className={frame === "dialog" ? "vx-scroll" : "vx-scroll thin-scroll"} ref={scrollArea}>
           {phase === "recibida" ? (
             <div className="vx-step">
               <ul className="vx-summary">
@@ -362,10 +364,10 @@ export function ValuationWizard({
             </div>
           ) : (
             <div className="vx-step" key={step}>
-              {step === 0 ? <StepOne /> : null}
-              {step === 1 ? <StepTwo /> : null}
-              {step === 2 ? <StepThree /> : null}
-              {step === 3 ? <StepFour /> : null}
+              {step === 0 ? renderStepOne() : null}
+              {step === 1 ? renderStepTwo() : null}
+              {step === 2 ? renderStepThree() : null}
+              {step === 3 ? renderStepFour() : null}
             </div>
           )}
         </div>
@@ -399,7 +401,7 @@ export function ValuationWizard({
     </div>
   );
 
-  function FieldError({ id }: { id: string }) {
+  function renderFieldError({ id }: { id: string }) {
     if (!errors[id]) return null;
     return (
       <p id={`${id}-error`} className="vx-error" role="alert">
@@ -408,7 +410,7 @@ export function ValuationWizard({
     );
   }
 
-  function StepOne() {
+  function renderStepOne() {
     const desde = byId("desde-cuando");
     const detalle = byId("zona");
     return (
@@ -442,40 +444,40 @@ export function ValuationWizard({
               <span>Otra necesidad</span>
             </button>
           </div>
-          <FieldError id="mejorar" />
+          {renderFieldError({ id: "mejorar" })}
         </fieldset>
         {picked.includes("otra") ? (
           <label className="vx-field">
             Cuéntanos esa otra necesidad
             <input value={otra} onChange={(event) => setOtra(event.target.value)} />
-            <FieldError id="otra" />
+            {renderFieldError({ id: "otra" })}
           </label>
         ) : null}
-        <OneField question={ZONA} />
-        {hairDetail && detalle ? <ManyField question={detalle} /> : null}
-        {desde ? <OneField question={desde} /> : null}
+        {renderOneField({ question: ZONA })}
+        {hairDetail && detalle ? renderManyField({ question: detalle }) : null}
+        {desde ? renderOneField({ question: desde }) : null}
       </>
     );
   }
 
-  function StepTwo() {
+  function renderStepTwo() {
     const probado = byId("probado");
     const satisfecha = byId("satisfecha");
     const cuando = byId("cuando");
     const decision = byId("decision");
     return (
       <>
-        <OneField question={ANTES} />
-        {showTriedDetail && probado ? <ManyField question={probado} /> : null}
-        <OneField question={RESULTADO} />
-        {picked.includes("caida-cabello") && satisfecha ? <ManyField question={satisfecha} /> : null}
-        {cuando ? <OneField question={cuando} /> : null}
-        {decision ? <ManyField question={decision} /> : null}
+        {renderOneField({ question: ANTES })}
+        {showTriedDetail && probado ? renderManyField({ question: probado }) : null}
+        {renderOneField({ question: RESULTADO })}
+        {picked.includes("caida-cabello") && satisfecha ? renderManyField({ question: satisfecha }) : null}
+        {cuando ? renderOneField({ question: cuando }) : null}
+        {decision ? renderManyField({ question: decision }) : null}
       </>
     );
   }
 
-  function StepThree() {
+  function renderStepThree() {
     return (
       <>
         {promo ? <p className="agenda-summary">{promo}</p> : null}
@@ -494,7 +496,7 @@ export function ValuationWizard({
             </button>
           ))}
         </div>
-        <FieldError id="modalidad" />
+        {renderFieldError({ id: "modalidad" })}
         {modality === "virtual" ? (
           <div className="vx-chips" role="group" aria-label="Cuándo">
             <button type="button" className={virtualMode === "ahora" ? "is-on" : ""} disabled={!preview} aria-pressed={virtualMode === "ahora"} onClick={() => setVirtualMode("ahora")}>
@@ -507,7 +509,7 @@ export function ValuationWizard({
         ) : null}
         {preview && modality === "virtual" ? <span className="lp-badge">Horario de asesora por definir</span> : null}
         {preview && modality === "virtual" && virtualMode === "ahora" ? <p>Fila de ejemplo. No hay una asesora conectada.</p> : null}
-        <FieldError id="virtual" />
+        {renderFieldError({ id: "virtual" })}
         {needsSede ? (
           <fieldset className="vx-field">
             <legend>Sede</legend>
@@ -521,7 +523,7 @@ export function ValuationWizard({
                   </button>
                 ))}
             </div>
-            <FieldError id="sede" />
+            {renderFieldError({ id: "sede" })}
           </fieldset>
         ) : null}
         {modality && wantsSlot ? (
@@ -547,7 +549,7 @@ export function ValuationWizard({
             <p>Te confirmaremos la disponibilidad. No hay horarios publicados.</p>
           )
         ) : null}
-        <FieldError id="horario" />
+        {renderFieldError({ id: "horario" })}
         {modality && modality !== "presencial" ? (
           <aside className="lp-meet">
             <p>Google Meet</p>
@@ -562,7 +564,7 @@ export function ValuationWizard({
     );
   }
 
-  function StepFour() {
+  function renderStepFour() {
     return (
       <>
         <ul className="vx-summary">
@@ -609,7 +611,7 @@ export function ValuationWizard({
                   </div>
                 );
               })}
-              <FieldError id={`extra-${id}`} />
+              {renderFieldError({ id: `extra-${id}` })}
             </fieldset>
           );
         })}
@@ -625,7 +627,7 @@ export function ValuationWizard({
                 No, gracias
               </button>
             </div>
-            <FieldError id="upsell" />
+            {renderFieldError({ id: "upsell" })}
           </article>
         ) : (
           <p>Esta oferta aún no está publicada.</p>
@@ -637,12 +639,12 @@ export function ValuationWizard({
         <label className="vx-field">
           Nombre completo
           <input autoComplete="name" value={patient.nombre} onChange={(event) => setPatient({ ...patient, nombre: event.target.value })} />
-          <FieldError id="nombre" />
+          {renderFieldError({ id: "nombre" })}
         </label>
         <label className="vx-field">
           Celular
           <input autoComplete="tel" inputMode="tel" value={patient.celular} onChange={(event) => setPatient({ ...patient, celular: event.target.value })} />
-          <FieldError id="celular" />
+          {renderFieldError({ id: "celular" })}
         </label>
         <label className="vx-field">
           Correo, si quieres
@@ -655,7 +657,7 @@ export function ValuationWizard({
             <Link href="/politicas/datos-personales">política de datos</Link>.
           </span>
         </label>
-        <FieldError id="consentimiento" />
+        {renderFieldError({ id: "consentimiento" })}
         <label className="absolute -left-[9999px]" aria-hidden="true">
           Sitio web
           <input value={website} tabIndex={-1} autoComplete="off" onChange={(event) => setWebsite(event.target.value)} />
@@ -665,7 +667,7 @@ export function ValuationWizard({
     );
   }
 
-  function OneField({ question }: { question: LandingQuestion }) {
+  function renderOneField({ question }: { question: LandingQuestion }) {
     const current = answerOf(question.id).opciones[0];
     return (
       <fieldset className="vx-field" aria-describedby={errors[question.id] ? `${question.id}-error` : undefined}>
@@ -677,12 +679,12 @@ export function ValuationWizard({
             </button>
           ))}
         </div>
-        <FieldError id={question.id} />
+        {renderFieldError({ id: question.id })}
       </fieldset>
     );
   }
 
-  function ManyField({ question }: { question: LandingQuestion }) {
+  function renderManyField({ question }: { question: LandingQuestion }) {
     const current = answerOf(question.id);
     return (
       <fieldset className="vx-field">
@@ -701,7 +703,7 @@ export function ValuationWizard({
           Si quieres agregar algo
           <textarea rows={2} value={current.texto} onChange={(event) => setAnswers({ ...answers, [question.id]: { ...current, texto: event.target.value } })} />
         </label>
-        <FieldError id={question.id} />
+        {renderFieldError({ id: question.id })}
       </fieldset>
     );
   }

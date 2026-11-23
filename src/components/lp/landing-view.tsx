@@ -1,10 +1,9 @@
+import { BookButton } from "@/components/book-button";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { OfferCard, isPublishedOffer } from "@/components/offer-card";
 import { getGuide } from "@/data/guides";
 import type { Landing } from "@/data/landings/types";
-import { extraNeedsFor } from "@/data/landings";
 import { offerIsExpired, offers } from "@/data/offers";
-import { resolveSedes } from "@/data/sedes";
 import { especialidadBySlug } from "@/data/taxonomy";
 import type { Treatment } from "@/data/types";
 import { publicText } from "@/lib/public-copy";
@@ -13,7 +12,6 @@ import Link from "next/link";
 import { DoctorPlaceholder } from "./photo-placeholders";
 import { ResultadosReales } from "./resultados";
 import { SimulationPanel } from "./simulation-panel";
-import { ValuationWizard } from "./valuation-wizard";
 
 function patientCopy(value: string | undefined) {
   return publicText(value)
@@ -67,7 +65,7 @@ export function LandingView({
     return related.has(offer.treatmentSlug);
   });
   const especialidad = treatment ? especialidadBySlug(treatment.especialidad) : undefined;
-  const sedes = resolveSedes();
+  const booking = { tratamiento: treatment?.name, tratamientoId: treatment?.slug, necesidad: landing.needId };
   const crumbs = treatment
     ? [
         { name: "Tratamientos", href: "/tratamientos" },
@@ -105,9 +103,9 @@ export function LandingView({
             <h1 className="display">{landing.heroTitle}</h1>
             {intro ? <p className="ficha-summary">{intro}</p> : null}
             <div className="ficha-hero-actions">
-              <a className="btn-coral" href="#valoracion">
+              <BookButton {...booking}>
                 {landing.simulation ? "Agendar mi valoración capilar" : "Iniciar valoración"}
-              </a>
+              </BookButton>
             </div>
           </div>
           <div className="ficha-hero-visual">
@@ -137,7 +135,31 @@ export function LandingView({
         <div className="lp-split hair-mirror-standalone"><SimulationPanel /></div>
       ) : null}
 
-      {treatment && cards.length ? (
+      {landing.simulation && treatment ? (
+        <section className="lp-hair-overview" aria-label="Conoce el tratamiento capilar">
+          <div className="lp-hair-facts">
+            {queEs ? <section id="que-es"><h2 className="display">Qué es</h2><p>{queEs}</p></section> : null}
+            {beneficios.length ? (
+              <section id="beneficios">
+                <h2 className="display">Beneficios</h2>
+                <ul className="lp-benefits">{beneficios.map((item) => <li key={item}>{item}</li>)}</ul>
+              </section>
+            ) : null}
+            {paraQuien ? (
+              <section id="para-quien">
+                <h2 className="display">Para quién</h2>
+                <p>{paraQuien}</p>
+                {duracion ? <p>{duracion}</p> : null}
+              </section>
+            ) : null}
+          </div>
+          <div className="lp-hair-book">
+            <BookButton {...booking}>Agendar mi valoración personalizada</BookButton>
+          </div>
+        </section>
+      ) : null}
+
+      {!landing.simulation && treatment && cards.length ? (
         <section className="lp-split" aria-labelledby="conoce">
           <div className="lp-split-copy">
             <h2 id="conoce" className="display">
@@ -161,9 +183,9 @@ export function LandingView({
         </section>
       ) : null}
 
-      {treatment && (queEs || beneficios.length || paraQuien || riesgos || faqs.length) ? (
+      {treatment && (landing.simulation || queEs || beneficios.length || paraQuien || riesgos || faqs.length) ? (
         <div className="lp-detail">
-          {queEs ? (
+          {!landing.simulation && queEs ? (
             <section id="que-es" className="ficha-block ficha-que">
               <div>
                 <h2 className="display">Qué es</h2>
@@ -171,7 +193,7 @@ export function LandingView({
               </div>
             </section>
           ) : null}
-          {beneficios.length ? (
+          {!landing.simulation && beneficios.length ? (
             <section id="beneficios" className="ficha-block ficha-card">
               <h2 className="display">Beneficios</h2>
               <ul className="lp-benefits">
@@ -181,7 +203,7 @@ export function LandingView({
               </ul>
             </section>
           ) : null}
-          {paraQuien ? (
+          {!landing.simulation && paraQuien ? (
             <section className="ficha-block ficha-card-soft">
               <h2 className="display">Para quién</h2>
               <p>{paraQuien}</p>
@@ -231,31 +253,17 @@ export function LandingView({
         </section>
       ) : null}
 
-      <section className="lp-next" data-reveal data-pointer>
+      {!landing.simulation ? <section className="lp-next" data-reveal data-pointer>
         <div>
           <Mark path="M7 4v2M17 4v2M5 8h14v11H5V8Zm0 4h14" />
-          <h2 className="display">{landing.simulation ? "Empieza por entender qué pasa con tu cabello" : "¿Lista para dar el siguiente paso?"}</h2>
+          <h2 className="display">¿Lista para dar el siguiente paso?</h2>
           <p>Agenda tu valoración personalizada en la sede de tu preferencia.</p>
         </div>
-        <a className="btn-coral" href="#valoracion">
-          Agenda tu valoración
-        </a>
-      </section>
-
-      <ValuationWizard
-        preview={preview}
-        needId={landing.needId}
-        path={`/lp/${landing.slug}`}
-        questions={landing.questions}
-        extras={extraNeedsFor(landing.needId)}
-        sedes={sedes.map((sede) => ({ slug: sede.slug, name: sede.name }))}
-        origin={treatment ? { id: treatment.slug, name: treatment.name } : null}
-      />
+        <BookButton {...booking}>Agenda tu valoración</BookButton>
+      </section> : null}
 
       <div className="ficha-mobile-bar">
-        <a className="btn-coral" href="#valoracion">
-          Iniciar valoración
-        </a>
+        <BookButton {...booking}>Iniciar valoración</BookButton>
       </div>
     </main>
   );

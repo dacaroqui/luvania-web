@@ -4714,3 +4714,34 @@ dialog.sheet.vx-dialog {
   font-size: 0.8rem;
   text-align: center;
 }
+
+
+.lp-hair-overview {
+  width: min(76rem, calc(100% - 1.5rem));
+  margin: 1.4rem auto 0.9rem;
+  border: 1px solid rgb(129 82 59 / 0.16);
+  border-radius: 1.35rem;
+  background: linear-gradient(135deg, #fff9f0, #f8e9db);
+  padding: clamp(1rem, 2.3vw, 1.55rem);
+}
+.lp-hair-facts { display: grid; gap: 1rem; }
+.lp-hair-facts > section { min-width: 0; scroll-margin-top: 7rem; }
+.lp-hair-facts > section + section { border-top: 1px solid rgb(129 82 59 / 0.17); padding-top: 0.75rem; }
+.lp-hair-facts h2 { margin: 0 0 0.4rem; font-size: clamp(1.55rem, 2.8vw, 2.35rem); line-height: 1; }
+.lp-hair-facts p, .lp-hair-facts .lp-benefits {
+  margin: 0;
+  color: #51433a;
+  font-size: 0.94rem;
+  line-height: 1.48;
+}
+.lp-hair-facts p + p { margin-top: 0.45rem; }
+.lp-hair-book { margin-top: 1rem; }
+@media (min-width: 820px) {
+  .lp-hair-facts { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.3rem; }
+  .lp-hair-facts > section + section { border-top: 0; border-left: 1px solid rgb(129 82 59 / 0.17); padding: 0 0 0 1.3rem; }
+}
+.vx.is-dialog .vx-scroll {
+  scrollbar-width: none;
+  overscroll-behavior: contain;
+}
+.vx.is-dialog .vx-scroll::-webkit-scrollbar { display: none; }

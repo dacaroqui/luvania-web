@@ -1,7 +1,7 @@
 "use client";
 
 import type { AgendaSede } from "@/data/types";
-import { extraNeedsFor } from "@/data/landings";
+import { extraNeedsFor, getLanding } from "@/data/landings";
 import { useEffect, useRef } from "react";
 import { ValuationWizard } from "./lp/valuation-wizard";
 
@@ -28,7 +28,11 @@ export function AgendaSheet({
 }) {
   const ref = useRef<HTMLDialogElement>(null);
   const returnFocus = useRef<HTMLElement | null>(null);
-  const needId = necesidadId || "valoracion";
+  const path = typeof window === "undefined" ? "/" : window.location.pathname;
+  const slug = /^\/lp\/([^/]+)\/?$/.exec(path)?.[1];
+  const landing = slug ? getLanding(slug) : undefined;
+  const needId = necesidadId || landing?.needId || "valoracion";
+  const questions = landing?.needId === needId ? landing.questions : [];
 
   useEffect(() => {
     const dialog = ref.current;
@@ -39,7 +43,7 @@ export function AgendaSheet({
     }
     if (!open && dialog.open) {
       dialog.close();
-      returnFocus.current?.focus();
+      returnFocus.current?.focus({ preventScroll: true });
     }
   }, [open]);
 
@@ -68,8 +72,8 @@ export function AgendaSheet({
           frame="dialog"
           preview={preview}
           needId={needId}
-          path={typeof window === "undefined" ? "/" : window.location.pathname}
-          questions={[]}
+          path={path}
+          questions={questions}
           extras={extraNeedsFor(needId)}
           sedes={sedes}
           origin={tratamientoInicial ? { id: tratamientoId || tratamientoInicial, name: tratamientoInicial } : null}

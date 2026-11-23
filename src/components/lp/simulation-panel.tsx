@@ -1,6 +1,7 @@
 "use client";
 
-import { paintDensity, readPhoto } from "@/lib/simulation/provider";
+import { createHairTracker, locateHairline, type HairPose, type HairTracker } from "@/lib/simulation/hair-tracker";
+import { paintDensity, readPhoto, sampleHairTone } from "@/lib/simulation/provider";
 import { useCallback, useEffect, useRef, useState, type KeyboardEvent, type MouseEvent, type ReactNode } from "react";
 
 import { CompareSlider } from "./compare-slider";
@@ -10,6 +11,7 @@ const previewSize = 540;
 const frameInterval = 1000 / 30;
 const privacyNote = "Tu imagen se queda en el dispositivo. No se guarda ni se envía.";
 const filterNote = "Filtro ilustrativo. No predice resultados de un tratamiento.";
+type Tracking = "loading" | "searching" | "ready" | "unavailable" | "manual";
 type Status = "idle" | "opening" | "live" | "loading-photo" | "photo" | "error";
 
 type Example = { before: ReactNode; after: ReactNode; label: string };
@@ -32,12 +34,38 @@ export function SimulationPanel({ example, onActiveChange }: {
   const session = useRef(0);
   const sourcePhoto = useRef<HTMLCanvasElement | null>(null);
   const point = useRef(initialPoint);
+  const tracker = useRef<HairTracker | null>(null);
+  const pose = useRef<HairPose | null>(null);
+  const tone = useRef<string | null>(null);
+  const manual = useRef(false);
+  const [tracking, setTracking] = useState<Tracking>("loading");
+
+  function usePose(next: HairPose) {
+    const current = pose.current;
+    if (!current || manual.current) {
+      pose.current = next;
+    } else {
+      const blend = (a: number, b: number) => a + (b - a) * 0.46;
+      pose.current = {
+        x: blend(current.x, next.x), y: blend(current.y, next.y),
+        width: blend(current.width, next.width), height: blend(current.height, next.height),
+        angle: blend(current.angle, next.angle),
+      };
+    }
+    point.current = next;
+    tone.current = null;
+  }
 
   const releaseCamera = useCallback(() => {
     session.current += 1;
     window.cancelAnimationFrame(frame.current);
     stream.current?.getTracks().forEach((track) => track.stop());
     stream.current = null;
+    tracker.current?.close();
+    tracker.current = null;
+    pose.current = null;
+    tone.current = null;
+    manual.current = false;
     if (video.current) video.current.srcObject = null;
   }, []);
 
@@ -93,13 +121,18 @@ export function SimulationPanel({ example, onActiveChange }: {
     original.drawImage(source, 0, 0, outputWidth, outputHeight);
     original.resetTransform();
     filtered.drawImage(before, 0, 0);
-    paintDensity(filtered, { ...point.current, size: 0.19, intensity: 70 });
+    const current = pose.current;
+    if (current) {
+      tone.current ??= sampleHairTone(filtered, current);
+      paintDensity(filtered, current, tone.current);
+    }
   }
 
   async function openCamera() {
     setError("");
     sourcePhoto.current = null;
     point.current = initialPoint;
+    setTracking("loading");
 
     if (!navigator.mediaDevices?.getUserMedia) {
       fail("La cámara no está disponible. Prueba con una foto.");
@@ -126,11 +159,46 @@ export function SimulationPanel({ example, onActiveChange }: {
       await element.play();
       if (session.current !== id) return;
 
+      void createHairTracker("VIDEO").then((model) => {
+        if (session.current !== id) {
+          model.close();
+          return;
+        }
+        tracker.current = model;
+        if (!manual.current) setTracking("searching");
+      }).catch(() => {
+        if (session.current === id && !manual.current) setTracking("unavailable");
+      });
+
       let previous = -Infinity;
+      let lastDetection = -Infinity;
+      let lastFace = -Infinity;
+      let lastVideoTime = -1;
       let shown = false;
       const render = (now: number) => {
         if (session.current !== id) return;
         if (element.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA && element.videoWidth && now - previous >= frameInterval) {
+          if (tracker.current && !manual.current && now - lastDetection >= 95 && lastVideoTime !== element.currentTime) {
+            lastDetection = now;
+            lastVideoTime = element.currentTime;
+            try {
+              const detected = tracker.current.detectForVideo(element, now);
+              const next = locateHairline(detected, element.videoWidth, element.videoHeight, true);
+              if (next) {
+                usePose(next);
+                lastFace = now;
+                setTracking("ready");
+              } else if (now - lastFace > 300) {
+                pose.current = null;
+                setTracking("searching");
+              }
+            } catch {
+              tracker.current?.close();
+              tracker.current = null;
+              pose.current = null;
+              setTracking("unavailable");
+            }
+          }
           try {
             draw(element, element.videoWidth, element.videoHeight, true);
           } catch {
@@ -164,6 +232,22 @@ export function SimulationPanel({ example, onActiveChange }: {
       sourcePhoto.current = image;
       draw(image, image.width, image.height, false);
       setStatus("photo");
+      setTracking("loading");
+      void createHairTracker("IMAGE").then((model) => {
+        try {
+          if (session.current !== id || manual.current) return;
+          const next = locateHairline(model.detect(image), image.width, image.height, false);
+          if (next) {
+            usePose(next);
+            draw(image, image.width, image.height, false);
+          }
+          setTracking(next ? "ready" : "unavailable");
+        } finally {
+          model.close();
+        }
+      }).catch(() => {
+        if (session.current === id && !manual.current) setTracking("unavailable");
+      });
     } catch {
       if (session.current === id) fail("No pudimos abrir la foto. Prueba con JPG, PNG o WebP.");
     }
@@ -178,7 +262,16 @@ export function SimulationPanel({ example, onActiveChange }: {
   }
 
   function adjustPoint(x: number, y: number) {
-    point.current = { x: Math.max(0, Math.min(1, x)), y: Math.max(0, Math.min(1, y)) };
+    manual.current = true;
+    const previous = pose.current;
+    usePose({
+      x: Math.max(0, Math.min(1, x)),
+      y: Math.max(0, Math.min(1, y)),
+      width: previous?.width ?? 0.3,
+      height: previous?.height ?? 0.14,
+      angle: previous?.angle ?? 0,
+    });
+    setTracking("manual");
     const image = sourcePhoto.current;
     if (image) draw(image, image.width, image.height, false);
   }
@@ -195,7 +288,7 @@ export function SimulationPanel({ example, onActiveChange }: {
       const x = (event.clientX - bounds.left - (bounds.width - width) / 2) / width;
       const y = (event.clientY - bounds.top - (bounds.height - height) / 2) / height;
       if (x < 0 || x > 1 || y < 0 || y > 1) return;
-      adjustPoint(x, y);
+      adjustPoint(x, y + (pose.current?.height ?? 0.14) * 0.4);
     }
     stopAdjusting();
   }
@@ -259,6 +352,9 @@ export function SimulationPanel({ example, onActiveChange }: {
           </button>
         ) : null}
       </div>
+      {active && tracking === "loading" ? <p className="hair-mirror-message" role="status">Preparando el filtro…</p> : null}
+      {active && tracking === "searching" ? <p className="hair-mirror-message" role="status">Mira de frente y deja visible la línea del cabello.</p> : null}
+      {active && tracking === "unavailable" ? <p className="hair-mirror-message" role="status">Usa «Ajustar zona» para colocar el filtro.</p> : null}
       {status === "opening" ? <p className="hair-mirror-message" role="status">Abriendo cámara…</p> : null}
       {status === "loading-photo" ? <p className="hair-mirror-message" role="status">Abriendo foto…</p> : null}
       <video ref={video} muted playsInline className="hair-mirror-source" aria-hidden="true" />
