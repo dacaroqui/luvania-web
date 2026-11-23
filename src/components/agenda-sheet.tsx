@@ -1,7 +1,9 @@
 "use client";
 
+import { catalog } from "@/data/catalog";
 import type { AgendaSede } from "@/data/types";
 import { extraNeedsFor, getLanding } from "@/data/landings";
+import { usePathname } from "next/navigation";
 import { useEffect, useRef } from "react";
 import { ValuationWizard } from "./lp/valuation-wizard";
 
@@ -28,10 +30,17 @@ export function AgendaSheet({
 }) {
   const ref = useRef<HTMLDialogElement>(null);
   const returnFocus = useRef<HTMLElement | null>(null);
-  const path = typeof window === "undefined" ? "/" : window.location.pathname;
+  const path = usePathname() ?? "/";
   const slug = /^\/lp\/([^/]+)\/?$/.exec(path)?.[1];
   const landing = slug ? getLanding(slug) : undefined;
-  const needId = necesidadId || landing?.needId || "valoracion";
+  const treatmentSlug = /^\/tratamientos\/([^/]+)\/?$/.exec(path)?.[1];
+  const treatment = catalog.find((item) => item.slug === (tratamientoId || (!tratamientoInicial ? treatmentSlug : undefined)));
+  const origin = tratamientoInicial
+    ? { id: tratamientoId || tratamientoInicial, name: tratamientoInicial }
+    : treatment
+      ? { id: treatment.slug, name: treatment.name }
+      : null;
+  const needId = necesidadId || treatment?.needs[0] || landing?.needId || "valoracion";
   const questions = landing?.needId === needId ? landing.questions : [];
 
   useEffect(() => {
@@ -69,6 +78,7 @@ export function AgendaSheet({
     >
       {open ? (
         <ValuationWizard
+          key={`${path}:${origin?.id ?? ""}:${needId}`}
           frame="dialog"
           preview={preview}
           needId={needId}
@@ -76,7 +86,7 @@ export function AgendaSheet({
           questions={questions}
           extras={extraNeedsFor(needId)}
           sedes={sedes}
-          origin={tratamientoInicial ? { id: tratamientoId || tratamientoInicial, name: tratamientoInicial } : null}
+          origin={origin}
           promo={promoInicial}
           initialSede={sedeInicial ?? null}
           deliverWhatsapp

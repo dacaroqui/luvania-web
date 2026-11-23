@@ -1,6 +1,8 @@
 "use client";
 
+import { catalog } from "@/data/catalog";
 import caidaLanding from "@/data/landings/caida-del-cabello";
+import { needById } from "@/data/taxonomy";
 import type { ExtraNeed, LandingQuestion } from "@/data/landings/types";
 import { needPages } from "@/lib/hubs";
 import { createMockAgenda, type AgendaSlot } from "@/lib/agenda/provider";
@@ -35,6 +37,19 @@ const ZONA: LandingQuestion = {
     { id: "cabello", label: "Cabello" },
     { id: "no-se", label: "No lo sé" },
   ],
+};
+
+const valuationZones: Partial<Record<string, string>> = {
+  rostro: "Rostro",
+  cuello: "Rostro",
+  capilar: "Cabello",
+  abdomen: "Cuerpo",
+  piernas: "Cuerpo",
+  brazos: "Cuerpo",
+  gluteos: "Cuerpo",
+  intima: "Cuerpo",
+  manos: "Cuerpo",
+  corporal: "Cuerpo",
 };
 
 const STEPS = [
@@ -85,8 +100,13 @@ export function ValuationWizard({
   const [patient, setPatient] = useState({ nombre: "", celular: "", email: "" });
   const [consent, setConsent] = useState(false);
   const [website, setWebsite] = useState("");
-  const [answers, setAnswers] = useState<Record<string, Answer>>({});
-  const [picked, setPicked] = useState<string[]>(() => (needPages.some((need) => need.slug === needId) ? [needId] : []));
+  const primaryNeed = needPages.find((need) => need.slug === needId) ?? needById(needId);
+  const [answers, setAnswers] = useState<Record<string, Answer>>(() => {
+    const zone = catalog.find((item) => item.slug === origin?.id)?.zones[0];
+    const initialZone = zone ? valuationZones[zone] : undefined;
+    return initialZone ? { [ZONA.id]: { opciones: [initialZone], texto: "" } } : {};
+  });
+  const [picked, setPicked] = useState<string[]>(() => primaryNeed ? [needId] : []);
   const [otra, setOtra] = useState("");
   const [modality, setModality] = useState<Modality | null>(null);
   const [sede, setSede] = useState<string | null>(initialSede);
@@ -163,16 +183,18 @@ export function ValuationWizard({
   const wantsSlot = modality !== null;
   const hairDetail = picked.includes("caida-cabello") || answerOf("zona-general").opciones.includes("Cabello");
   const days = [...new Set(slots.map((item) => item.day))];
-  const cards = [
-    ...needPages.filter((need) => need.slug === needId || extras.some((item) => item.id === need.slug)),
-  ];
+  const guidedHair = needId === "caida-cabello" && picked.includes(needId);
+  const cards = needPages.filter((need) => need.slug === needId || extras.some((item) => item.id === need.slug));
+  if (primaryNeed && !cards.some((need) => need.slug === needId)) {
+    cards.unshift({ slug: needId, name: primaryNeed.name, text: "" });
+  }
 
   function validate(index: number) {
     const next: Record<string, string> = {};
     if (index === 0) {
-      if (picked.length === 0 && !otra.trim()) next.mejorar = "Elige al menos una necesidad.";
+      if (!origin && picked.length === 0 && !otra.trim()) next.mejorar = "Elige al menos una necesidad.";
       if (picked.includes("otra") && !otra.trim()) next.otra = "Cuéntanos esa otra necesidad.";
-      if (!(needId === "caida-cabello" && picked.includes(needId)) && !answerOf("zona-general").opciones.length) next["zona-general"] = "Elige una zona.";
+      if (!guidedHair && !answerOf("zona-general").opciones.length) next[ZONA.id] = "Elige una zona.";
       if (hairDetail && byId("zona") && !answerOf("zona").opciones.length) next.zona = "Elige la zona del cuero.";
       if (!answerOf("desde-cuando").opciones.length) next["desde-cuando"] = "Elige hace cuánto lo notas.";
     }
@@ -184,7 +206,6 @@ export function ValuationWizard({
       if (!modality) next.modalidad = "Elige cómo quieres la valoración.";
       if (modality === "virtual" && (meetState !== "ready" || !slot)) next.horario = "Elige un horario disponible para continuar.";
       if (needsSede && !sede) next.sede = "Elige una sede.";
-      if (modality !== "virtual" && preview && wantsSlot && slots.length > 0 && !slot) next.horario = "Elige un horario de ejemplo, o espera la confirmación.";
     }
     if (index === 3) {
       if (patient.nombre.trim().length < 2) next.nombre = "Escribe tu nombre.";
@@ -193,7 +214,11 @@ export function ValuationWizard({
       if (!consent) next.consentimiento = "Hace falta la autorización para contactarte.";
     }
     setErrors(next);
-    return Object.values(next).every((value) => !value);
+    const hasErrors = Object.keys(next).length > 0;
+    if (hasErrors) {
+      requestAnimationFrame(() => scrollArea.current?.querySelector(".vx-error")?.scrollIntoView({ block: "nearest" }));
+    }
+    return !hasErrors;
   }
 
   function go(nextStep: number) {
@@ -342,7 +367,7 @@ export function ValuationWizard({
     ["Preferencias", [answerOf("antes").opciones[0], answerOf("cuando").opciones[0]].filter(Boolean).join(" · ")],
     ["Sede", sedes.find((item) => item.slug === sede)?.name ?? ""],
     ["Modalidad", modalities.find((item) => item.id === modality)?.title ?? ""],
-    ["Origen", origin ? `${origin.name} (${origin.id})` : ""],
+    ["Tratamiento", origin?.name ?? ""],
     ["Horario", slot ? `${slot.dayLabel} ${slot.label}${preview && modality !== "virtual" ? " · ejemplo, sin confirmar" : " · hora Colombia"}` : preview ? "" : "Te confirmaremos la disponibilidad"],
   ].filter(([, value]) => value);
 
@@ -459,9 +484,12 @@ export function ValuationWizard({
   function renderStepOne() {
     const desde = byId("desde-cuando");
     const detalle = byId("zona");
-    const guided = needId === "caida-cabello" && picked.includes(needId);
+    const guided = guidedHair || Boolean(origin);
     return (
       <>
+        {origin ? (
+          <p className="vx-treatment-choice"><span>Tratamiento seleccionado</span><strong>{origin.name}</strong></p>
+        ) : null}
         <details className="vx-optional" open={!guided || Boolean(errors.mejorar || errors.otra) || undefined}>
         <summary>{guided ? "Agregar otra necesidad" : "Elegir necesidades"}</summary>
         <fieldset className="vx-field" aria-describedby={errors.mejorar ? "mejorar-error" : undefined}>
@@ -503,7 +531,7 @@ export function ValuationWizard({
           </label>
         ) : null}
         </details>
-        {!guided ? renderOneField({ question: ZONA }) : null}
+        {!guidedHair ? renderOneField({ question: ZONA }) : null}
         {hairDetail && detalle ? renderManyField({ question: detalle }) : null}
         {desde ? renderOneField({ question: desde }) : null}
       </>
@@ -589,7 +617,7 @@ export function ValuationWizard({
         {modality !== "virtual" && wantsSlot && (!needsSede || sede) ? (
           preview && slots.length ? (
             <div>
-              <span className="lp-badge">Horarios de ejemplo</span>
+              <span className="lp-badge">Horarios de ejemplo (opcional)</span>
               <div className="vx-chips">
                 {days.map((item) => (
                   <button key={item} type="button" className={day === item ? "is-on" : ""} onClick={() => { setDay(item); setSlot(null); }}>

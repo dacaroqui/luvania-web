@@ -67,6 +67,23 @@ function BenefitIcon({ index }: { index: number }) {
   );
 }
 
+const detailIcons = {
+  audience: "M15 7a3 3 0 1 1-6 0 3 3 0 0 1 6 0ZM5 20v-2a4 4 0 0 1 4-4h6a4 4 0 0 1 4 4v2",
+  caution: "M12 3 3 7v5c0 4 4 7 9 9 5-2 9-5 9-9V7l-9-4Zm0 5v4m0 4h.01",
+  time: "M12 7v5l3 2m6-2a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z",
+  procedure: "M5 4h14v16H5zM9 9h6m-6 6h6",
+  care: "M20 9c0 4-8 10-8 10S4 13 4 9a4 4 0 0 1 8-1 4 4 0 0 1 8 1Z",
+};
+
+function DetailHeading({ icon, children }: { icon: keyof typeof detailIcons; children: string }) {
+  return (
+    <h2 className="display ficha-detail-heading">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d={detailIcons[icon]} /></svg>
+      {children}
+    </h2>
+  );
+}
+
 function NameList({ items }: { items: { name: string; href?: string }[] }) {
   if (items.length === 0) return null;
   return (
@@ -332,14 +349,14 @@ export default async function TratamientoPage({ params }: { params: Promise<Para
           {paraQuien || riesgos ? (
             <div className="ficha-pair">
               {paraQuien ? (
-                <section id="para-quien" className="ficha-card" data-reveal>
-                  <h2 className="display">¿Para quién es?</h2>
+                <section id="para-quien" className="ficha-card ficha-detail-card" data-reveal>
+                  <DetailHeading icon="audience">¿Para quién es?</DetailHeading>
                   <TreatmentCopy text={paraQuien} />
                 </section>
               ) : null}
               {riesgos ? (
-                <section id="riesgos" className="ficha-card ficha-card-soft" data-reveal>
-                  <h2 className="display">Riesgos y contraindicaciones</h2>
+                <section id="riesgos" className="ficha-card ficha-detail-card is-caution" data-reveal>
+                  <DetailHeading icon="caution">Riesgos y contraindicaciones</DetailHeading>
                   <TreatmentCopy text={riesgos} label="Ver todos los riesgos y contraindicaciones" />
                   {showGuide ? <GuideLink slug={treatment.slug} anchor="efectos" /> : null}
                 </section>
@@ -350,18 +367,20 @@ export default async function TratamientoPage({ params }: { params: Promise<Para
           {clinicalCards
             .filter((block) => block.id === "procedimiento")
             .map((block) => (
-              <section key={block.id} id="procedimiento" className="ficha-card ficha-card-soft" data-reveal>
-                <h2 className="display">Cómo es el procedimiento</h2>
+              <section key={block.id} id="procedimiento" className="ficha-card ficha-detail-card" data-reveal>
+                <DetailHeading icon="procedure">Cómo es el procedimiento</DetailHeading>
                 <TreatmentCopy text={block.card} />
                 <GuideLink slug={treatment.slug} anchor={block.id} />
               </section>
             ))}
 
           {sesiones || duracion ? (
-            <section id="sesiones" className="ficha-card" data-reveal>
-              <h2 className="display">Sesiones y duración</h2>
-              {sesiones ? <p>{sesiones}</p> : null}
-              {duracion ? <p>{duracion}</p> : null}
+            <section id="sesiones" className="ficha-card ficha-detail-card is-timing" data-reveal>
+              <DetailHeading icon="time">Sesiones y duración</DetailHeading>
+              <dl className="ficha-session-facts">
+                {sesiones ? <div><dt>Sesiones</dt><dd>{sesiones}</dd></div> : null}
+                {duracion ? <div><dt>Duración</dt><dd>{duracion}</dd></div> : null}
+              </dl>
               {showGuide ? <GuideLink slug={treatment.slug} anchor="sesiones" /> : null}
             </section>
           ) : null}
@@ -369,14 +388,14 @@ export default async function TratamientoPage({ params }: { params: Promise<Para
           {clinicalCards
             .filter((block) => block.id !== "procedimiento")
             .map((block) => (
-              <section key={block.id} id={block.id} className="ficha-card" data-reveal>
-                <h2 className="display">
+              <section key={block.id} id={block.id} className={`ficha-card ficha-detail-card ${block.id === "efectos" ? "is-caution" : "is-timing"}`} data-reveal>
+                <DetailHeading icon={block.id === "efectos" ? "caution" : "care"}>
                   {block.id === "preparacion"
                     ? "Cuidados antes"
                     : block.id === "cuidados"
                       ? "Cuidados después"
                       : "Efectos y contraindicaciones"}
-                </h2>
+                </DetailHeading>
                 <TreatmentCopy text={block.card} />
                 {guide?.medicalReview === "pendiente" ? <p className="ficha-review-note">Contenido en revisión médica</p> : null}
                 <GuideLink slug={treatment.slug} anchor={block.id} />
@@ -396,15 +415,16 @@ export default async function TratamientoPage({ params }: { params: Promise<Para
 
           {!showGuide && guideMatches.length ? (
             <section id="guias" className="ficha-guide-block glass" data-reveal>
-              <p className="ficha-guide-kicker">Guías relacionadas</p>
-              <h2 className="display">De la misma zona</h2>
+              <h2 className="display">Guías relacionadas</h2>
               <ul className="ficha-guide-list">
                 {guideMatches.map(({ guide: item }) => (
                   <li key={item.slug}>
                     <Link href={`/tratamientos/${item.slug}/guia`}>
-                      <span className="display">{item.h1}</span>
-                      <span>{item.description}</span>
-                      <span>{readingMinutes(item)} min de lectura</span>
+                      <h3 className="display">{item.h1}</h3>
+                      <p>{item.description}</p>
+                      <span className="ficha-guide-card-meta">
+                        {readingMinutes(item)} min de lectura <span aria-hidden="true">↗</span>
+                      </span>
                     </Link>
                   </li>
                 ))}

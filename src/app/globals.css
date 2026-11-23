@@ -3265,6 +3265,41 @@ body:has(dialog[open]) .ficha-mobile-bar {
 .ficha-pair { display: grid; gap: 1rem; }
 .ficha-card { background: rgb(255 252 247 / 0.72); }
 .ficha-card-soft { background: rgb(247 241 230 / 0.72); }
+.ficha-detail-card {
+  border: 1px solid #e7d8c9;
+  background: #fffaf3;
+}
+.ficha-detail-card.is-caution { background: #faede6; }
+.ficha-detail-card.is-timing { background: #f7f2e6; }
+.ficha-detail-card .ficha-detail-heading {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  font-size: clamp(1.6rem, 2.5vw, 2.15rem);
+}
+.ficha-detail-heading svg {
+  flex: 0 0 2.25rem;
+  width: 2.25rem;
+  height: 2.25rem;
+  padding: 0.48rem;
+  border-radius: 0.75rem;
+  background: #f3e2d5;
+  color: #914331;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.ficha-session-facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr));
+  gap: 0.6rem;
+  margin: 0.85rem 0 0;
+}
+.ficha-session-facts > div { padding: 0.7rem; border-radius: 0.75rem; background: #fffaf3; }
+.ficha-session-facts dt { color: #824837; font-size: 0.82rem; font-weight: 700; }
+.ficha-session-facts dd { margin: 0.25rem 0 0; }
 
 .ficha-faqs { display: grid; gap: 0.65rem; margin-top: 1rem; }
 
@@ -3520,8 +3555,7 @@ body:has(dialog[open]) .ficha-mobile-bar {
   border-radius: 1.4rem;
 }
 .ficha-guide-block .display { margin: 0; font-size: clamp(1.7rem, 3vw, 2.3rem); line-height: 1.08; }
-.ficha-guide-lead,
-.ficha-guide-list a span:nth-child(2) {
+.ficha-guide-lead {
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
@@ -3532,10 +3566,52 @@ body:has(dialog[open]) .ficha-mobile-bar {
 .ficha-guide-time { margin: 0; color: #5e534c; font-size: 0.92rem; }
 .ficha-guide-block > a { color: #ee876b; font-weight: 750; width: fit-content; }
 .ficha-guide-block .ficha-review-note { justify-self: start; }
-.ficha-guide-list { display: grid; gap: 0.75rem; margin: 0.45rem 0 0; padding: 0; list-style: none; }
-.ficha-guide-list a { display: grid; gap: 0.15rem; color: inherit; }
-.ficha-guide-list .display { font-size: 1.25rem; }
-.ficha-guide-list a span:last-child { color: #5e534c; font-size: 0.88rem; }
+.ficha-guide-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr));
+  grid-auto-rows: 1fr;
+  gap: 0.75rem;
+  margin: 0.75rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+.ficha-guide-list > li { display: grid; min-width: 0; }
+.ficha-guide-list a {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  align-content: start;
+  gap: 0.55rem;
+  height: 100%;
+  padding: 1rem;
+  border: 1px solid #e6d4c3;
+  border-radius: 1rem;
+  background: #fffaf3;
+  color: inherit;
+}
+.ficha-guide-list a:hover,
+.ficha-guide-list a:focus-visible { border-color: #b87763; background: #fff2e8; }
+.ficha-guide-list .display { font-size: 1.32rem; overflow-wrap: anywhere; }
+.ficha-guide-list a > p {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  align-self: start;
+  overflow: hidden;
+  color: #574a42;
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+.ficha-guide-card-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+  padding-top: 0.55rem;
+  border-top: 1px solid #eadbcc;
+  color: #774b3e;
+  font-size: 0.82rem;
+}
+.ficha-guide-card-meta > span { font-size: 1rem; }
 
 .guia-bridge {
   display: grid;
@@ -4797,6 +4873,19 @@ dialog.sheet.vx-dialog { width: min(57rem, calc(100vw - 1.5rem)); border: 0; pad
 .vx-modalities button svg { box-sizing: content-box; padding: 0.45rem; border-radius: 0.7rem; background: #f7e7da; }
 .vx-modalities button strong { font-size: 1rem; }
 .vx-modalities button > span { font-size: 0.8rem; color: #524239; }
+.vx-treatment-choice {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.15rem 0.55rem;
+  margin: 0 0 0.75rem;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #ead6c7;
+  border-radius: 0.75rem;
+  background: #faf0e7;
+}
+.vx-treatment-choice span { color: #744936; font-size: 0.78rem; }
+.vx-treatment-choice strong { font-size: 0.95rem; }
 .vx-optional { margin: 0 0 0.85rem; color: #665147; }
 .vx-optional > summary { width: fit-content; cursor: pointer; color: #8d3d2c; font-size: 0.88rem; font-weight: 700; }
 .vx-optional[open] > summary { margin-bottom: 0.55rem; }
