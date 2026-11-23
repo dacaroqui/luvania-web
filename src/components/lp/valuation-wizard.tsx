@@ -12,7 +12,6 @@ import { CloseButton } from "../close-button";
 
 type Answer = { opciones: string[]; texto: string };
 type Modality = "presencial" | "virtual" | "hibrida";
-type VirtualMode = "ahora" | "agendar";
 type Sede = { slug: string; name: string; whatsapp?: string };
 
 const empty = (): Answer => ({ opciones: [], texto: "" });
@@ -90,11 +89,15 @@ export function ValuationWizard({
   const [picked, setPicked] = useState<string[]>(() => (needPages.some((need) => need.slug === needId) ? [needId] : []));
   const [otra, setOtra] = useState("");
   const [modality, setModality] = useState<Modality | null>(null);
-  const [virtualMode, setVirtualMode] = useState<VirtualMode | null>(null);
   const [sede, setSede] = useState<string | null>(initialSede);
   const [slots, setSlots] = useState<AgendaSlot[]>([]);
   const [day, setDay] = useState<string | null>(null);
   const [slot, setSlot] = useState<AgendaSlot | null>(null);
+  const [meetState, setMeetState] = useState<"loading" | "ready" | "unavailable">("loading");
+  const [meetUrl, setMeetUrl] = useState("");
+  const [meetPending, setMeetPending] = useState(false);
+  const meetRequest = useRef<{ start: string; id: string } | null>(null);
+  const bookingInFlight = useRef(false);
   const [reservationId, setReservationId] = useState<string | null>(null);
   const [phase, setPhase] = useState<"form" | "recibida">("form");
   const [note, setNote] = useState("");
@@ -108,20 +111,33 @@ export function ValuationWizard({
 
   useEffect(() => {
     if (step !== 2 || !modality) return;
-    if (modality === "virtual" && virtualMode === "ahora") {
-      setSlots([]);
-      return;
-    }
     let live = true;
-    agenda.getSlots({ modality, sede, days: 5 }).then((next) => {
+    const controller = new AbortController();
+    function showSlots(next: AgendaSlot[]) {
       if (!live) return;
       setSlots(next);
       setDay((current) => next.some((item) => item.day === current) ? current : next[0]?.day ?? null);
-    });
+      setSlot((current) => next.find((item) => item.id === current?.id) ?? null);
+    }
+    if (modality === "virtual") {
+      setMeetState("loading");
+      void fetch("/api/agenda/meet", { signal: controller.signal }).then(async (response) => {
+        if (!response.ok) throw new Error("agenda");
+        const data = await response.json() as { enabled: boolean; slots: AgendaSlot[] };
+        if (!live) return;
+        setMeetState(data.enabled ? "ready" : "unavailable");
+        showSlots(data.slots);
+      }).catch(() => {
+        if (live) { setMeetState("unavailable"); showSlots([]); }
+      });
+    } else {
+      void agenda.getSlots({ modality, sede, days: 5 }).then(showSlots);
+    }
     return () => {
       live = false;
+      controller.abort();
     };
-  }, [agenda, modality, virtualMode, sede, step]);
+  }, [agenda, modality, sede, step]);
 
   const provided = questions.length ? questions : caidaLanding.questions;
   const bank = [...provided];
@@ -144,7 +160,7 @@ export function ValuationWizard({
   };
 
   const needsSede = modality === "presencial" || modality === "hibrida";
-  const wantsSlot = modality !== null && !(modality === "virtual" && virtualMode === "ahora");
+  const wantsSlot = modality !== null;
   const hairDetail = picked.includes("caida-cabello") || answerOf("zona-general").opciones.includes("Cabello");
   const days = [...new Set(slots.map((item) => item.day))];
   const cards = [
@@ -166,13 +182,14 @@ export function ValuationWizard({
     }
     if (index === 2) {
       if (!modality) next.modalidad = "Elige cómo quieres la valoración.";
-      if (modality === "virtual" && !virtualMode) next.virtual = "Elige si es ahora o con hora.";
+      if (modality === "virtual" && (meetState !== "ready" || !slot)) next.horario = "Elige un horario disponible para continuar.";
       if (needsSede && !sede) next.sede = "Elige una sede.";
-      if (preview && wantsSlot && slots.length > 0 && !slot) next.horario = "Elige un horario de ejemplo, o espera la confirmación.";
+      if (modality !== "virtual" && preview && wantsSlot && slots.length > 0 && !slot) next.horario = "Elige un horario de ejemplo, o espera la confirmación.";
     }
     if (index === 3) {
       if (patient.nombre.trim().length < 2) next.nombre = "Escribe tu nombre.";
       if (patient.celular.replace(/\D/g, "").length < 7) next.celular = "Escribe un celular de al menos 7 dígitos.";
+      if (modality === "virtual" && patient.email.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(patient.email.trim())) next.email = "Revisa el correo o déjalo vacío.";
       if (!consent) next.consentimiento = "Hace falta la autorización para contactarte.";
     }
     setErrors(next);
@@ -191,8 +208,49 @@ export function ValuationWizard({
     return { id: question.id, pregunta: question.prompt, opciones: current.opciones, texto: current.texto.trim() };
   }
 
+  async function finishMeet(selected: AgendaSlot) {
+    if (bookingInFlight.current) return;
+    bookingInFlight.current = true;
+    setPending(true);
+    setNote("");
+    const previous = meetRequest.current;
+    const id = previous?.start === selected.start ? previous.id : crypto.randomUUID();
+    meetRequest.current = { start: selected.start, id };
+    try {
+      const response = await fetch("/api/agenda/meet", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          requestId: id, start: selected.start, name: patient.nombre.trim(), phone: patient.celular.trim(),
+          email: patient.email.trim() || undefined, consent, website,
+        }),
+      });
+      const result = await response.json() as { status?: string; url?: string; error?: string };
+      if (response.ok && result.status === "confirmed" && result.url) {
+        setMeetUrl(result.url);
+        setMeetPending(false);
+        if (scrollArea.current) scrollArea.current.scrollTop = 0;
+        setPhase("recibida");
+      } else if (response.status === 202) {
+        setMeetPending(true);
+        setNote("Estamos preparando tu enlace de Meet. Pulsa «Consultar enlace» en unos segundos.");
+      } else {
+        setNote(result.error || "No pudimos confirmar la cita. Intenta de nuevo.");
+      }
+    } catch {
+      setNote("No pudimos comprobar la reserva. Intenta de nuevo con el mismo horario.");
+    } finally {
+      bookingInFlight.current = false;
+      setPending(false);
+    }
+  }
+
   async function finish() {
-    if (!validate(3) || !modality) return;
+    if (pending || !validate(3) || !modality) return;
+    if (modality === "virtual") {
+      if (slot) await finishMeet(slot);
+      return;
+    }
     setPending(true);
     setNote("");
     let reserved = reservationId;
@@ -230,7 +288,7 @@ export function ValuationWizard({
           return [{ id, principal: false, respuestas: [] }];
         }),
       ],
-      modalidad: { tipo: modality, virtual: modality === "virtual" ? virtualMode : null },
+      modalidad: { tipo: modality, virtual: null },
       slot: slot && reserved ? { id: slot.id, start: slot.start, end: slot.end, reservationId: reserved } : null,
       sede: needsSede ? sede : null,
       upsell: null,
@@ -283,9 +341,9 @@ export function ValuationWizard({
     ["Zona", answerOf("zona-general").opciones.join(", ")],
     ["Preferencias", [answerOf("antes").opciones[0], answerOf("cuando").opciones[0]].filter(Boolean).join(" · ")],
     ["Sede", sedes.find((item) => item.slug === sede)?.name ?? ""],
-    ["Modalidad", modality ? `${modality}${virtualMode ? ` · ${virtualMode}` : ""}` : ""],
+    ["Modalidad", modalities.find((item) => item.id === modality)?.title ?? ""],
     ["Origen", origin ? `${origin.name} (${origin.id})` : ""],
-    ["Horario", slot ? `${slot.dayLabel} ${slot.label}${preview ? " · ejemplo, sin confirmar" : ""}` : preview ? "" : "Te confirmaremos la disponibilidad"],
+    ["Horario", slot ? `${slot.dayLabel} ${slot.label}${preview && modality !== "virtual" ? " · ejemplo, sin confirmar" : " · hora Colombia"}` : preview ? "" : "Te confirmaremos la disponibilidad"],
   ].filter(([, value]) => value);
 
   const shell = (
@@ -309,7 +367,7 @@ export function ValuationWizard({
           ))}
         </div>
         <div className="vx-heading">
-          <h3 className="display">{phase === "recibida" ? "Solicitud recibida" : step === 2 && appointmentDetails ? "Elige los detalles de tu cita" : STEPS[step].title}</h3>
+          <h3 className="display">{phase === "recibida" ? (meetUrl ? "Valoración confirmada" : "Solicitud recibida") : step === 2 && appointmentDetails ? "Elige los detalles de tu cita" : STEPS[step].title}</h3>
         </div>
         <div className={frame === "dialog" ? "vx-scroll" : "vx-scroll thin-scroll"} ref={scrollArea}>
           {phase === "recibida" ? (
@@ -322,7 +380,9 @@ export function ValuationWizard({
                   </li>
                 ))}
               </ul>
-              <p>{note || "Siguiente paso: te escribimos al celular que dejaste para acordar la sede y la hora."}</p>
+              {meetUrl ? (
+                <a className="btn-coral" href={meetUrl} target="_blank" rel="noreferrer">Entrar a Google Meet</a>
+              ) : <p>{note || "Siguiente paso: te escribimos al celular que dejaste para acordar la sede y la hora."}</p>}
             </div>
           ) : (
             <div className="vx-step" key={step}>
@@ -336,7 +396,7 @@ export function ValuationWizard({
         {phase === "form" ? (
           <div className="vx-nav">
             {step > 0 ? (
-              <button type="button" className="btn-line" onClick={() => {
+              <button type="button" className="btn-line" disabled={pending || meetPending} onClick={() => {
                 if (step === 2 && appointmentDetails) {
                   setAppointmentDetails(false);
                   setErrors({});
@@ -368,7 +428,7 @@ export function ValuationWizard({
               </button>
             ) : (
               <button type="button" className="btn-coral" disabled={pending} onClick={finish}>
-                {pending ? "Enviando…" : "Enviar solicitud"}
+                {pending ? "Confirmando…" : meetPending ? "Consultar enlace" : modality === "virtual" ? "Confirmar valoración" : "Enviar solicitud"}
               </button>
             )}
           </div>
@@ -460,7 +520,6 @@ export function ValuationWizard({
               <button key={id} type="button" className={modality === id ? "is-on" : ""} aria-pressed={modality === id}
                 onClick={() => {
                   if (modality !== id) {
-                    setVirtualMode(id === "virtual" && !preview ? "agendar" : null);
                     setSlots([]);
                     setDay(null);
                     setSlot(null);
@@ -480,19 +539,27 @@ export function ValuationWizard({
     }
     return (
       <>
-        {modality === "virtual" && !preview ? <p>Te contactaremos para acordar la hora.</p> : null}
-        {modality === "virtual" && preview ? (
-          <div className="vx-chips" role="group" aria-label="Cuándo">
-            <button type="button" className={virtualMode === "ahora" ? "is-on" : ""} disabled={!preview} aria-pressed={virtualMode === "ahora"} onClick={() => setVirtualMode("ahora")}>
-              Atenderme ahora
-            </button>
-            <button type="button" className={virtualMode === "agendar" ? "is-on" : ""} aria-pressed={virtualMode === "agendar"} onClick={() => setVirtualMode("agendar")}>
-              Agendar hora
-            </button>
-          </div>
+        {modality === "virtual" ? (
+          meetState === "loading" ? <p role="status">Consultando horarios…</p> :
+            meetState === "unavailable" ? <p>La agenda virtual aún no está disponible. Puedes volver y elegir otra modalidad.</p> :
+            !days.length ? <p>No hay cupos virtuales disponibles en los próximos días.</p> : (
+              <div className="vx-contact">
+                <label className="vx-field">
+                  Día
+                  <select value={day ?? ""} onChange={(event) => { setDay(event.target.value); setSlot(null); }}>
+                    {days.map((item) => <option key={item} value={item}>{slots.find((option) => option.day === item)?.dayLabel}</option>)}
+                  </select>
+                </label>
+                <label className="vx-field">
+                  Hora de Colombia
+                  <select value={slot?.id ?? ""} onChange={(event) => setSlot(slots.find((item) => item.id === event.target.value && item.day === day) ?? null)}>
+                    <option value="">Elige una hora</option>
+                    {slots.filter((item) => item.day === day).map((item) => <option key={item.id} value={item.id}>{item.label}</option>)}
+                  </select>
+                </label>
+              </div>
+            )
         ) : null}
-        {preview && modality === "virtual" && virtualMode === "ahora" ? <p>No hay una asesora conectada en esta vista previa.</p> : null}
-        {renderFieldError({ id: "virtual" })}
         {needsSede ? (
           <fieldset className="vx-field">
             <legend>Sede</legend>
@@ -509,7 +576,7 @@ export function ValuationWizard({
             {renderFieldError({ id: "sede" })}
           </fieldset>
         ) : null}
-        {modality && wantsSlot && (modality !== "virtual" || preview) && (!needsSede || sede) && (modality !== "virtual" || virtualMode) ? (
+        {modality !== "virtual" && wantsSlot && (!needsSede || sede) ? (
           preview && slots.length ? (
             <div>
               <span className="lp-badge">Horarios de ejemplo</span>
@@ -562,6 +629,7 @@ export function ValuationWizard({
         <label className="vx-field">
           Correo (opcional)
           <input autoComplete="email" inputMode="email" value={patient.email} onChange={(event) => setPatient({ ...patient, email: event.target.value })} />
+          {renderFieldError({ id: "email" })}
         </label>
         </div>
         <label className="vx-check">

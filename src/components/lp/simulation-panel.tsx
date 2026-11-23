@@ -385,15 +385,26 @@ export function SimulationPanel({ examples }: { examples: Record<DensityStyle, E
 
   return (
     <div id="como-te-verias" className="hair-mirror">
-      <div className="hair-style-picker" role="group" aria-label="Estilo de densidad">
+      <div className="hair-mirror-toolbar">
+        <div className="hair-style-picker" role="group" aria-label="Estilo de densidad">
           <button type="button" aria-pressed={style === "masculino"} onClick={() => chooseStyle("masculino")}>
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 16v-4a7 7 0 0 1 14 0v4M5 12l4-2 3 2 3-2 4 2" /></svg>
-            <span><strong>Masculino</strong><small>Entradas y línea frontal</small></span>
+            Masculino
           </button>
           <button type="button" aria-pressed={style === "femenino"} onClick={() => chooseStyle("femenino")}>
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 20V12a7 7 0 0 1 14 0v8M12 5c0 5-3 8-7 10m7-10c0 5 3 8 7 10" /></svg>
-            <span><strong>Femenino</strong><small>Raya y densidad superior</small></span>
+            Femenino
           </button>
+        </div>
+        <div className="hair-mirror-actions">
+          <button className="btn-coral" type="button" aria-controls="espejo-capilar" aria-expanded={opened} onClick={opened ? close : openCamera}>
+            {opened ? status === "opening" ? "Cancelar cámara" : "Cerrar vista" : "Ver cómo se vería en mí"}
+          </button>
+          {active && maskStatus === "ready" ? (
+            <button type="button" ref={aimToggle} className="hair-mirror-adjust" aria-pressed={adjusting}
+              onClick={() => adjusting ? stopAdjusting() : setAdjusting(true)}>
+              {adjusting ? "Listo" : "Ajustar zona"}
+            </button>
+          ) : null}
+        </div>
       </div>
       <div id="espejo-capilar" className={active ? "lp-results-frame hair-mirror-live" : "lp-results-frame"}>
         {!active ? <span className="lp-badge">{example.badge}</span> : null}
@@ -408,17 +419,6 @@ export function SimulationPanel({ examples }: { examples: Record<DensityStyle, E
           <button type="button" ref={aimSurface} className="hair-mirror-aim"
             onClick={aim} onKeyDown={aimWithKeys} aria-label="Toca tu cabello o ajusta el filtro con las flechas. Pulsa Intro para terminar.">
             <span>Toca tu cabello</span>
-          </button>
-        ) : null}
-      </div>
-      <div className="hair-mirror-actions">
-        <button className="btn-coral" type="button" aria-controls="espejo-capilar" aria-expanded={opened} onClick={opened ? close : openCamera}>
-          {opened ? status === "opening" ? "Cancelar cámara" : "Cerrar vista" : "Ver cómo se vería en mí"}
-        </button>
-        {active && maskStatus === "ready" ? (
-          <button type="button" ref={aimToggle} className="hair-mirror-adjust" aria-pressed={adjusting}
-            onClick={() => adjusting ? stopAdjusting() : setAdjusting(true)}>
-            {adjusting ? "Listo" : "Ajustar zona"}
           </button>
         ) : null}
       </div>
@@ -441,20 +441,10 @@ export function SimulationPanel({ examples }: { examples: Record<DensityStyle, E
         void openPhoto(event.target.files?.[0]);
         event.target.value = "";
       }} />
-      <aside className="hair-mirror-notes" aria-label="Información del filtro">
-        <details name="espejo-capilar-notas">
-          <summary aria-label="Privacidad" title={privacyNote}>
-            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="11" width="12" height="9" rx="2" /><path d="M9 11V8a3 3 0 0 1 6 0v3" /></svg>
-          </summary>
-          <p>{privacyNote}</p>
-        </details>
-        <details name="espejo-capilar-notas">
-          <summary aria-label="Sobre el filtro" title={filterNote}>
-            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8" /><path d="M12 11v5m0-8v1" /></svg>
-          </summary>
-          <p>{filterNote}</p>
-        </details>
-      </aside>
+      <details className="hair-mirror-privacy">
+        <summary>Privacidad y alcance del filtro</summary>
+        <p>{privacyNote} {filterNote}</p>
+      </details>
     </div>
   );
 }

@@ -4912,3 +4912,51 @@ dialog.sheet.vx-dialog { width: min(57rem, calc(100vw - 1.5rem)); border: 0; pad
   background: #fffaf2;
 }
 .lp-hair-disclosure p { margin: 0.55rem 0; }
+
+
+.lp-hair-stage .hair-mirror-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.55rem;
+  width: 100%;
+}
+.lp-hair-stage .hair-mirror-toolbar .hair-style-picker {
+  width: auto;
+  gap: 0.18rem;
+  padding: 0.18rem;
+  border: 1px solid #dac8b8;
+  border-radius: 999px;
+  background: #fffaf2;
+}
+.lp-hair-stage .hair-mirror-toolbar .hair-style-picker button {
+  min-height: 2.25rem;
+  padding: 0.35rem 0.8rem;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background: transparent;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+.lp-hair-stage .hair-mirror-toolbar .hair-style-picker button[aria-pressed="true"] {
+  border-color: #d39882;
+  background: #f7e3d4;
+}
+.hair-mirror-toolbar .hair-mirror-actions .btn-coral { min-height: 2.45rem; padding-block: 0.4rem; }
+.hair-mirror-privacy { justify-self: end; color: #654c43; font-size: 0.78rem; }
+.hair-mirror-privacy summary { cursor: pointer; width: fit-content; margin-left: auto; }
+.hair-mirror-privacy p { max-width: 27rem; margin: 0.3rem 0 0; line-height: 1.45; }
+.vx .vx-field select {
+  width: 100%;
+  min-height: 2.85rem;
+  border: 1px solid #eadfce;
+  border-radius: 0.85rem;
+  background: #fff;
+  padding: 0.55rem 0.8rem;
+}
+@media (max-width: 520px) {
+  .lp-hair-stage .hair-mirror-toolbar .hair-style-picker,
+  .hair-mirror-toolbar .hair-mirror-actions { width: 100%; }
+  .hair-mirror-toolbar .hair-mirror-actions .btn-coral { flex: 1 1 auto; }
+}
