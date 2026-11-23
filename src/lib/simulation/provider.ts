@@ -1,60 +1,87 @@
-export type SimulationRequest = {
-  bitmap: ImageBitmap;
-};
+export type DensityOptions = { x: number; y: number; size: number; intensity: number };
 
-export type SimulationFrame = {
-  before: HTMLCanvasElement;
-  after: HTMLCanvasElement;
-  mock: true;
-  label: "Simulación de ejemplo";
-};
-
-export interface SimulationProvider {
-  id: string;
-  simulate(request: SimulationRequest): Promise<SimulationFrame>;
-}
-
-function frame(bitmap: ImageBitmap, paint: (ctx: CanvasRenderingContext2D, width: number, height: number) => void) {
-  const max = 960;
-  const scale = Math.min(1, max / Math.max(bitmap.width, bitmap.height));
+export function photoCanvas(source: CanvasImageSource, width: number, height: number) {
+  if (!width || !height) throw new Error("La foto no tiene dimensiones.");
+  const scale = Math.min(1, 960 / Math.max(width, height));
   const canvas = document.createElement("canvas");
-  canvas.width = Math.max(1, Math.round(bitmap.width * scale));
-  canvas.height = Math.max(1, Math.round(bitmap.height * scale));
-  const ctx = canvas.getContext("2d");
-  if (!ctx) throw new Error("canvas");
-  ctx.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
-  paint(ctx, canvas.width, canvas.height);
+  canvas.width = Math.max(1, Math.round(width * scale));
+  canvas.height = Math.max(1, Math.round(height * scale));
+  const context = canvas.getContext("2d");
+  if (!context) throw new Error("No se pudo preparar la foto.");
+  context.drawImage(source, 0, 0, canvas.width, canvas.height);
   return canvas;
 }
 
-/**
- * Velo suave en la zona superior. No es un resultado clínico ni un aumento de densidad real.
- * Se reemplaza por otro SimulationProvider cuando haya un modelo. Ver docs/simulacion.md.
- */
-export const mockDensitySimulation: SimulationProvider = {
-  id: "mock-densidad-superior",
-  async simulate({ bitmap }) {
-    const before = frame(bitmap, () => undefined);
-    const after = frame(bitmap, (ctx, width, height) => {
-      ctx.save();
-      ctx.beginPath();
-      ctx.rect(0, 0, width, height * 0.36);
-      ctx.clip();
-      ctx.fillStyle = "rgba(74, 42, 32, 0.38)";
-      ctx.fillRect(0, 0, width, height);
-      ctx.strokeStyle = "rgba(42, 24, 18, 0.75)";
-      ctx.lineWidth = 1.25;
-      for (let index = 0; index < 90; index += 1) {
-        const x = width * (0.24 + ((index * 47) % 100) / 100 * 0.52);
-        const y = height * (0.05 + ((index * 19) % 100) / 100 * 0.26);
-        ctx.beginPath();
-        ctx.moveTo(x, y);
-        ctx.lineTo(x + 0.6, y - 10);
-        ctx.stroke();
+export async function readPhoto(file: File) {
+  if (typeof createImageBitmap === "function") {
+    const bitmap = await createImageBitmap(file).catch(() => null);
+    if (bitmap) {
+      try {
+        return photoCanvas(bitmap, bitmap.width, bitmap.height);
+      } finally {
+        bitmap.close();
       }
-      ctx.restore();
-    });
-    bitmap.close();
-    return { before, after, mock: true, label: "Simulación de ejemplo" };
-  },
-};
+    }
+  }
+
+  const url = URL.createObjectURL(file);
+  try {
+    const image = new Image();
+    image.src = url;
+    await image.decode();
+    return photoCanvas(image, image.naturalWidth, image.naturalHeight);
+  } finally {
+    URL.revokeObjectURL(url);
+  }
+}
+
+export function applyDensity(photo: HTMLCanvasElement, options: DensityOptions) {
+  const { width, height } = photo;
+  const result = photoCanvas(photo, width, height);
+  const context = result.getContext("2d");
+  const source = photo.getContext("2d");
+  if (!context || !source || options.intensity === 0) return result;
+
+  const centerX = options.x * width;
+  const centerY = options.y * height;
+  const radius = Math.min(width, height) * options.size;
+  const radiusY = radius * 0.68;
+  const left = Math.max(0, Math.floor(centerX - radius));
+  const top = Math.max(0, Math.floor(centerY - radiusY));
+  const right = Math.min(width, Math.ceil(centerX + radius));
+  const bottom = Math.min(height, Math.ceil(centerY + radiusY));
+  if (right <= left || bottom <= top) return result;
+
+  const patch = source.getImageData(left, top, right - left, bottom - top);
+  const samples: { r: number; g: number; b: number; light: number }[] = [];
+  for (let y = 0; y < patch.height; y += 5) {
+    for (let x = 0; x < patch.width; x += 5) {
+      const distance = Math.hypot((left + x - centerX) / radius, (top + y - centerY) / radiusY);
+      if (distance > 0.96) continue;
+      const offset = (y * patch.width + x) * 4;
+      const [r, g, b] = patch.data.subarray(offset, offset + 3);
+      samples.push({ r, g, b, light: r * 0.21 + g * 0.72 + b * 0.07 });
+    }
+  }
+  samples.sort((a, b) => a.light - b.light);
+  const shade = samples[Math.floor(samples.length * 0.18)] ?? { r: 58, g: 42, b: 36 };
+  const strength = options.intensity / 100;
+
+  for (let y = 0; y < patch.height; y += 1) {
+    for (let x = 0; x < patch.width; x += 1) {
+      const dx = (left + x - centerX) / radius;
+      const dy = (top + y - centerY) / radiusY;
+      const distance = Math.hypot(dx, dy);
+      if (distance >= 1) continue;
+      const edge = Math.min(1, (1 - distance) / 0.46);
+      const opacity = edge * edge * strength * 0.52;
+      const offset = (y * patch.width + x) * 4;
+      const strand = 0.83 + 0.17 * Math.sin((dx * radius + dy * dy * radius * 0.43) * 1.15);
+      patch.data[offset] = patch.data[offset] * (1 - opacity) + shade.r * strand * opacity;
+      patch.data[offset + 1] = patch.data[offset + 1] * (1 - opacity) + shade.g * strand * opacity;
+      patch.data[offset + 2] = patch.data[offset + 2] * (1 - opacity) + shade.b * strand * opacity;
+    }
+  }
+  context.putImageData(patch, left, top);
+  return result;
+}

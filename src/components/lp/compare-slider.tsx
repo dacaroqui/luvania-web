@@ -6,6 +6,7 @@ export function CompareSlider({
   before,
   after,
   label,
+  aspectRatio,
   beforeLabel = "Antes",
   afterLabel = "Después",
 }: {
@@ -13,6 +14,7 @@ export function CompareSlider({
   after: ReactNode;
   label: string;
   beforeLabel?: string;
+  aspectRatio?: number;
   afterLabel?: string;
 }) {
   const box = useRef<HTMLDivElement>(null);
@@ -30,7 +32,7 @@ export function CompareSlider({
   }, []);
 
   return (
-    <div className="compare" ref={box}>
+    <div className={aspectRatio ? "compare compare-photo" : "compare"} ref={box} style={aspectRatio ? { aspectRatio } : undefined}>
       <div className="compare-layer">{after}</div>
       <div className="compare-clip" style={{ width: `${pos}%` }}>
         <div className="compare-full" style={{ width: width || "100%" }}>

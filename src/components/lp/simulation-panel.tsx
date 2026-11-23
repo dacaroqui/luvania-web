@@ -1,171 +1,258 @@
 "use client";
 
-import { mockDensitySimulation, type SimulationFrame } from "@/lib/simulation/provider";
-import { useEffect, useRef, useState } from "react";
+import { applyDensity, photoCanvas, readPhoto, type DensityOptions } from "@/lib/simulation/provider";
+import { useEffect, useRef, useState, type KeyboardEvent, type MouseEvent } from "react";
 import { CompareSlider } from "./compare-slider";
 
-export function SimulationPanel({ enabled }: { enabled: boolean }) {
-  const [consent, setConsent] = useState(false);
+const defaults: DensityOptions = { x: 0.5, y: 0.28, size: 0.16, intensity: 65 };
+
+export function SimulationPanel() {
   const [open, setOpen] = useState(false);
-  const [frame, setFrame] = useState<SimulationFrame | null>(null);
-  const [error, setError] = useState("");
-  const beforeUrl = useRef<string | null>(null);
-  const afterUrl = useRef<string | null>(null);
-  const [urls, setUrls] = useState<{ before: string; after: string } | null>(null);
-
-  useEffect(() => {
-    return () => {
-      if (beforeUrl.current) URL.revokeObjectURL(beforeUrl.current);
-      if (afterUrl.current) URL.revokeObjectURL(afterUrl.current);
-    };
-  }, []);
-
-  useEffect(() => {
-    if (!open) return;
-    const motion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    document.getElementById("simulacion")?.scrollIntoView({ behavior: motion ? "auto" : "smooth", block: "nearest" });
-  }, [open]);
-
-  async function onFile(file: File | undefined) {
-    if (!file || !consent) return;
-    setError("");
-    try {
-      const bitmap = await createImageBitmap(file);
-      const next = await mockDensitySimulation.simulate({ bitmap });
-      const beforeBlob = await canvasBlob(next.before);
-      const afterBlob = await canvasBlob(next.after);
-      if (beforeUrl.current) URL.revokeObjectURL(beforeUrl.current);
-      if (afterUrl.current) URL.revokeObjectURL(afterUrl.current);
-      beforeUrl.current = URL.createObjectURL(beforeBlob);
-      afterUrl.current = URL.createObjectURL(afterBlob);
-      setFrame(next);
-      setUrls({ before: beforeUrl.current, after: afterUrl.current });
-    } catch {
-      setError("No se pudo leer esa imagen en este navegador.");
-    }
-  }
-
   return (
-    <section id="como-te-verias" className="lp-band">
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img className="lp-band-petal" src="/stock/petalo-b.webp" alt="" />
-      <div className="lp-band-grid">
-        <ExampleSplit />
-        <div className="lp-band-copy">
-          <h2 className="display">¿Cómo te verías?</h2>
-          <p>Visualiza un posible cambio con una simulación ilustrativa de tu tratamiento.</p>
-          <ul className="lp-band-points">
-            <li>
-              <PointIcon path="M12 3v3M12 18v3M3 12h3M18 12h3M6 6l2 2M16 16l2 2M18 6l-2 2M8 16l-2 2" />
-              <span>
-                <strong>Referencia visual orientativa</strong>
-                Un filtro de ejemplo, no un resultado.
-              </span>
-            </li>
-            <li>
-              <PointIcon path="M8 8h2l1.2-2h3.6L16 8h2a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2ZM12 11.2a2.3 2.3 0 1 0 0 4.6 2.3 2.3 0 0 0 0-4.6Z" />
-              <span>
-                <strong>Con tu foto de forma segura</strong>
-                Cámara o archivo, solo en este dispositivo.
-              </span>
-            </li>
-            <li>
-              <PointIcon path="M8 11V8.5a4 4 0 0 1 8 0V11M7 11h10v8H7v-8Z" />
-              <span>
-                <strong>Privada y confidencial</strong>
-                La imagen no se envía ni se guarda.
-              </span>
-            </li>
-          </ul>
+    <section id="como-te-verias" className="lp-band density-band" data-reveal>
+      <div className="density-intro">
+        <span className="density-symbol" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+            <path d="M4 8h4l2-3h4l2 3h4v11H4z" strokeLinejoin="round" />
+            <circle cx="12" cy="13" r="3" />
+          </svg>
+        </span>
+        <div>
+          <h2 className="display">¿Cómo te verías con más densidad?</h2>
+          <p>Usa tu cámara o una foto, marca la zona que te preocupa y compara el cambio con un filtro visual.</p>
         </div>
-        <div className="lp-band-action">
-          {enabled ? (
-            <button
-              type="button"
-              className="btn-coral"
-              onClick={() => setOpen(true)}
-            >
-              <svg className="btn-arrow" viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M8 8h2l1.2-2h3.6L16 8h2a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2Z" />
-                <circle cx="13" cy="13.2" r="2.2" />
-              </svg>
-              Simular mi cambio
-            </button>
-          ) : (
-            <p className="lp-blocked">La simulación ilustrativa no está disponible todavía.</p>
-          )}
-          <p className="lp-disclaimer">Simulación ilustrativa. No garantiza resultados; tu médico define el plan en la valoración.</p>
-        </div>
+        <button className="btn-coral" type="button" aria-expanded={open} aria-controls={open ? "simulacion" : undefined} onClick={() => setOpen(!open)}>
+          {open ? "Cerrar simulación" : "Probar con mi foto"}
+        </button>
       </div>
-      {enabled && open ? (
-        <div id="simulacion" className="lp-sim-flow">
-          <label className="lp-consent">
-            <input type="checkbox" checked={consent} onChange={(event) => setConsent(event.target.checked)} />
-            <span>Acepto usar la cámara o un archivo solo en este dispositivo. La imagen no se envía ni se guarda.</span>
-          </label>
-          <div className="lp-sim-actions">
-            <label className={consent ? "btn-line" : "btn-line is-disabled"}>
-              Tomar foto
-              <input type="file" accept="image/*" capture="user" disabled={!consent} onChange={(event) => onFile(event.target.files?.[0])} />
-            </label>
-            <label className={consent ? "btn-line" : "btn-line is-disabled"}>
-              Elegir archivo
-              <input type="file" accept="image/*" disabled={!consent} onChange={(event) => onFile(event.target.files?.[0])} />
-            </label>
-          </div>
-          {error ? <p className="lp-error">{error}</p> : null}
-          {urls && frame ? (
-            <div className="lp-sim-result">
-              <CompareSlider
-                label="Comparar tu foto y la simulación de ejemplo"
-                beforeLabel="Tu foto"
-                afterLabel="Simulación"
-                before={
-                  // La foto solo existe en memoria. next/image no sirve un blob.
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img src={urls.before} alt="" />
-                }
-                after={
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img src={urls.after} alt="" />
-                }
-              />
-              <p className="lp-sim-note">El velo de la zona superior es un filtro de ejemplo. No predice cómo vas a quedar.</p>
-              <a className="btn-coral" href="#valoracion">
-                Iniciar valoración
-              </a>
-            </div>
-          ) : (
-            <p className="lp-sim-empty">Cuando aceptes, la foto se procesa aquí mismo. No queda guardada al salir.</p>
-          )}
-        </div>
-      ) : null}
+      <p className="lp-disclaimer">Simulación ilustrativa. Tu valoración permite explorar opciones para tu caso.</p>
+      {open ? <PhotoStudio /> : null}
     </section>
   );
 }
 
-function ExampleSplit() {
+function PhotoStudio() {
+  const [consent, setConsent] = useState(false);
+  const [camera, setCamera] = useState<"off" | "opening" | "live">("off");
+  const [ready, setReady] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState("");
+  const [photo, setPhoto] = useState<HTMLCanvasElement | null>(null);
+  const [options, setOptions] = useState(defaults);
+  const [original, setOriginal] = useState("");
+  const [filtered, setFiltered] = useState<HTMLCanvasElement | null>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const stream = useRef<MediaStream | null>(null);
+  const request = useRef(0);
+  const fileInput = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    document.getElementById("density-consent")?.focus({ preventScroll: true });
+    document.getElementById("simulacion")?.scrollIntoView({ block: "nearest" });
+    return () => {
+      request.current += 1;
+      stream.current?.getTracks().forEach((track) => track.stop());
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!photo) return;
+    const update = window.requestAnimationFrame(() => {
+      try {
+        setFiltered(applyDensity(photo, options));
+      } catch {
+        setError("No se pudo aplicar el filtro. Prueba con otra foto.");
+      }
+    });
+    return () => window.cancelAnimationFrame(update);
+  }, [photo, options]);
+
+  function stopCamera() {
+    stream.current?.getTracks().forEach((track) => track.stop());
+    stream.current = null;
+    if (videoRef.current) videoRef.current.srcObject = null;
+    setCamera("off");
+    setReady(false);
+  }
+
+  function acceptPhoto(next: HTMLCanvasElement) {
+    setOriginal(next.toDataURL("image/jpeg", 0.92));
+    setFiltered(null);
+    setOptions(defaults);
+    setPhoto(next);
+    setError("");
+  }
+
+  async function openCamera() {
+    if (!consent) return;
+    setError("");
+    if (!navigator.mediaDevices?.getUserMedia) {
+      setError("La cámara no está disponible aquí. Puedes elegir una foto de tu dispositivo.");
+      return;
+    }
+    const id = ++request.current;
+    setCamera("opening");
+    try {
+      const next = await navigator.mediaDevices.getUserMedia({
+        audio: false,
+        video: { facingMode: { ideal: "user" }, width: { ideal: 960 }, height: { ideal: 960 } },
+      });
+      const video = videoRef.current;
+      if (request.current !== id || !video) {
+        next.getTracks().forEach((track) => track.stop());
+        return;
+      }
+      stream.current = next;
+      video.srcObject = next;
+      await video.play();
+      if (request.current === id) setCamera("live");
+    } catch (cause) {
+      if (request.current !== id) return;
+      stopCamera();
+      const denied = cause instanceof DOMException && cause.name === "NotAllowedError";
+      setError(denied
+        ? "El navegador bloqueó la cámara. Puedes darle permiso o elegir una foto."
+        : "No pudimos abrir la cámara. Puedes elegir una foto de tu dispositivo.");
+    }
+  }
+
+  function capture() {
+    const video = videoRef.current;
+    if (!video?.videoWidth) return;
+    try {
+      acceptPhoto(photoCanvas(video, video.videoWidth, video.videoHeight));
+      stopCamera();
+    } catch {
+      setError("No pudimos tomar la foto. Intenta de nuevo o elige un archivo.");
+    }
+  }
+
+  async function loadFile(file: File | undefined) {
+    if (!file || !consent) return;
+    const id = ++request.current;
+    stopCamera();
+    setBusy(true);
+    setError("");
+    try {
+      const next = await readPhoto(file);
+      if (request.current === id) acceptPhoto(next);
+    } catch {
+      if (request.current === id) setError("No pudimos leer esa imagen. Prueba con una foto JPG, PNG o WebP.");
+    } finally {
+      if (request.current === id) setBusy(false);
+    }
+  }
+
+  function clearPhoto() {
+    request.current += 1;
+    stopCamera();
+    setBusy(false);
+    setPhoto(null);
+    setOriginal("");
+    setFiltered(null);
+    setError("");
+  }
+
+  function point(x: number, y: number) {
+    setOptions((current) => ({ ...current, x: Math.max(0, Math.min(1, x)), y: Math.max(0, Math.min(1, y)) }));
+  }
+
+  function pointFromClick(event: MouseEvent<HTMLButtonElement>) {
+    if (event.detail === 0) return;
+    const box = event.currentTarget.getBoundingClientRect();
+    point((event.clientX - box.left) / box.width, (event.clientY - box.top) / box.height);
+  }
+
+  function pointFromKeys(event: KeyboardEvent<HTMLButtonElement>) {
+    const directions: Record<string, [number, number]> = {
+      ArrowLeft: [-0.025, 0], ArrowRight: [0.025, 0], ArrowUp: [0, -0.025], ArrowDown: [0, 0.025],
+    };
+    const move = directions[event.key];
+    if (!move) return;
+    event.preventDefault();
+    point(options.x + move[0], options.y + move[1]);
+  }
+
   return (
-    <div className="lp-example" aria-hidden="true">
-      <div className="lp-example-half" />
-      <div className="lp-example-half is-after" />
-      <span className="compare-tag is-before">Antes</span>
-      <span className="compare-tag is-after">Simulación</span>
-      <span className="lp-badge">Ejemplo ilustrativo. No es una paciente.</span>
+    <div id="simulacion" className="density-studio">
+      <label className="lp-consent">
+        <input id="density-consent" type="checkbox" checked={consent} onChange={(event) => {
+          setConsent(event.target.checked);
+          if (!event.target.checked) clearPhoto();
+        }} />
+        <span>Acepto usar mi foto en este dispositivo. La imagen no se envía ni se guarda.</span>
+      </label>
+      <div className="density-actions">
+        {camera === "off" ? (
+          <button className="btn-line" type="button" onClick={openCamera} disabled={!consent || busy}>
+            {photo ? "Tomar otra foto" : "Abrir cámara"}
+          </button>
+        ) : (
+          <button className="btn-line" type="button" onClick={() => { request.current += 1; stopCamera(); }}>Cancelar cámara</button>
+        )}
+        <button className="btn-line" type="button" disabled={!consent || busy} onClick={() => fileInput.current?.click()}>Elegir una foto</button>
+        <input ref={fileInput} hidden type="file" accept="image/*" onChange={(event) => {
+          void loadFile(event.target.files?.[0]);
+          event.target.value = "";
+        }} />
+        {photo ? <button className="density-clear" type="button" onClick={clearPhoto}>Quitar foto</button> : null}
+      </div>
+      {error ? <p className="lp-error" role="alert">{error}</p> : null}
+      {busy ? <p role="status">Preparando la foto…</p> : null}
+      {camera === "opening" ? <p role="status">Abriendo la cámara. Revisa si tu navegador solicita permiso.</p> : null}
+      <div className="density-camera" hidden={camera === "off"}>
+        <video ref={videoRef} muted playsInline onLoadedData={() => setReady(true)} aria-label="Vista en vivo de tu cámara" />
+        <div>
+          <p>Busca buena luz y encuadra la zona del cabello que quieres ver.</p>
+          <button className="btn-coral" type="button" disabled={!ready || camera !== "live"} onClick={capture}>Capturar foto</button>
+        </div>
+      </div>
+      {photo && original && camera === "off" ? (
+        <div className="density-workspace">
+          <div className="density-tools">
+            <h3>Marca la zona en tu foto</h3>
+            <p id="density-instructions">Toca el cabello donde quieres aplicar el filtro. También puedes mover el marcador con las flechas del teclado.</p>
+            <button className="density-photo-select" type="button" aria-label="Posición del filtro" aria-describedby="density-instructions" onClick={pointFromClick} onKeyDown={pointFromKeys}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={original} alt="" width={photo.width} height={photo.height} />
+              <span aria-hidden="true" style={{
+                left: `${options.x * 100}%`, top: `${options.y * 100}%`,
+                width: `${options.size * 200 * Math.min(photo.width, photo.height) / photo.width}%`,
+                height: `${options.size * 136 * Math.min(photo.width, photo.height) / photo.height}%`,
+              }} />
+            </button>
+            <label>Intensidad <input type="range" min={0} max={100} value={options.intensity} onChange={(event) => setOptions({ ...options, intensity: Number(event.target.value) })} /></label>
+            <label>Tamaño de la zona <input type="range" min={7} max={34} value={Math.round(options.size * 100)} onChange={(event) => setOptions({ ...options, size: Number(event.target.value) / 100 })} /></label>
+          </div>
+          <div className="density-comparison">
+            <h3>Compara tu foto</h3>
+            {filtered ? (
+              <CompareSlider
+                label="Desliza para comparar la foto original con el filtro de densidad"
+                beforeLabel="Original" afterLabel="Con filtro"
+                aspectRatio={photo.width / photo.height}
+                before={
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={original} alt="" />
+                }
+                after={<CanvasPreview source={filtered} />}
+              />
+            ) : !error ? <p role="status">Aplicando el filtro…</p> : null}
+            <p>El filtro cambia el aspecto de la zona marcada. Los resultados de un tratamiento varían según cada persona.</p>
+            <a className="btn-coral" href="#valoracion">Agendar mi valoración capilar</a>
+          </div>
+        </div>
+      ) : null}
     </div>
   );
 }
 
-function PointIcon({ path }: { path: string }) {
-  return (
-    <svg viewBox="0 0 24 24" aria-hidden="true">
-      <path d={path} />
-    </svg>
-  );
-}
+function CanvasPreview({ source }: { source: HTMLCanvasElement }) {
+  const ref = useRef<HTMLCanvasElement>(null);
 
-function canvasBlob(canvas: HTMLCanvasElement) {
-  return new Promise<Blob>((resolve, reject) => {
-    canvas.toBlob((blob) => (blob ? resolve(blob) : reject(new Error("blob"))), "image/jpeg", 0.9);
-  });
+  useEffect(() => {
+    ref.current?.getContext("2d")?.drawImage(source, 0, 0);
+  }, [source]);
+
+  return <canvas ref={ref} width={source.width} height={source.height} aria-hidden="true" />;
 }

@@ -1,3 +1,4 @@
+import { PageMotion } from "@/components/page-motion";
 import { FlorBackdrop } from "@/components/flor-backdrop";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
@@ -41,6 +42,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       <body className="pb-24 md:pb-0">
         <FlorBackdrop />
         <ToneField />
+        <PageMotion />
         <a
           href="#contenido"
           className="sr-only focus:not-sr-only focus:absolute focus:top-3 focus:left-3 focus:z-50 focus:rounded-full focus:bg-ink focus:px-4 focus:py-2 focus:text-cream"

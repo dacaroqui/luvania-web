@@ -1,60 +1,40 @@
-import { FlorLuvania } from "./flor-luvania";
 import { BookButton } from "./book-button";
 
-const steps = [
-  ["1", "Eliges la sede", "Restrepo, Modelia, Chicó, Venecia o Colina."],
-  ["2", "Cuentas qué te preocupa", "Sin tener el nombre del tratamiento."],
-  ["3", "El equipo mira la zona", "Te explica opciones, tiempos y cuidados."],
-  ["4", "Tú decides", "Sigues solo si el plan te hace sentido."],
+const benefits = [
+  ["Cuenta qué te gustaría mejorar", "El equipo escucha tu objetivo y revisa la zona contigo."],
+  ["Conoce tus opciones", "Pregunta por el plan, el costo y los cuidados que debes considerar."],
+  ["Elige cuándo empezar", "Puedes decidir después de la cita. La valoración no te compromete a un tratamiento."],
 ];
 
-export function Valoracion({ layout = "home" }: { layout?: "home" | "steps" }) {
-  if (layout === "steps") {
-    return (
-      <section data-tone="peach" className="valoracion-band">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img className="valoracion-petal" src="/stock/petalo-a.webp" alt="" />
-        <div className="valoracion-band-grid">
-          <div>
-            <p className="text-xs font-bold tracking-[0.16em] text-clay uppercase">La primera conversación</p>
-            <h2 className="display mt-3 text-5xl">Cómo es tu valoración</h2>
-            <p className="mt-4 max-w-sm text-mute">Una cita para mirar la zona y decidir con calma. Sin compromiso de tratamiento.</p>
-          </div>
-          <ol className="valoracion-steps">
-            {steps.map(([n, title, copy]) => (
-              <li key={n}>
-                <p>{n}</p>
-                <h3>{title}</h3>
-                <span>{copy}</span>
-              </li>
-            ))}
-          </ol>
-        </div>
-      </section>
-    );
-  }
-
+export function Valoracion({
+  tratamiento,
+  tratamientoId,
+  necesidad,
+  promo,
+}: {
+  tratamiento?: string;
+  tratamientoId?: string;
+  necesidad?: string;
+  promo?: string;
+}) {
   return (
-    <section data-tone="peach" className="relative z-[1] overflow-hidden bg-[#f1ceb3]">
-      <FlorLuvania className="flor-glow" />
-      <div className="relative z-[1] mx-auto grid max-w-6xl items-start gap-10 px-4 py-20 lg:grid-cols-[0.8fr_1.2fr]">
-        <div className="lg:sticky lg:top-28">
-          <p className="text-xs font-bold tracking-[0.16em] text-clay uppercase">La primera conversación</p>
-          <h2 className="display mt-3 text-5xl">Cómo es tu valoración</h2>
-          <p className="mt-4 max-w-sm text-mute">Una cita para mirar la zona y decidir con calma. Sin compromiso de tratamiento.</p>
+    <section data-tone="peach" className="valuation-callout">
+      <div className="valuation-content">
+        <div className="valuation-copy" data-reveal>
+          <h2 className="display">Encuentra un plan para ti</h2>
+          <p>Sal de tu valoración con más claridad sobre tus opciones y cuánto costaría empezar.</p>
+          <BookButton tratamiento={tratamiento} tratamientoId={tratamientoId} necesidad={necesidad} promo={promo}>
+            Agendar mi valoración
+          </BookButton>
         </div>
-        <ol className="grid gap-4">
-          {steps.map(([n, title, copy], index) => (
-            <li key={n} className="reveal rounded-3xl bg-cream p-6" style={{ animationDelay: `${index * 80}ms` }}>
-              <p className="display text-3xl text-coral">{n}</p>
-              <h3 className="mt-2 text-xl font-bold">{title}</h3>
-              <p className="mt-2 text-mute">{copy}</p>
+        <ul className="valuation-benefits">
+          {benefits.map(([title, description]) => (
+            <li key={title} data-reveal data-pointer>
+              <h3>{title}</h3>
+              <p>{description}</p>
             </li>
           ))}
-          <li>
-            <BookButton />
-          </li>
-        </ol>
+        </ul>
       </div>
     </section>
   );

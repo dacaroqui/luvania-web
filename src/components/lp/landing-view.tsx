@@ -71,7 +71,7 @@ export function LandingView({
   const crumbs = treatment
     ? [
         { name: "Tratamientos", href: "/tratamientos" },
-        { name: landing.heroTitle, href: `/lp/${landing.slug}` },
+        { name: landing.simulation ? "Caída del cabello" : landing.heroTitle, href: `/lp/${landing.slug}` },
       ]
     : [
         { name: "Promociones", href: "/promociones" },
@@ -106,11 +106,11 @@ export function LandingView({
             {intro ? <p className="ficha-summary">{intro}</p> : null}
             <div className="ficha-hero-actions">
               <a className="btn-coral" href="#valoracion">
-                Iniciar valoración
+                {landing.simulation ? "Agendar mi valoración capilar" : "Iniciar valoración"}
               </a>
               {landing.simulation ? (
                 <a className="btn-line" href="#como-te-verias">
-                  ¿Cómo te verías?
+                  Probar con mi foto
                 </a>
               ) : null}
             </div>
@@ -137,7 +137,7 @@ export function LandingView({
       </section>
 
       {preview && landing.showResults ? <ResultadosReales /> : null}
-      {landing.simulation ? <SimulationPanel enabled={preview} /> : null}
+      {landing.simulation ? <SimulationPanel /> : null}
 
       {treatment && cards.length ? (
         <section className="lp-split" aria-labelledby="conoce">
@@ -150,7 +150,7 @@ export function LandingView({
           <ul className="lp-know">
             {cards.map((card) => (
               <li key={card.href}>
-                <a className="lp-know-card glass-card" href={card.href}>
+                <a className="lp-know-card glass-card" data-reveal data-pointer href={card.href}>
                   <Mark path={card.path} />
                   <span>
                     <strong>{card.title}</strong>
@@ -233,10 +233,10 @@ export function LandingView({
         </section>
       ) : null}
 
-      <section className="lp-next">
+      <section className="lp-next" data-reveal data-pointer>
         <div>
           <Mark path="M7 4v2M17 4v2M5 8h14v11H5V8Zm0 4h14" />
-          <h2 className="display">¿Lista para dar el siguiente paso?</h2>
+          <h2 className="display">{landing.simulation ? "Empieza por entender qué pasa con tu cabello" : "¿Lista para dar el siguiente paso?"}</h2>
           <p>Agenda tu valoración personalizada en la sede de tu preferencia.</p>
         </div>
         <a className="btn-coral" href="#valoracion">
