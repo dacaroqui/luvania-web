@@ -14,7 +14,7 @@ const filterNote = "Filtro ilustrativo. No predice resultados de un tratamiento.
 type Tracking = "loading" | "searching" | "ready" | "unavailable" | "manual";
 type Status = "idle" | "opening" | "live" | "loading-photo" | "photo" | "error";
 
-type Example = { before: ReactNode; after: ReactNode; label: string };
+type Example = { before: ReactNode; after: ReactNode; label: string; badge: string };
 
 export function SimulationPanel({ example, onActiveChange }: {
   example?: Example;
@@ -403,7 +403,7 @@ export function SimulationPanel({ example, onActiveChange }: {
         </div>
       ) : null}
       <div id="espejo-capilar" className={active ? "lp-results-frame hair-mirror-live" : "lp-results-frame"} hidden={!example && !active}>
-        {example && !active ? <span className="lp-badge">Foto real autorizada pendiente</span> : null}
+        {example && !active ? <span className="lp-badge">{example.badge}</span> : null}
         <CompareSlider
           label={active ? "Compara tu imagen sin filtro y con filtro" : example?.label ?? "Comparador capilar"}
           beforeLabel={active ? "Antes · Sin filtro" : "Antes"}

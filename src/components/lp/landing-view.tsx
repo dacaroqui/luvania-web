@@ -11,7 +11,6 @@ import { clinicalVisible } from "@/lib/review";
 import Link from "next/link";
 import { DoctorPlaceholder } from "./photo-placeholders";
 import { ResultadosReales } from "./resultados";
-import { SimulationPanel } from "./simulation-panel";
 
 function patientCopy(value: string | undefined) {
   return publicText(value)
@@ -129,10 +128,8 @@ export function LandingView({
         </div>
       </section>
 
-      {preview && landing.showResults ? (
+      {landing.simulation || (preview && landing.showResults) ? (
         <ResultadosReales withMirror={landing.simulation} />
-      ) : landing.simulation ? (
-        <div className="lp-split hair-mirror-standalone"><SimulationPanel /></div>
       ) : null}
 
       {landing.simulation && treatment ? (

@@ -4844,3 +4844,9 @@ dialog.sheet.vx-dialog { width: min(57rem, calc(100vw - 1.5rem)); border: 0; pad
 .hair-style-picker svg { flex: none; width: 1.5rem; height: 1.5rem; fill: none; stroke: #8d4534; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
 .hair-style-picker strong, .hair-style-picker small { display: block; line-height: 1.2; }
 .hair-style-picker small { font-size: 0.72rem; }
+
+
+.lp-results-frame .compare img.hair-demo-photo {
+  object-fit: cover;
+  object-position: center 12%;
+}

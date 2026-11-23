@@ -5,3 +5,5 @@ El comparador muestra dos versiones del mismo cuadro. MediaPipe Face Landmarker 
 El modelo y el runtime se descargan bajo demanda; cámara y fotos se procesan en el navegador. Si el modelo no encuentra cabello, se conserva la imagen sin filtro. El espejo representa un cambio ilustrativo de densidad, no genera una cabellera en zonas sin pelo ni predice resultados clínicos.
 
 Referencias de producto: [Banuba Virtual Hairstyle Try-On](https://www.banuba.com/virtual-hairstyle-try-on) para seguimiento y cámara, [Perfect Corp. Hair Style API](https://docs.perfectcorp.com/reference/ai_hairstyle/section/overview/integration-guide) para edición de una foto. La implementación usa el [segmentador de Google](https://developers.google.com/edge/mediapipe/solutions/vision/image_segmenter).
+
+El espejo cerrado muestra un par de retratos sintéticos, etiquetados como ejemplo generado con IA. Al cerrar la cámara, el comparador vuelve a estas imágenes.

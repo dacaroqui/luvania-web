@@ -23,8 +23,11 @@ const CASES = [
 ];
 
 export function ResultadosReales({ withMirror = false }: { withMirror?: boolean }) {
+  return withMirror ? <CapillaryExample /> : <ResultsCarousel />;
+}
+
+function ResultsCarousel() {
   const [index, setIndex] = useState(0);
-  const [mirrorActive, setMirrorActive] = useState(false);
   const item = CASES[index];
   const go = (delta: number) => setIndex((current) => (current + delta + CASES.length) % CASES.length);
 
@@ -38,10 +41,10 @@ export function ResultadosReales({ withMirror = false }: { withMirror?: boolean 
     <section className="lp-split" aria-labelledby="resultados-reales">
       <div className="lp-split-copy">
         <h2 id="resultados-reales" className="display">
-          {mirrorActive ? "Tu espejo capilar" : "Resultados reales de Luvania"}
+          Resultados reales de Luvania
         </h2>
-        {!mirrorActive ? <p>Fotos de pacientes pendientes de autorización.</p> : null}
-        <div className="lp-arrows" hidden={mirrorActive}>
+        <p>Fotos de pacientes pendientes de autorización.</p>
+        <div className="lp-arrows">
           <button type="button" className="lp-arrow" aria-label="Caso anterior" onClick={() => go(-1)}>
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <path d="M14.5 6.5 9 12l5.5 5.5" />
@@ -57,15 +60,39 @@ export function ResultadosReales({ withMirror = false }: { withMirror?: boolean 
           </span>
         </div>
       </div>
-      {withMirror ? (
-        <SimulationPanel example={example} onActiveChange={setMirrorActive} />
-      ) : (
-        <div className="lp-results-frame">
-          <span className="lp-badge">Foto real autorizada pendiente</span>
-          <CompareSlider key={item.id} {...example} />
-        </div>
-      )}
+      <div className="lp-results-frame">
+        <span className="lp-badge">Foto real autorizada pendiente</span>
+        <CompareSlider key={item.id} {...example} />
+      </div>
     </section>
+  );
+}
+
+function CapillaryExample() {
+  const [active, setActive] = useState(false);
+  const example = {
+    label: "Comparar las dos fotos del ejemplo de densidad",
+    badge: "Ejemplo generado con IA",
+    before: <ExamplePhoto side="antes" />,
+    after: <ExamplePhoto side="despues" />,
+  };
+
+  return (
+    <section className="lp-split" aria-labelledby="resultados-reales">
+      <div className="lp-split-copy">
+        <h2 id="resultados-reales" className="display">{active ? "Tu espejo capilar" : "Ejemplo de densidad capilar"}</h2>
+        {!active ? <p>Desliza para comparar la densidad en la línea frontal.</p> : null}
+      </div>
+      <SimulationPanel example={example} onActiveChange={setActive} />
+    </section>
+  );
+}
+
+function ExamplePhoto({ side }: { side: "antes" | "despues" }) {
+  const alt = side === "antes" ? "Retrato ilustrativo con entradas visibles" : "El mismo retrato con mayor densidad frente a las entradas";
+  return (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img className="hair-demo-photo" src={`/images/capilar-ejemplo-${side}.webp`} alt={alt} width={750} height={750} decoding="async" />
   );
 }
 
