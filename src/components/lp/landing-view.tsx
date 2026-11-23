@@ -108,11 +108,6 @@ export function LandingView({
               <a className="btn-coral" href="#valoracion">
                 {landing.simulation ? "Agendar mi valoración capilar" : "Iniciar valoración"}
               </a>
-              {landing.simulation ? (
-                <a className="btn-line" href="#como-te-verias">
-                  Probar con mi foto
-                </a>
-              ) : null}
             </div>
           </div>
           <div className="ficha-hero-visual">
@@ -136,8 +131,11 @@ export function LandingView({
         </div>
       </section>
 
-      {preview && landing.showResults ? <ResultadosReales /> : null}
-      {landing.simulation ? <SimulationPanel /> : null}
+      {preview && landing.showResults ? (
+        <ResultadosReales withMirror={landing.simulation} />
+      ) : landing.simulation ? (
+        <div className="lp-split hair-mirror-standalone"><SimulationPanel /></div>
+      ) : null}
 
       {treatment && cards.length ? (
         <section className="lp-split" aria-labelledby="conoce">

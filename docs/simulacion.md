@@ -1,7 +1,7 @@
-# Simulación capilar «¿Cómo te verías?»
+# Espejo capilar
 
-En `/lp/caida-del-cabello`, la persona puede capturar una foto con la cámara o elegir un archivo. La cámara requiere permiso del navegador en HTTPS o localhost. Solo se solicita video; al capturar, cancelar, retirar el consentimiento o cerrar el panel se detiene la cámara.
+En `/lp/caida-del-cabello`, «Ver cómo se vería en mí» solicita el permiso de la cámara y abre un video con el filtro aplicado. La persona puede mover el filtro tocando su cabello en pantalla o con las flechas del teclado. Si la cámara no está disponible, puede elegir una foto. No se solicita audio ni se guardan o envían imágenes.
 
-El navegador conserva la foto en memoria, toma como referencia el color de la zona marcada y aplica un filtro de densidad de tamaño e intensidad ajustables. El deslizador compara la foto original y la versión filtrada. La imagen no se envía ni se guarda. El filtro es ilustrativo y no predice resultados de un tratamiento.
+El filtro usa un área fija y ajustable de la imagen. No detecta el cabello ni predice resultados de un tratamiento. El video se detiene al cerrar la vista o salir de la página.
 
-Los casos de antes y después de pacientes requieren fotos reales autorizadas. Se gestionan por separado del simulador.
+El carrusel muestra marcadores provisionales hasta contar con fotos reales autorizadas.

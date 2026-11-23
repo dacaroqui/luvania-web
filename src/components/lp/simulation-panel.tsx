@@ -1,258 +1,220 @@
 "use client";
 
-import { applyDensity, photoCanvas, readPhoto, type DensityOptions } from "@/lib/simulation/provider";
-import { useEffect, useRef, useState, type KeyboardEvent, type MouseEvent } from "react";
-import { CompareSlider } from "./compare-slider";
+import { paintDensity, readPhoto } from "@/lib/simulation/provider";
+import { useCallback, useEffect, useRef, useState, type KeyboardEvent, type MouseEvent } from "react";
 
-const defaults: DensityOptions = { x: 0.5, y: 0.28, size: 0.16, intensity: 65 };
+const initialPoint = { x: 0.5, y: 0.24 };
+const previewSize = 540;
+const frameInterval = 1000 / 30;
+const privacyNote = "Tu imagen se queda en el dispositivo. No se guarda ni se envía.";
+const filterNote = "Filtro ilustrativo. No predice resultados de un tratamiento.";
+type Status = "idle" | "opening" | "live" | "loading-photo" | "photo" | "error";
 
 export function SimulationPanel() {
-  const [open, setOpen] = useState(false);
-  return (
-    <section id="como-te-verias" className="lp-band density-band" data-reveal>
-      <div className="density-intro">
-        <span className="density-symbol" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-            <path d="M4 8h4l2-3h4l2 3h4v11H4z" strokeLinejoin="round" />
-            <circle cx="12" cy="13" r="3" />
-          </svg>
-        </span>
-        <div>
-          <h2 className="display">¿Cómo te verías con más densidad?</h2>
-          <p>Usa tu cámara o una foto, marca la zona que te preocupa y compara el cambio con un filtro visual.</p>
-        </div>
-        <button className="btn-coral" type="button" aria-expanded={open} aria-controls={open ? "simulacion" : undefined} onClick={() => setOpen(!open)}>
-          {open ? "Cerrar simulación" : "Probar con mi foto"}
-        </button>
-      </div>
-      <p className="lp-disclaimer">Simulación ilustrativa. Tu valoración permite explorar opciones para tu caso.</p>
-      {open ? <PhotoStudio /> : null}
-    </section>
-  );
-}
-
-function PhotoStudio() {
-  const [consent, setConsent] = useState(false);
-  const [camera, setCamera] = useState<"off" | "opening" | "live">("off");
-  const [ready, setReady] = useState(false);
-  const [busy, setBusy] = useState(false);
+  const [status, setStatus] = useState<Status>("idle");
   const [error, setError] = useState("");
-  const [photo, setPhoto] = useState<HTMLCanvasElement | null>(null);
-  const [options, setOptions] = useState(defaults);
-  const [original, setOriginal] = useState("");
-  const [filtered, setFiltered] = useState<HTMLCanvasElement | null>(null);
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const stream = useRef<MediaStream | null>(null);
-  const request = useRef(0);
+  const video = useRef<HTMLVideoElement>(null);
+  const canvas = useRef<HTMLCanvasElement>(null);
   const fileInput = useRef<HTMLInputElement>(null);
+  const stream = useRef<MediaStream | null>(null);
+  const frame = useRef(0);
+  const session = useRef(0);
+  const sourcePhoto = useRef<HTMLCanvasElement | null>(null);
+  const point = useRef(initialPoint);
 
-  useEffect(() => {
-    document.getElementById("density-consent")?.focus({ preventScroll: true });
-    document.getElementById("simulacion")?.scrollIntoView({ block: "nearest" });
-    return () => {
-      request.current += 1;
-      stream.current?.getTracks().forEach((track) => track.stop());
-    };
+  const releaseCamera = useCallback(() => {
+    session.current += 1;
+    window.cancelAnimationFrame(frame.current);
+    stream.current?.getTracks().forEach((track) => track.stop());
+    stream.current = null;
+    if (video.current) video.current.srcObject = null;
   }, []);
 
   useEffect(() => {
-    if (!photo) return;
-    const update = window.requestAnimationFrame(() => {
-      try {
-        setFiltered(applyDensity(photo, options));
-      } catch {
-        setError("No se pudo aplicar el filtro. Prueba con otra foto.");
-      }
-    });
-    return () => window.cancelAnimationFrame(update);
-  }, [photo, options]);
+    function closeOnPageHide() {
+      releaseCamera();
+      sourcePhoto.current = null;
+      if (canvas.current) canvas.current.width = 1;
+      setStatus("idle");
+    }
+    window.addEventListener("pagehide", closeOnPageHide);
+    return () => {
+      window.removeEventListener("pagehide", closeOnPageHide);
+      releaseCamera();
+    };
+  }, [releaseCamera]);
 
-  function stopCamera() {
-    stream.current?.getTracks().forEach((track) => track.stop());
-    stream.current = null;
-    if (videoRef.current) videoRef.current.srcObject = null;
-    setCamera("off");
-    setReady(false);
+  function fail(message: string) {
+    releaseCamera();
+    sourcePhoto.current = null;
+    if (canvas.current) canvas.current.width = 1;
+    setError(message);
+    setStatus("error");
   }
 
-  function acceptPhoto(next: HTMLCanvasElement) {
-    setOriginal(next.toDataURL("image/jpeg", 0.92));
-    setFiltered(null);
-    setOptions(defaults);
-    setPhoto(next);
-    setError("");
+  function draw(source: CanvasImageSource, width: number, height: number, mirror: boolean) {
+    const target = canvas.current;
+    if (!target || !width || !height) return;
+    const scale = Math.min(1, previewSize / Math.max(width, height));
+    const outputWidth = Math.max(1, Math.round(width * scale));
+    const outputHeight = Math.max(1, Math.round(height * scale));
+    if (target.width !== outputWidth) target.width = outputWidth;
+    if (target.height !== outputHeight) target.height = outputHeight;
+    const ctx = target.getContext("2d", { willReadFrequently: true });
+    if (!ctx) throw new Error("Canvas no disponible");
+
+    ctx.setTransform(mirror ? -1 : 1, 0, 0, 1, mirror ? outputWidth : 0, 0);
+    ctx.drawImage(source, 0, 0, outputWidth, outputHeight);
+    ctx.resetTransform();
+    paintDensity(ctx, { ...point.current, size: 0.19, intensity: 70 });
   }
 
   async function openCamera() {
-    if (!consent) return;
     setError("");
+    sourcePhoto.current = null;
+    point.current = initialPoint;
+
     if (!navigator.mediaDevices?.getUserMedia) {
-      setError("La cámara no está disponible aquí. Puedes elegir una foto de tu dispositivo.");
+      fail("La cámara no está disponible. Prueba con una foto.");
       return;
     }
-    const id = ++request.current;
-    setCamera("opening");
+
+    const id = ++session.current;
+    setStatus("opening");
     try {
       const next = await navigator.mediaDevices.getUserMedia({
         audio: false,
-        video: { facingMode: { ideal: "user" }, width: { ideal: 960 }, height: { ideal: 960 } },
+        video: { facingMode: { ideal: "user" }, width: { ideal: 640 }, height: { ideal: 480 } },
       });
-      const video = videoRef.current;
-      if (request.current !== id || !video) {
+      const element = video.current;
+      if (session.current !== id || !element) {
         next.getTracks().forEach((track) => track.stop());
         return;
       }
       stream.current = next;
-      video.srcObject = next;
-      await video.play();
-      if (request.current === id) setCamera("live");
-    } catch (cause) {
-      if (request.current !== id) return;
-      stopCamera();
-      const denied = cause instanceof DOMException && cause.name === "NotAllowedError";
-      setError(denied
-        ? "El navegador bloqueó la cámara. Puedes darle permiso o elegir una foto."
-        : "No pudimos abrir la cámara. Puedes elegir una foto de tu dispositivo.");
-    }
-  }
+      next.getVideoTracks()[0]?.addEventListener("ended", () => {
+        if (session.current === id) fail("La cámara se desconectó. Puedes volver a abrirla o usar una foto.");
+      }, { once: true });
+      element.srcObject = next;
+      await element.play();
+      if (session.current !== id) return;
 
-  function capture() {
-    const video = videoRef.current;
-    if (!video?.videoWidth) return;
-    try {
-      acceptPhoto(photoCanvas(video, video.videoWidth, video.videoHeight));
-      stopCamera();
+      let previous = -Infinity;
+      let shown = false;
+      const render = (now: number) => {
+        if (session.current !== id) return;
+        if (element.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA && element.videoWidth && now - previous >= frameInterval) {
+          try {
+            draw(element, element.videoWidth, element.videoHeight, true);
+          } catch {
+            fail("No pudimos mostrar el filtro en vivo. Prueba con una foto.");
+            return;
+          }
+          previous = now;
+          if (!shown) {
+            shown = true;
+            setStatus("live");
+          }
+        }
+        frame.current = window.requestAnimationFrame(render);
+      };
+      frame.current = window.requestAnimationFrame(render);
     } catch {
-      setError("No pudimos tomar la foto. Intenta de nuevo o elige un archivo.");
+      if (session.current === id) fail("No pudimos acceder a la cámara. Revisa el permiso o usa una foto.");
     }
   }
 
-  async function loadFile(file: File | undefined) {
-    if (!file || !consent) return;
-    const id = ++request.current;
-    stopCamera();
-    setBusy(true);
+  async function openPhoto(file: File | undefined) {
+    if (!file) return;
+    releaseCamera();
+    const id = session.current;
     setError("");
+    setStatus("loading-photo");
     try {
-      const next = await readPhoto(file);
-      if (request.current === id) acceptPhoto(next);
+      const image = await readPhoto(file);
+      if (session.current !== id) return;
+      point.current = initialPoint;
+      sourcePhoto.current = image;
+      draw(image, image.width, image.height, false);
+      setStatus("photo");
     } catch {
-      if (request.current === id) setError("No pudimos leer esa imagen. Prueba con una foto JPG, PNG o WebP.");
-    } finally {
-      if (request.current === id) setBusy(false);
+      if (session.current === id) fail("No pudimos abrir la foto. Prueba con JPG, PNG o WebP.");
     }
   }
 
-  function clearPhoto() {
-    request.current += 1;
-    stopCamera();
-    setBusy(false);
-    setPhoto(null);
-    setOriginal("");
-    setFiltered(null);
+  function close() {
+    releaseCamera();
+    sourcePhoto.current = null;
+    if (canvas.current) canvas.current.width = 1;
+    setStatus("idle");
     setError("");
   }
 
-  function point(x: number, y: number) {
-    setOptions((current) => ({ ...current, x: Math.max(0, Math.min(1, x)), y: Math.max(0, Math.min(1, y)) }));
+  function adjustPoint(x: number, y: number) {
+    point.current = { x: Math.max(0, Math.min(1, x)), y: Math.max(0, Math.min(1, y)) };
+    const image = sourcePhoto.current;
+    if (image) draw(image, image.width, image.height, false);
   }
 
-  function pointFromClick(event: MouseEvent<HTMLButtonElement>) {
-    if (event.detail === 0) return;
-    const box = event.currentTarget.getBoundingClientRect();
-    point((event.clientX - box.left) / box.width, (event.clientY - box.top) / box.height);
+  function aim(event: MouseEvent<HTMLButtonElement>) {
+    if (event.detail === 0 || !canvas.current) return;
+    const bounds = canvas.current.getBoundingClientRect();
+    if (!bounds.width || !bounds.height) return;
+    adjustPoint((event.clientX - bounds.left) / bounds.width, (event.clientY - bounds.top) / bounds.height);
   }
 
-  function pointFromKeys(event: KeyboardEvent<HTMLButtonElement>) {
-    const directions: Record<string, [number, number]> = {
+  function aimWithKeys(event: KeyboardEvent<HTMLButtonElement>) {
+    const moves: Record<string, [number, number]> = {
       ArrowLeft: [-0.025, 0], ArrowRight: [0.025, 0], ArrowUp: [0, -0.025], ArrowDown: [0, 0.025],
     };
-    const move = directions[event.key];
+    const move = moves[event.key];
     if (!move) return;
     event.preventDefault();
-    point(options.x + move[0], options.y + move[1]);
+    adjustPoint(point.current.x + move[0], point.current.y + move[1]);
   }
 
+  const active = status === "live" || status === "photo";
+  const opened = active || status === "opening" || status === "loading-photo";
+
   return (
-    <div id="simulacion" className="density-studio">
-      <label className="lp-consent">
-        <input id="density-consent" type="checkbox" checked={consent} onChange={(event) => {
-          setConsent(event.target.checked);
-          if (!event.target.checked) clearPhoto();
-        }} />
-        <span>Acepto usar mi foto en este dispositivo. La imagen no se envía ni se guarda.</span>
-      </label>
-      <div className="density-actions">
-        {camera === "off" ? (
-          <button className="btn-line" type="button" onClick={openCamera} disabled={!consent || busy}>
-            {photo ? "Tomar otra foto" : "Abrir cámara"}
-          </button>
-        ) : (
-          <button className="btn-line" type="button" onClick={() => { request.current += 1; stopCamera(); }}>Cancelar cámara</button>
-        )}
-        <button className="btn-line" type="button" disabled={!consent || busy} onClick={() => fileInput.current?.click()}>Elegir una foto</button>
-        <input ref={fileInput} hidden type="file" accept="image/*" onChange={(event) => {
-          void loadFile(event.target.files?.[0]);
-          event.target.value = "";
-        }} />
-        {photo ? <button className="density-clear" type="button" onClick={clearPhoto}>Quitar foto</button> : null}
+    <div id="como-te-verias" className="hair-mirror">
+      <button className="btn-coral" type="button" aria-controls="espejo-capilar" aria-expanded={opened} onClick={opened ? close : openCamera}>
+        {opened ? status === "opening" ? "Cancelar cámara" : "Cerrar vista" : "Ver cómo se vería en mí"}
+      </button>
+      {status === "opening" ? <p className="hair-mirror-message" role="status">Abriendo cámara…</p> : null}
+      {status === "loading-photo" ? <p className="hair-mirror-message" role="status">Abriendo foto…</p> : null}
+      <div id="espejo-capilar" className="hair-mirror-view" hidden={!active}>
+        <button type="button" className="hair-mirror-frame" onClick={aim} onKeyDown={aimWithKeys}
+          aria-label="Vista con filtro capilar. Toca el cabello o usa las flechas para mover el filtro."
+          title="Toca tu cabello para mover el filtro">
+          <canvas ref={canvas} aria-hidden="true" />
+        </button>
       </div>
-      {error ? <p className="lp-error" role="alert">{error}</p> : null}
-      {busy ? <p role="status">Preparando la foto…</p> : null}
-      {camera === "opening" ? <p role="status">Abriendo la cámara. Revisa si tu navegador solicita permiso.</p> : null}
-      <div className="density-camera" hidden={camera === "off"}>
-        <video ref={videoRef} muted playsInline onLoadedData={() => setReady(true)} aria-label="Vista en vivo de tu cámara" />
-        <div>
-          <p>Busca buena luz y encuadra la zona del cabello que quieres ver.</p>
-          <button className="btn-coral" type="button" disabled={!ready || camera !== "live"} onClick={capture}>Capturar foto</button>
-        </div>
-      </div>
-      {photo && original && camera === "off" ? (
-        <div className="density-workspace">
-          <div className="density-tools">
-            <h3>Marca la zona en tu foto</h3>
-            <p id="density-instructions">Toca el cabello donde quieres aplicar el filtro. También puedes mover el marcador con las flechas del teclado.</p>
-            <button className="density-photo-select" type="button" aria-label="Posición del filtro" aria-describedby="density-instructions" onClick={pointFromClick} onKeyDown={pointFromKeys}>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={original} alt="" width={photo.width} height={photo.height} />
-              <span aria-hidden="true" style={{
-                left: `${options.x * 100}%`, top: `${options.y * 100}%`,
-                width: `${options.size * 200 * Math.min(photo.width, photo.height) / photo.width}%`,
-                height: `${options.size * 136 * Math.min(photo.width, photo.height) / photo.height}%`,
-              }} />
-            </button>
-            <label>Intensidad <input type="range" min={0} max={100} value={options.intensity} onChange={(event) => setOptions({ ...options, intensity: Number(event.target.value) })} /></label>
-            <label>Tamaño de la zona <input type="range" min={7} max={34} value={Math.round(options.size * 100)} onChange={(event) => setOptions({ ...options, size: Number(event.target.value) / 100 })} /></label>
-          </div>
-          <div className="density-comparison">
-            <h3>Compara tu foto</h3>
-            {filtered ? (
-              <CompareSlider
-                label="Desliza para comparar la foto original con el filtro de densidad"
-                beforeLabel="Original" afterLabel="Con filtro"
-                aspectRatio={photo.width / photo.height}
-                before={
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img src={original} alt="" />
-                }
-                after={<CanvasPreview source={filtered} />}
-              />
-            ) : !error ? <p role="status">Aplicando el filtro…</p> : null}
-            <p>El filtro cambia el aspecto de la zona marcada. Los resultados de un tratamiento varían según cada persona.</p>
-            <a className="btn-coral" href="#valoracion">Agendar mi valoración capilar</a>
-          </div>
+      <video ref={video} muted playsInline className="hair-mirror-source" aria-hidden="true" />
+      {error ? (
+        <div className="hair-mirror-message">
+          <p role="alert">{error}</p>
+          <button className="btn-line" type="button" onClick={() => fileInput.current?.click()}>Elegir una foto</button>
         </div>
       ) : null}
+      <input ref={fileInput} type="file" accept="image/*" hidden onChange={(event) => {
+        void openPhoto(event.target.files?.[0]);
+        event.target.value = "";
+      }} />
+      <aside className="hair-mirror-notes" aria-label="Información del filtro">
+        <details name="espejo-capilar-notas">
+          <summary aria-label="Privacidad" title={privacyNote}>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="11" width="12" height="9" rx="2" /><path d="M9 11V8a3 3 0 0 1 6 0v3" /></svg>
+          </summary>
+          <p>{privacyNote}</p>
+        </details>
+        <details name="espejo-capilar-notas">
+          <summary aria-label="Sobre el filtro" title={filterNote}>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8" /><path d="M12 11v5m0-8v1" /></svg>
+          </summary>
+          <p>{filterNote}</p>
+        </details>
+      </aside>
     </div>
   );
-}
-
-function CanvasPreview({ source }: { source: HTMLCanvasElement }) {
-  const ref = useRef<HTMLCanvasElement>(null);
-
-  useEffect(() => {
-    ref.current?.getContext("2d")?.drawImage(source, 0, 0);
-  }, [source]);
-
-  return <canvas ref={ref} width={source.width} height={source.height} aria-hidden="true" />;
 }

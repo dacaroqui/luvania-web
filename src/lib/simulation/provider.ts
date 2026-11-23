@@ -35,12 +35,9 @@ export async function readPhoto(file: File) {
   }
 }
 
-export function applyDensity(photo: HTMLCanvasElement, options: DensityOptions) {
-  const { width, height } = photo;
-  const result = photoCanvas(photo, width, height);
-  const context = result.getContext("2d");
-  const source = photo.getContext("2d");
-  if (!context || !source || options.intensity === 0) return result;
+export function paintDensity(context: CanvasRenderingContext2D, options: DensityOptions) {
+  const { width, height } = context.canvas;
+  if (options.intensity === 0) return;
 
   const centerX = options.x * width;
   const centerY = options.y * height;
@@ -50,9 +47,9 @@ export function applyDensity(photo: HTMLCanvasElement, options: DensityOptions) 
   const top = Math.max(0, Math.floor(centerY - radiusY));
   const right = Math.min(width, Math.ceil(centerX + radius));
   const bottom = Math.min(height, Math.ceil(centerY + radiusY));
-  if (right <= left || bottom <= top) return result;
+  if (right <= left || bottom <= top) return;
 
-  const patch = source.getImageData(left, top, right - left, bottom - top);
+  const patch = context.getImageData(left, top, right - left, bottom - top);
   const samples: { r: number; g: number; b: number; light: number }[] = [];
   for (let y = 0; y < patch.height; y += 5) {
     for (let x = 0; x < patch.width; x += 5) {
@@ -83,5 +80,4 @@ export function applyDensity(photo: HTMLCanvasElement, options: DensityOptions) 
     }
   }
   context.putImageData(patch, left, top);
-  return result;
 }

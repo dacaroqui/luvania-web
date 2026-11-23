@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { CompareSlider } from "./compare-slider";
+import { SimulationPanel } from "./simulation-panel";
 
 const CASES = [
   {
@@ -21,7 +22,7 @@ const CASES = [
   },
 ];
 
-export function ResultadosReales() {
+export function ResultadosReales({ withMirror = false }: { withMirror?: boolean }) {
   const [index, setIndex] = useState(0);
   const item = CASES[index];
   const go = (delta: number) => setIndex((current) => (current + delta + CASES.length) % CASES.length);
@@ -32,7 +33,7 @@ export function ResultadosReales() {
         <h2 id="resultados-reales" className="display">
           Resultados reales de Luvania
         </h2>
-        <p>Cuando haya fotos autorizadas, se comparan aquí. Hoy el espacio queda reservado.</p>
+        <p>Fotos de pacientes pendientes de autorización.</p>
         <div className="lp-arrows">
           <button type="button" className="lp-arrow" aria-label="Caso anterior" onClick={() => go(-1)}>
             <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -58,6 +59,7 @@ export function ResultadosReales() {
           after={<Placeholder tone={item.after} />}
         />
       </div>
+      {withMirror ? <SimulationPanel /> : null}
     </section>
   );
 }
