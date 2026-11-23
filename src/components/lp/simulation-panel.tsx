@@ -4,23 +4,30 @@ import { copyHairMask, createHairSegmenter, createHairTracker, locateHairline, t
 import { paintDensity, prepareDensityMask, readPhoto, type DensityMask, type DensityStyle } from "@/lib/simulation/provider";
 import { useCallback, useEffect, useRef, useState, type KeyboardEvent, type MouseEvent, type ReactNode } from "react";
 
+import { captureHairEdit } from "@/lib/simulation/generative";
 import { CompareSlider } from "./compare-slider";
 
 const initialPoint = { x: 0.5, y: 0.16 };
 const previewSize = 540;
 const frameInterval = 1000 / 30;
-const privacyNote = "Tu imagen se queda en el dispositivo. No se guarda ni se envía.";
+const privacyNote = "La cámara en vivo se procesa en tu dispositivo.";
 const filterNote = "Filtro ilustrativo. No predice resultados de un tratamiento.";
 type Tracking = "loading" | "searching" | "ready" | "unavailable" | "manual";
 type Status = "idle" | "opening" | "live" | "loading-photo" | "photo" | "error";
 
-type Example = { before: ReactNode; after: ReactNode; label: string; badge: string };
+type Example = { before: ReactNode; after: ReactNode; label: string };
 
 export function SimulationPanel({ examples }: { examples: Record<DensityStyle, Example> }) {
   const [status, setStatus] = useState<Status>("idle");
   const [error, setError] = useState("");
   const video = useRef<HTMLVideoElement>(null);
   const beforeCanvas = useRef<HTMLCanvasElement>(null);
+  const aiRequest = useRef<AbortController | null>(null);
+  const [aiEnabled, setAiEnabled] = useState(false);
+  const [aiConsent, setAiConsent] = useState(false);
+  const [aiPending, setAiPending] = useState(false);
+  const [aiMessage, setAiMessage] = useState("");
+  const [generated, setGenerated] = useState(false);
   const afterCanvas = useRef<HTMLCanvasElement>(null);
   const [adjusting, setAdjusting] = useState(false);
   const aimSurface = useRef<HTMLButtonElement>(null);
@@ -93,6 +100,12 @@ export function SimulationPanel({ examples }: { examples: Record<DensityStyle, E
 
   useEffect(() => {
     function closeOnPageHide() {
+      aiRequest.current?.abort();
+      aiRequest.current = null;
+      setAiConsent(false);
+      setAiPending(false);
+      setAiMessage("");
+      setGenerated(false);
       releaseCamera();
       sourcePhoto.current = null;
       clearPreview();
@@ -101,6 +114,7 @@ export function SimulationPanel({ examples }: { examples: Record<DensityStyle, E
     window.addEventListener("pagehide", closeOnPageHide);
     return () => {
       window.removeEventListener("pagehide", closeOnPageHide);
+      aiRequest.current?.abort();
       releaseCamera();
     };
   }, [clearPreview, releaseCamera]);
@@ -316,6 +330,12 @@ export function SimulationPanel({ examples }: { examples: Record<DensityStyle, E
   }
 
   function close() {
+    aiRequest.current?.abort();
+    aiRequest.current = null;
+    setAiConsent(false);
+    setAiPending(false);
+    setAiMessage("");
+    setGenerated(false);
     releaseCamera();
     sourcePhoto.current = null;
     clearPreview();
@@ -380,6 +400,52 @@ export function SimulationPanel({ examples }: { examples: Record<DensityStyle, E
   const example = examples[style];
 
   useEffect(() => {
+    if (!active) return;
+    const controller = new AbortController();
+    void fetch("/api/simulacion/capilar", { signal: controller.signal }).then(async (response) => {
+      const data = response.ok ? await response.json() as { enabled?: boolean } : null;
+      if (!controller.signal.aborted) setAiEnabled(data?.enabled === true);
+    }).catch(() => undefined);
+    return () => controller.abort();
+  }, [active]);
+
+  async function generatePhoto() {
+    const before = beforeCanvas.current;
+    const after = afterCanvas.current;
+    const position = pose.current;
+    if (!before || !after || !position || aiRequest.current) return;
+    const controller = new AbortController();
+    const id = session.current;
+    aiRequest.current = controller;
+    setAiPending(true);
+    setAiConsent(false);
+    setAiMessage("Generando vista previa…");
+    try {
+      const capture = captureHairEdit(before, position, selectedStyle.current);
+      const edited = await capture.generate(controller.signal);
+      if (session.current !== id || controller.signal.aborted) return;
+      releaseCamera();
+      sourcePhoto.current = null;
+      before.width = before.height = after.width = after.height = edited.width;
+      before.getContext("2d")?.drawImage(capture.original, 0, 0);
+      after.getContext("2d")?.drawImage(edited, 0, 0);
+      setGenerated(true);
+      setAdjusting(false);
+      setStatus("photo");
+      setAiMessage("");
+    } catch (error) {
+      if (!controller.signal.aborted && session.current === id) {
+        setAiMessage(error instanceof Error ? error.message : "No pudimos generar la simulación.");
+      }
+    } finally {
+      if (aiRequest.current === controller) {
+        aiRequest.current = null;
+        setAiPending(false);
+      }
+    }
+  }
+
+  useEffect(() => {
     if (adjusting) aimSurface.current?.focus({ preventScroll: true });
   }, [adjusting]);
 
@@ -387,10 +453,10 @@ export function SimulationPanel({ examples }: { examples: Record<DensityStyle, E
     <div id="como-te-verias" className="hair-mirror">
       <div className="hair-mirror-toolbar">
         <div className="hair-style-picker" role="group" aria-label="Estilo de densidad">
-          <button type="button" aria-pressed={style === "masculino"} onClick={() => chooseStyle("masculino")}>
+          <button type="button" disabled={aiPending || generated} aria-pressed={style === "masculino"} onClick={() => chooseStyle("masculino")}>
             Masculino
           </button>
-          <button type="button" aria-pressed={style === "femenino"} onClick={() => chooseStyle("femenino")}>
+          <button type="button" disabled={aiPending || generated} aria-pressed={style === "femenino"} onClick={() => chooseStyle("femenino")}>
             Femenino
           </button>
         </div>
@@ -398,20 +464,32 @@ export function SimulationPanel({ examples }: { examples: Record<DensityStyle, E
           <button className="btn-coral" type="button" aria-controls="espejo-capilar" aria-expanded={opened} onClick={opened ? close : openCamera}>
             {opened ? status === "opening" ? "Cancelar cámara" : "Cerrar vista" : "Ver cómo se vería en mí"}
           </button>
-          {active && maskStatus === "ready" ? (
+          {active && !generated && maskStatus === "ready" ? (
             <button type="button" ref={aimToggle} className="hair-mirror-adjust" aria-pressed={adjusting}
               onClick={() => adjusting ? stopAdjusting() : setAdjusting(true)}>
               {adjusting ? "Listo" : "Ajustar zona"}
             </button>
           ) : null}
+          {aiEnabled && active && !generated && (tracking === "ready" || tracking === "manual") ? (
+            <button type="button" className="hair-mirror-adjust" disabled={aiPending || adjusting} onClick={() => setAiConsent(!aiConsent)}>
+              Simular con IA
+            </button>
+          ) : null}
         </div>
       </div>
-      <div id="espejo-capilar" className={active ? "lp-results-frame hair-mirror-live" : "lp-results-frame"}>
-        {!active ? <span className="lp-badge">{example.badge}</span> : null}
+      {aiConsent ? (
+        <div className="hair-mirror-ai-consent">
+          <p>Para generar esta vista, se enviará una captura a OpenAI para editar la zona capilar.</p>
+          <button type="button" className="btn-coral" onClick={generatePhoto}>Autorizar y generar</button>
+          <button type="button" className="btn-line" onClick={() => setAiConsent(false)}>Cancelar</button>
+        </div>
+      ) : null}
+      {aiMessage ? <p className="hair-mirror-message" role="status">{aiMessage}</p> : null}
+      <div id="espejo-capilar" className={generated ? "lp-results-frame hair-mirror-live hair-mirror-generated" : active ? "lp-results-frame hair-mirror-live" : "lp-results-frame"}>
         <CompareSlider
           label={active ? "Compara tu imagen sin filtro y con filtro" : example.label}
-          beforeLabel={active ? "Antes · Sin filtro" : "Antes"}
-          afterLabel={active ? "Después · Con filtro" : "Después"}
+          beforeLabel={generated ? "Antes · Captura" : active ? "Antes · Sin filtro" : "Antes"}
+          afterLabel={generated ? "Después · Simulación" : active ? "Después · Con filtro" : "Después"}
           before={<><canvas ref={beforeCanvas} hidden={!active} aria-hidden="true" />{!active ? example.before : null}</>}
           after={<><canvas ref={afterCanvas} hidden={!active} aria-hidden="true" />{!active ? example.after : null}</>}
         />
@@ -422,12 +500,12 @@ export function SimulationPanel({ examples }: { examples: Record<DensityStyle, E
           </button>
         ) : null}
       </div>
-      {active && maskStatus !== "error" && (tracking === "loading" || maskStatus === "loading") ? <p className="hair-mirror-message" role="status">Preparando el filtro…</p> : null}
-      {active && tracking === "searching" && maskStatus === "ready" ? <p className="hair-mirror-message" role="status">Mira de frente y deja visible la línea del cabello.</p> : null}
-      {active && tracking === "unavailable" && maskStatus === "ready" ? <p className="hair-mirror-message" role="status">Usa «Ajustar zona» para colocar el filtro.</p> : null}
-      {active && style === "femenino" && tracking === "ready" && maskStatus === "ready" ? <p className="hair-mirror-style-note">Para apreciar el cambio, encuadra la parte superior con la raya visible.</p> : null}
-      {active && maskStatus === "empty" ? <p className="hair-mirror-message" role="status">Acércate para que se vea el cabello.</p> : null}
-      {active && maskStatus === "error" ? <p className="hair-mirror-message" role="status">El filtro no cargó. Cierra la vista e inténtalo de nuevo.</p> : null}
+      {active && !generated && maskStatus !== "error" && (tracking === "loading" || maskStatus === "loading") ? <p className="hair-mirror-message" role="status">Preparando el filtro…</p> : null}
+      {active && !generated && tracking === "searching" && maskStatus === "ready" ? <p className="hair-mirror-message" role="status">Mira de frente y deja visible la línea del cabello.</p> : null}
+      {active && !generated && tracking === "unavailable" && maskStatus === "ready" ? <p className="hair-mirror-message" role="status">Usa «Ajustar zona» para colocar el filtro.</p> : null}
+      {active && !generated && style === "femenino" && tracking === "ready" && maskStatus === "ready" ? <p className="hair-mirror-style-note">Para apreciar el cambio, muestra la parte superior del cabello.</p> : null}
+      {active && !generated && maskStatus === "empty" ? <p className="hair-mirror-message" role="status">Acércate para que se vea el cabello.</p> : null}
+      {active && !generated && maskStatus === "error" ? <p className="hair-mirror-message" role="status">El filtro no cargó. Cierra la vista e inténtalo de nuevo.</p> : null}
       {status === "opening" ? <p className="hair-mirror-message" role="status">Abriendo cámara…</p> : null}
       {status === "loading-photo" ? <p className="hair-mirror-message" role="status">Abriendo foto…</p> : null}
       <video ref={video} muted playsInline className="hair-mirror-source" aria-hidden="true" />
@@ -443,7 +521,7 @@ export function SimulationPanel({ examples }: { examples: Record<DensityStyle, E
       }} />
       <details className="hair-mirror-privacy">
         <summary>Privacidad y alcance del filtro</summary>
-        <p>{privacyNote} {filterNote}</p>
+        <p>{privacyNote} {filterNote}{aiEnabled ? " La simulación con IA solicita autorización para enviar una captura a OpenAI." : ""}</p>
       </details>
     </div>
   );

@@ -4960,3 +4960,21 @@ dialog.sheet.vx-dialog { width: min(57rem, calc(100vw - 1.5rem)); border: 0; pad
   .hair-mirror-toolbar .hair-mirror-actions { width: 100%; }
   .hair-mirror-toolbar .hair-mirror-actions .btn-coral { flex: 1 1 auto; }
 }
+
+
+.lp-hair-stage .hair-mirror-generated .compare { background: #c9b19a; }
+.lp-hair-stage .hair-mirror-generated .compare canvas {
+  width: min(100%, calc(var(--hair-frame-height) * 1.48));
+  height: 100%;
+  margin-inline: auto;
+  object-position: center 12%;
+}
+.hair-mirror-ai-consent {
+  width: 100%;
+  padding: 0.65rem 0.85rem;
+  border-radius: 0.75rem;
+  background: #fff9ef;
+  color: #493930;
+}
+.hair-mirror-ai-consent p { margin: 0 0 0.45rem; font-size: 0.88rem; }
+.hair-mirror-ai-consent button { margin: 0.2rem 0.4rem 0.2rem 0; }

@@ -122,7 +122,7 @@ export function LandingView({
             {intro ? <p className="ficha-summary">{intro}</p> : null}
             <div className="ficha-hero-actions">
               <BookButton {...booking}>
-                {landing.simulation ? "Agendar mi valoración capilar" : "Iniciar valoración"}
+                {landing.simulation ? "Agendar valoración" : "Iniciar valoración"}
               </BookButton>
               {landing.simulation ? <a className="btn-line" href="#como-te-verias">Probar simulación</a> : null}
             </div>
@@ -172,7 +172,7 @@ export function LandingView({
             ) : null}
           </div>
           <div className="lp-hair-book">
-            <BookButton {...booking}>Agendar mi valoración personalizada</BookButton>
+            <BookButton {...booking}>Agendar valoración</BookButton>
           </div>
         </section>
       ) : null}

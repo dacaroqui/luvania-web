@@ -73,13 +73,11 @@ function CapillaryExample() {
   const examples = {
     masculino: {
       label: "Comparar el ejemplo de densidad en entradas",
-      badge: "Ejemplo generado con IA",
       before: <ExamplePhoto style="masculino" side="antes" />,
       after: <ExamplePhoto style="masculino" side="despues" />,
     },
     femenino: {
-      label: "Comparar el ejemplo de densidad en la raya",
-      badge: "Ejemplo generado con IA",
+      label: "Comparar el ejemplo ilustrativo de densidad en la zona superior",
       before: <ExamplePhoto style="femenino" side="antes" />,
       after: <ExamplePhoto style="femenino" side="despues" />,
     },
@@ -93,7 +91,7 @@ function CapillaryExample() {
 }
 
 function ExamplePhoto({ side, style }: { side: "antes" | "despues"; style: DensityStyle }) {
-  const area = style === "femenino" ? "la raya" : "las entradas";
+  const area = style === "femenino" ? "la zona superior" : "las entradas";
   const alt = side === "antes" ? `Retrato ilustrativo con menor densidad en ${area}` : `El mismo retrato con mayor densidad en ${area}`;
   const file = style === "femenino" ? "capilar-raya" : "capilar-ejemplo";
   return (
