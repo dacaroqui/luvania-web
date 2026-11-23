@@ -1,7 +1,7 @@
 # Espejo capilar
 
-«Ver cómo se vería en mí» activa el comparador con dos vistas sincronizadas. El navegador localiza puntos del rostro con MediaPipe Face Landmarker, los usa para orientar una textura de fibras cortas sobre la línea capilar y toma el tono de la imagen. Puede tardar unos instantes en cargar el modelo. Si no hay rostro de frente, se muestra una indicación. «Ajustar zona» permite colocar el filtro manualmente si hace falta.
+El comparador muestra dos versiones del mismo cuadro. MediaPipe Face Landmarker ubica la zona superior y Selfie Multiclass segmenta cabello, piel y fondo. El filtro toma color de los mechones vecinos y se limita al cabello real y a la piel adyacente dentro de la zona capilar. El estilo Masculino enfatiza entradas y línea frontal. Femenino trabaja sobre la raya y la densidad superior. La persona elige el estilo.
 
-La librería y el modelo se descargan bajo demanda. No se solicita audio, ni se guardan o envían imágenes. El video se detiene al cerrar o salir. La simulación ilustra un posible aspecto de mayor densidad y no predice resultados del tratamiento.
+El modelo y el runtime se descargan bajo demanda; cámara y fotos se procesan en el navegador. Si el modelo no encuentra cabello, se conserva la imagen sin filtro. El espejo representa un cambio ilustrativo de densidad, no genera una cabellera en zonas sin pelo ni predice resultados clínicos.
 
-El carrusel muestra marcadores provisionales hasta contar con fotos reales autorizadas.
+Referencias de producto: [Banuba Virtual Hairstyle Try-On](https://www.banuba.com/virtual-hairstyle-try-on) para seguimiento y cámara, [Perfect Corp. Hair Style API](https://docs.perfectcorp.com/reference/ai_hairstyle/section/overview/integration-guide) para edición de una foto. La implementación usa el [segmentador de Google](https://developers.google.com/edge/mediapipe/solutions/vision/image_segmenter).

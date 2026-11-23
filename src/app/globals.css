@@ -4795,3 +4795,52 @@ dialog.sheet.vx-dialog { width: min(57rem, calc(100vw - 1.5rem)); border: 0; pad
   .vx .vx-modalities { gap: 0.35rem; }
   .vx-modalities button { padding: 0.55rem 0.45rem; }
 }
+
+
+.vx .vx-visual-options { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.55rem; }
+.vx .vx-visual-options button {
+  position: relative;
+  display: grid;
+  min-height: 5.35rem;
+  grid-template-columns: 1fr;
+  align-content: start;
+  gap: 0.35rem;
+  padding: 0.65rem 0.7rem;
+  background: linear-gradient(150deg, #fffdf9, #f9efe4);
+}
+.vx .vx-visual-options button.is-on { background: #fae3d5; border-color: #b96651; }
+.vx-visual-options button svg {
+  box-sizing: content-box;
+  padding: 0.3rem;
+  border-radius: 0.6rem;
+  background: #f6e2d3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.vx-visual-options button span { font-size: 0.83rem; font-weight: 700; line-height: 1.2; }
+.vx-visual-options button i { position: absolute; top: 0.6rem; right: 0.65rem; color: #853d2e; font-style: normal; }
+@media (max-width: 520px) {
+  .vx .vx-visual-options { gap: 0.35rem; }
+  .vx .vx-visual-options button { padding-inline: 0.45rem; }
+  .vx-visual-options button i { right: 0.35rem; }
+}
+
+.hair-style-picker { display: grid; width: 100%; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.45rem; }
+.hair-style-picker button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  min-height: 3.4rem;
+  padding: 0.45rem 0.55rem;
+  border: 1px solid #d9c2ac;
+  border-radius: 0.85rem;
+  color: #4e372c;
+  background: #fffaf2;
+  text-align: left;
+}
+.hair-style-picker button[aria-pressed="true"] { border-color: #a95542; background: #f7e3d4; }
+.hair-style-picker button:focus-visible { outline: 2px solid #873e32; outline-offset: 2px; }
+.hair-style-picker svg { flex: none; width: 1.5rem; height: 1.5rem; fill: none; stroke: #8d4534; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+.hair-style-picker strong, .hair-style-picker small { display: block; line-height: 1.2; }
+.hair-style-picker small { font-size: 0.72rem; }

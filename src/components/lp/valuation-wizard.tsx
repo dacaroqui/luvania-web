@@ -19,7 +19,7 @@ const empty = (): Answer => ({ opciones: [], texto: "" });
 
 const ANTES: LandingQuestion = {
   id: "antes",
-  prompt: "¿Has probado algún tratamiento antes?",
+  prompt: "¿Has probado algo antes?",
   choices: [
     { id: "primera", label: "No, sería mi primera vez" },
     { id: "cabina", label: "Sí, tratamientos en cabina" },
@@ -444,8 +444,8 @@ export function ValuationWizard({
     const cuando = byId("cuando");
     return (
       <>
-        {renderOneField({ question: ANTES })}
-        {cuando ? renderOneField({ question: cuando }) : null}
+        {renderOneField({ question: ANTES, visual: true })}
+        {cuando ? renderOneField({ question: cuando, visual: true }) : null}
       </>
     );
   }
@@ -581,15 +581,17 @@ export function ValuationWizard({
     );
   }
 
-  function renderOneField({ question }: { question: LandingQuestion }) {
+  function renderOneField({ question, visual = false }: { question: LandingQuestion; visual?: boolean }) {
     const current = answerOf(question.id).opciones[0];
     return (
       <fieldset className="vx-field" aria-describedby={errors[question.id] ? `${question.id}-error` : undefined}>
         <legend>{question.prompt}</legend>
-        <div className="vx-chips">
+        <div className={visual ? "vx-cards vx-visual-options" : "vx-chips"}>
           {question.choices.map((choice) => (
             <button key={choice.id} type="button" className={current === choice.label ? "is-on" : ""} aria-pressed={current === choice.label} onClick={() => chooseOne(question, choice.label)}>
-              {choice.label}
+              {visual ? <ExperienceIcon id={choice.id} /> : null}
+              <span>{visual ? experienceLabels[choice.id] ?? choice.label : choice.label}</span>
+              {visual ? <i aria-hidden="true">{current === choice.label ? "✓" : ""}</i> : null}
             </button>
           ))}
         </div>
@@ -624,6 +626,23 @@ export function ValuationWizard({
       {shell}
     </section>
   );
+}
+
+const experienceLabels: Record<string, string> = {
+  primera: "Es mi primera vez", cabina: "Tratamiento en cabina", productos: "Productos o suplementos",
+  semana: "Lo antes posible", mes: "El próximo mes", tres: "Estoy explorando",
+};
+const experienceIcons: Record<string, string> = {
+  "primera": "M12 3l2.2 6.8L21 12l-6.8 2.2L12 21l-2.2-6.8L3 12l6.8-2.2z",
+  "cabina": "M4 19V7l8-4 8 4v12M3 19h18M10 19v-5h4v5",
+  "productos": "M9 4h6v4l3 3v8H6v-8l3-3zm-3 9h12",
+  "semana": "M13 3L5 14h6l-1 7 9-11h-6z",
+  "mes": "M5 6h14v14H5zM8 4v4m8-4v4M5 10h14",
+  "tres": "M12 3l8 8-8 10-8-10zM9 14l6-5-2 6z"
+};
+
+function ExperienceIcon({ id }: { id: string }) {
+  return <svg viewBox="0 0 24 24" aria-hidden="true"><path d={experienceIcons[id] ?? experienceIcons.mes} /></svg>;
 }
 
 function NeedMark({ id }: { id: string }) {
