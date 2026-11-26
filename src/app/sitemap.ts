@@ -24,10 +24,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...zonePages.map((zone) => `/zonas/${zone.slug}`),
     ...needPages.map((need) => `/necesidades/${need.slug}`),
     ...catalog.filter((item) => item.status === "VERIFIED").map((item) => `/tratamientos/${item.slug}`),
-    ...allGuides()
-      .filter((guide) => guide.medicalReview === "aprobado")
-      .map((guide) => `/tratamientos/${guide.slug}/guia`),
     ...legalDocs.map((doc) => doc.href),
   ];
-  return paths.map((path) => ({ url: `${site.url}${path}` }));
+  const guides = allGuides()
+    .filter((guide) => guide.medicalReview === "aprobado")
+    .map((guide) => ({
+      url: `${site.url}/tratamientos/${guide.slug}/guia`,
+      ...(guide.cover ? { images: [new URL(guide.cover.src, site.url).href] } : {}),
+    }));
+  return [...paths.map((path) => ({ url: `${site.url}${path}` })), ...guides];
 }

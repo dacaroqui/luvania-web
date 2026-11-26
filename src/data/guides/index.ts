@@ -1,8 +1,10 @@
-import { guides } from "./batch";
+import { guides as existingGuides } from "./batch";
+import { facialContourGuides } from "./contorno-facial";
 import type { Guide } from "./types";
 
 export type { Guide, GuideBlock, ReviewState } from "./types";
 
+const guides = [...facialContourGuides, ...existingGuides];
 const bySlug = new Map(guides.map((guide) => [guide.slug, guide]));
 
 export function getGuide(slug: string) {

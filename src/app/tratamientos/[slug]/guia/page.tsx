@@ -12,6 +12,7 @@ import { publicText } from "@/lib/public-copy";
 import { clinicalVisible } from "@/lib/review";
 import { pageMeta } from "@/lib/seo";
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
@@ -33,8 +34,9 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
     title: guide.title,
     description: guide.description,
     path: `/tratamientos/${guide.slug}/guia`,
-    image: treatment.image,
-    imageAlt: treatment.name,
+    image: guide.cover?.src ?? treatment.image,
+    imageAlt: guide.cover?.alt ?? treatment.name,
+    imageSize: guide.cover,
     type: "article",
     index: guide.medicalReview === "aprobado",
   });
@@ -55,6 +57,10 @@ export default async function GuiaPage({ params }: { params: Promise<Params> }) 
     { name: "Guía", href: `/tratamientos/${treatment.slug}/guia` },
   ];
   const articles = relatedGuides(treatment, 3);
+  const cover = guide.cover;
+  const referenceDate = guide.referencesCheckedOn ?? "2026-11-19";
+  const formattedReferenceDate = new Intl.DateTimeFormat("es-CO", { dateStyle: "long", timeZone: "UTC" })
+    .format(new Date(referenceDate));
   const summary = publicText(treatment.summary, treatment.name);
   const zones = treatment.zones.map((id) => ({
     name: zoneById(id)?.name ?? id,
@@ -78,6 +84,7 @@ export default async function GuiaPage({ params }: { params: Promise<Params> }) 
           inLanguage: "es-CO",
           mainEntityOfPage: { "@type": "WebPage", "@id": `${site.url}/tratamientos/${guide.slug}/guia` },
           publisher: { "@type": "Organization", name: site.name, url: site.url },
+          ...(cover ? { image: new URL(cover.src, site.url).href } : {}),
           about: { "@type": "MedicalProcedure", name: treatment.name, url: fichaUrl },
           mentions: { "@type": "MedicalProcedure", name: treatment.name, url: fichaUrl },
           isPartOf: { "@type": "WebSite", name: site.name, url: site.url },
@@ -111,6 +118,18 @@ export default async function GuiaPage({ params }: { params: Promise<Params> }) 
           <p className="guia-lead">{guide.description}</p>
           {guide.medicalReview === "pendiente" ? (
             <p className="ficha-review-note">Contenido en revisión médica</p>
+          ) : null}
+          {guide.medicalReview === "aprobado" && guide.revisadoPor && guide.fechaRevision ? (
+            <p className="guia-review">
+              Revisión médica de {guide.revisadoPor} · <time dateTime={guide.fechaRevision}>{guide.fechaRevision}</time>
+            </p>
+          ) : null}
+          {cover ? (
+            <figure className="guia-figure guia-cover">
+              <Image src={cover.src} alt={cover.alt} width={cover.width} height={cover.height}
+                sizes="(max-width: 703px) calc(100vw - 32px), 672px" />
+              <figcaption>{cover.caption}</figcaption>
+            </figure>
           ) : null}
           <TreatmentBridge treatment={treatment} summary={summary} />
         </div>
@@ -164,7 +183,7 @@ export default async function GuiaPage({ params }: { params: Promise<Params> }) 
           {guide.references.length ? (
             <section id="referencias" className="guia-refs">
               <h2 className="display">Referencias</h2>
-              <p>Consultadas el 19 de noviembre de 2026. Sirven para sostener el mecanismo y el origen. No son una promesa de resultado.</p>
+              <p>Referencias consultadas el <time dateTime={referenceDate}>{formattedReferenceDate}</time>.</p>
               <ol>
                 {guide.references.map((source) => (
                   <li key={source.href}>

@@ -25,6 +25,14 @@ export type GuideBlock = {
 
 export type GuideFaq = { q: string; a: string };
 
+export type GuideCover = {
+  src: string;
+  width: number;
+  height: number;
+  alt: string;
+  caption: string;
+};
+
 export type Guide = {
   slug: string;
   h1: string;
@@ -35,6 +43,8 @@ export type Guide = {
   medicalReview: ReviewState;
   revisadoPor: string | null;
   fechaRevision: string | null;
+  referencesCheckedOn?: string;
+  cover?: GuideCover;
   blocks: GuideBlock[];
   faqs: GuideFaq[];
   references: GuideSource[];

@@ -15,11 +15,15 @@ export function pageMeta(input: {
   path: string;
   image?: string;
   imageAlt?: string;
+  imageSize?: { width: number; height: number };
   type?: "website" | "article";
   index?: boolean;
 }): Metadata {
   const url = `${site.url}${input.path}`;
   const image = input.image ?? "/images/og-luvania.jpg";
+  const imageSize = input.imageSize
+    ? { width: input.imageSize.width, height: input.imageSize.height }
+    : input.image ? {} : { width: 1200, height: 675 };
   const imageAlt = input.imageAlt ?? "Ambiente de Luvania, clínica estética en Bogotá";
   return {
     title: { absolute: input.title },
@@ -35,7 +39,7 @@ export function pageMeta(input: {
       siteName: site.name,
       locale: site.locale,
       type: input.type ?? "website",
-      images: [{ url: image, width: 1200, height: 675, alt: imageAlt }],
+      images: [{ url: image, ...imageSize, alt: imageAlt }],
     },
     twitter: {
       card: "summary_large_image",

@@ -3672,6 +3672,8 @@ body:has(dialog[open]) .ficha-mobile-bar {
   max-width: 42rem;
   margin: 1rem 0 0.2rem;
 }
+.guia-cover img { display: block; width: 100%; height: auto; border-radius: 1.2rem; }
+.guia-review { margin-top: 0.65rem; color: #3d4445; font-size: 0.9rem; }
 .guia-figure svg { display: block; width: 100%; height: auto; }
 .guia-figure figcaption { margin-top: 0.55rem; color: #3d4445; font-size: 0.95rem; }
 .guia-figure figcaption span {

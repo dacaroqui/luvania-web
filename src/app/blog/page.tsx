@@ -4,6 +4,7 @@ import { verifiedCatalog } from "@/data/catalog";
 import { publicText } from "@/lib/public-copy";
 import { clinicalVisible } from "@/lib/review";
 import { pageMeta } from "@/lib/seo";
+import Image from "next/image";
 import Link from "next/link";
 
 const guides = allGuides().filter((guide) => clinicalVisible(guide.medicalReview));
@@ -11,6 +12,7 @@ const pending = guides.some((guide) => guide.medicalReview === "pendiente");
 const prioritySlugs = [
   "hair-loss", "perfilamiento-maxilar-hombres", "toxina-botulinica-tipo-a", "eliminar-ojeras",
   "acne", "aumento-y-o-perfilamiento-de-labios", "celulitis", "levantamiento-de-gluteos",
+  "dewlap-lipopapada-sin-cirugia", "hilos-tensores",
 ];
 const catalog = verifiedCatalog();
 const topics = prioritySlugs.flatMap((slug) => catalog.filter((item) => item.slug === slug));
@@ -54,7 +56,10 @@ export default function BlogPage() {
               return (
                 <li key={guide.slug}>
                   <Link href={`/tratamientos/${guide.slug}/guia`} className="guide-card glass">
-                    {treatment?.image ? (
+                    {guide.cover ? (
+                      <Image src={guide.cover.src} alt="" width={guide.cover.width} height={guide.cover.height}
+                        sizes="(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 33vw" />
+                    ) : treatment?.image ? (
                       // eslint-disable-next-line @next/next/no-img-element
                       <img src={treatment.image} alt="" />
                     ) : null}
