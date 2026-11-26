@@ -65,9 +65,9 @@ export default function HomePage() {
             </div>
           </div>
           <ul className="shot-grid">
-            {shots.map((item) => (
+            {shots.map((item, index) => (
               <li key={item.href}>
-                <Link href={item.href} className="shot-card" data-reveal>
+                <Link href={item.href} className="shot-card" data-reveal data-reveal-delay={index * 75}>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src={item.image} alt="" />
                   <span className="shot-label">

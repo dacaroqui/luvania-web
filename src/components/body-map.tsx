@@ -6,8 +6,8 @@ import { useState } from "react";
 
 const pins = [
   { id: "rostro", name: "Rostro", href: "/zonas/rostro", x: 55, y: 10, side: "right", glow: 20 },
-  { id: "ojos", name: "Ojos", href: "/zonas/ojos", x: 46, y: 11, side: "left", glow: 12 },
-  { id: "labios", name: "Labios", href: "/zonas/labios", x: 50, y: 14.3, side: "left", glow: 11 },
+  { id: "ojos", name: "Ojos", href: "/zonas/ojos", x: 46, y: 11, side: "left", offset: -20, glow: 12 },
+  { id: "labios", name: "Labios", href: "/zonas/labios", x: 50, y: 14.3, side: "left", offset: 4, glow: 11 },
   { id: "cuello", name: "Cuello", href: "/zonas/cuello", x: 53, y: 18.4, side: "right", glow: 13 },
   { id: "piel", name: "Piel", href: "/zonas/piel", x: 44, y: 24.5, side: "left", glow: 22 },
   { id: "brazos", name: "Brazos", href: "/zonas/brazos", x: 60, y: 33, side: "right", glow: 14 },
@@ -56,7 +56,8 @@ export function BodyMap() {
               key={pin.id}
               type="button"
               className={`zone-pin is-${pin.side} ${on ? "is-on" : ""}`}
-              style={{ left: `${pin.x}%`, top: `${pin.y}%`, ["--lead" as string]: "1.2rem" }}
+              style={{ left: `${pin.x}%`, top: `${pin.y}%`, ["--lead" as string]: "1.2rem", ["--label-y" as string]: "offset" in pin ? `${pin.offset}px` : "0px" }}
+              data-pin={pin.id}
               aria-pressed={on}
               aria-label={pin.name}
               onPointerEnter={(event) => { if (event.pointerType === "mouse") setHover(pin.id); }}

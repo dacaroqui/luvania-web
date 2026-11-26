@@ -14,7 +14,7 @@ export function TreatmentMedia({
     <div className="treatment-media">
       {image ? (
         // eslint-disable-next-line @next/next/no-img-element
-        <img src={image} alt={name} />
+        <img src={image} alt={name} loading="lazy" />
       ) : (
         <div className="treatment-frame" aria-hidden="true">
           <FlorLuvania />

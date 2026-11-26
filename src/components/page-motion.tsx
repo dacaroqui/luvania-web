@@ -18,14 +18,14 @@ export function PageMotion() {
         observer?.unobserve(entry.target);
         if (reduced.matches || entry.target.matches(":focus-within, :target") || typeof entry.target.animate !== "function") continue;
         const animation = entry.target.animate(
-          [{ opacity: 0.32, translate: "0 14px" }, { opacity: 1, translate: "0 0" }],
-          { duration: 420, delay, fill: "backwards", easing: "cubic-bezier(.2,.64,.25,1)" },
+          [{ opacity: 0.2, translate: "0 24px" }, { opacity: 1, translate: "0 0" }],
+          { duration: 480, delay: Number((entry.target as HTMLElement).dataset.revealDelay ?? delay), fill: "backwards", easing: "cubic-bezier(.2,.64,.25,1)" },
         );
         animations.add(animation);
         animation.finished.then(() => animations.delete(animation), () => animations.delete(animation));
         delay = Math.min(delay + 40, 120);
       }
-    }) : null;
+    }, { threshold: 0.12 }) : null;
     if (!reduced.matches) nodes.forEach((element) => observer?.observe(element));
 
     let frame = 0;

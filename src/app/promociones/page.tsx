@@ -11,7 +11,8 @@ export const metadata = pageMeta({
   path: "/promociones",
 });
 
-export default function PromocionesPage() {
+export default async function PromocionesPage({ searchParams }: { searchParams: Promise<{ sede?: string }> }) {
+  const { sede } = await searchParams;
   const crumbs = [{ name: "Promociones", href: "/promociones" }];
   return (
     <main className="mx-auto max-w-6xl px-4 py-10">
@@ -22,7 +23,7 @@ export default function PromocionesPage() {
         Precios de referencia del 17 de noviembre de 2026. Elige la sede, agrega al carrito y cierra el pedido por WhatsApp.
       </p>
       <div className="mt-8">
-        <PromosBrowser />
+        <PromosBrowser initialSede={sede} />
       </div>
       <BookButton className="mt-10 min-h-12 rounded-full bg-coral px-5 text-sm font-bold">
         Agendar valoración

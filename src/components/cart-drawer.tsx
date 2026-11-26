@@ -1,12 +1,13 @@
 "use client";
 
-import { canPurchase, shopProduct } from "@/data/shop";
+import { canPurchase, shopProduct, shopProducts } from "@/data/shop";
 import type { AgendaSede } from "@/data/types";
 import { cop, waLink } from "@/lib/format";
 import Link from "next/link";
 import { useEffect, useId, useRef } from "react";
 import { CloseButton } from "./close-button";
 import { useCart } from "./cart-store";
+import { TreatmentMedia } from "./treatment-media";
 
 export function CartDrawer({ sedes }: { sedes: AgendaSede[] }) {
   const cart = useCart();
@@ -24,11 +25,13 @@ export function CartDrawer({ sedes }: { sedes: AgendaSede[] }) {
     const product = shopProduct(line.slug, cart.sede);
     return product && canPurchase(product) ? [{ line, product }] : [];
   });
+  const unavailable = cart.lines.filter((line) => !items.some((item) => item.line.slug === line.slug));
+  const suggestions = cart.sede ? shopProducts(cart.sede).filter((product) => canPurchase(product) && !cart.lines.some((line) => line.slug === product.slug)).slice(0, 2) : [];
   const subtotal = items.reduce((sum, item) => sum + item.product.precio * item.line.cantidad, 0);
   const chosen = sedes.find((item) => item.slug === cart.sede) ?? null;
 
   function checkout() {
-    if (!chosen || items.length === 0) return;
+    if (!chosen || items.length === 0 || unavailable.length > 0) return;
     const lines = items.map(
       (item) => `• ${item.product.nombre} x${item.line.cantidad} — ${cop(item.product.precio * item.line.cantidad)}`,
     );
@@ -57,7 +60,8 @@ export function CartDrawer({ sedes }: { sedes: AgendaSede[] }) {
         <h2 id={titleId}>Carrito</h2>
         <CloseButton onClick={() => cart.setOpen(false)} />
       </header>
-      {items.length === 0 ? (
+      <div className="cart-content thin-scroll">
+      {cart.lines.length === 0 ? (
         <div className="cart-empty">
           <p>Tu carrito está vacío.</p>
           <Link href="/promociones" onClick={() => cart.setOpen(false)}>
@@ -65,11 +69,16 @@ export function CartDrawer({ sedes }: { sedes: AgendaSede[] }) {
           </Link>
         </div>
       ) : (
-        <ul className="cart-list thin-scroll">
+        <ul className="cart-list">
+          {unavailable.map((line) => (
+            <li key={line.slug}>
+              <p>{shopProduct(line.slug)?.nombre ?? line.slug} · No disponible en esta sede</p>
+              <button type="button" className="cart-remove" onClick={() => cart.remove(line.slug)}>Eliminar</button>
+            </li>
+          ))}
           {items.map(({ line, product }) => (
             <li key={line.slug}>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={product.imagen} alt="" />
+              <TreatmentMedia name={product.nombre} image={product.imagen} />
               <div>
                 <p className="cart-name">{product.nombre}</p>
                 <p className="cart-line-price">{cop(product.precio)}</p>
@@ -90,6 +99,17 @@ export function CartDrawer({ sedes }: { sedes: AgendaSede[] }) {
           ))}
         </ul>
       )}
+      {chosen && suggestions.length > 0 ? (
+        <section className="cart-suggestions" aria-label={"Más promociones en " + chosen.name}>
+          <h3>Más promociones en {chosen.name}</h3>
+          {suggestions.map((product) => (
+            <button type="button" className="sede-option flex w-full flex-wrap justify-between gap-2" key={product.slug} onClick={() => cart.requestAdd(product.slug, 1, chosen.slug)}>
+              <span>{product.nombre} · {cop(product.precio)}</span><span>Agregar</span>
+            </button>
+          ))}
+        </section>
+      ) : null}
+      </div>
       <footer className="cart-foot">
         <p className="cart-subtotal">
           <span>Subtotal</span>
@@ -111,7 +131,7 @@ export function CartDrawer({ sedes }: { sedes: AgendaSede[] }) {
             </select>
           </label>
         ) : null}
-        <button type="button" className="shop-add" onClick={checkout} disabled={items.length === 0 || !chosen}>
+        <button type="button" className="shop-add" onClick={checkout} disabled={items.length === 0 || !chosen || unavailable.length > 0}>
           Finalizar por WhatsApp
         </button>
       </footer>

@@ -1,3 +1,4 @@
+import { MedicalReviewMark } from "@/components/medical-review-mark";
 import { BookButton } from "@/components/book-button";
 import { Breadcrumbs, breadcrumbLd } from "@/components/breadcrumbs";
 import { GuideArt } from "@/components/guia-art";
@@ -116,9 +117,7 @@ export default async function GuiaPage({ params }: { params: Promise<Params> }) 
           <p className="guia-kicker">Guía · {minutes} min de lectura</p>
           <h1 className="display">{guide.h1}</h1>
           <p className="guia-lead">{guide.description}</p>
-          {guide.medicalReview === "pendiente" ? (
-            <p className="ficha-review-note">Contenido en revisión médica</p>
-          ) : null}
+          <MedicalReviewMark state={guide.medicalReview} />
           {guide.medicalReview === "aprobado" && guide.revisadoPor && guide.fechaRevision ? (
             <p className="guia-review">
               Revisión médica de {guide.revisadoPor} · <time dateTime={guide.fechaRevision}>{guide.fechaRevision}</time>

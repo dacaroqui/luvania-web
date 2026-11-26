@@ -77,7 +77,6 @@ export function Providers({
           <SedeGate sedes={sedes} />
           <AgendaSheet
             open={open}
-            preview={demoCart}
             tratamientoInicial={tratamiento}
             tratamientoId={tratamientoId}
             necesidadId={necesidad}

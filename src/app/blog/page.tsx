@@ -1,3 +1,4 @@
+import { MedicalReviewMark } from "@/components/medical-review-mark";
 import { allGuides, readingMinutes } from "@/data/guides";
 import { getTreatment } from "@/data";
 import { verifiedCatalog } from "@/data/catalog";
@@ -49,7 +50,7 @@ export default function BlogPage() {
       {guides.length ? (
         <section aria-labelledby="articulos" className="mt-10">
           <h2 id="articulos" className="display text-3xl">Artículos</h2>
-          {pending ? <p className="ficha-review-note mt-4">Contenido en revisión médica</p> : null}
+          {guides.length ? <MedicalReviewMark state={pending ? "pendiente" : "aprobado"} /> : null}
           <ul className="guide-index">
             {guides.map((guide) => {
               const treatment = getTreatment(guide.slug);

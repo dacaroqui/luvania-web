@@ -1,5 +1,5 @@
 import { getTreatment } from "@/data";
-import { shopProduct } from "@/data/shop";
+import { shopProductForOffer } from "@/data/shop";
 import type { Offer } from "@/data/types";
 import { publicText } from "@/lib/public-copy";
 import { ShopCard } from "./shop-card";
@@ -16,8 +16,7 @@ function sessionLabel(value: string | undefined) {
 }
 
 export function OfferCard({ offer, sede }: { offer: Offer; sede?: string | null }) {
-  const product = shopProduct(offer.treatmentSlug, sede);
-  if (!product) return null;
+  const product = shopProductForOffer(offer, sede);
   const sesiones = sessionLabel(getTreatment(offer.treatmentSlug)?.sesiones);
   return <ShopCard product={product} sesiones={sesiones} sedeHint={sede} />;
 }

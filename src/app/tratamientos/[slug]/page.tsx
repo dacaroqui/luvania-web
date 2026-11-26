@@ -1,3 +1,4 @@
+import { MedicalReviewMark } from "@/components/medical-review-mark";
 import { BookButton } from "@/components/book-button";
 import { Breadcrumbs, breadcrumbLd } from "@/components/breadcrumbs";
 import { JsonLd } from "@/components/json-ld";
@@ -397,7 +398,7 @@ export default async function TratamientoPage({ params }: { params: Promise<Para
                       : "Efectos y contraindicaciones"}
                 </DetailHeading>
                 <TreatmentCopy text={block.card} />
-                {guide?.medicalReview === "pendiente" ? <p className="ficha-review-note">Contenido en revisión médica</p> : null}
+                {guide ? <MedicalReviewMark state={guide.medicalReview} /> : null}
                 <GuideLink slug={treatment.slug} anchor={block.id} />
               </section>
             ))}
@@ -408,7 +409,7 @@ export default async function TratamientoPage({ params }: { params: Promise<Para
               <h2 className="display">{guide.h1}</h2>
               <p className="ficha-guide-lead">{guide.description}</p>
               <p className="ficha-guide-time">{readingMinutes(guide)} min de lectura</p>
-              {guide.medicalReview === "pendiente" ? <p className="ficha-review-note">Contenido en revisión médica</p> : null}
+              <MedicalReviewMark state={guide.medicalReview} />
               <Link href={`/tratamientos/${treatment.slug}/guia`}>{guideSentence(treatment.name)}</Link>
             </section>
           ) : null}

@@ -1,13 +1,13 @@
 "use client";
 
-import { offerMatchesSede, offers } from "@/data/offers";
+import { offersAtSede } from "@/data/shop";
 import { sedes } from "@/data/sedes";
 import { useState } from "react";
 import { OfferCard } from "./offer-card";
 
-export function PromosBrowser() {
-  const [sede, setSede] = useState<string | null>(null);
-  const visible = offers.filter((offer) => offerMatchesSede(offer, sede));
+export function PromosBrowser({ initialSede }: { initialSede?: string }) {
+  const [sede, setSede] = useState<string | null>(sedes.find((item) => item.slug === initialSede)?.slug ?? null);
+  const visible = offersAtSede(sede);
 
   return (
     <div>
@@ -27,6 +27,7 @@ export function PromosBrowser() {
           </button>
         ))}
       </div>
+      {visible.length === 0 ? <p className="mt-6 text-mute">No hay promociones vigentes para esta sede.</p> : null}
       <ul className="shop-grid mt-6">
         {visible.map((offer) => (
           <OfferCard key={offer.slug} offer={offer} sede={sede} />
