@@ -15,7 +15,6 @@ export function AgendaSheet({
   sedeInicial,
   promoInicial,
   sedes,
-  preview,
   onClose,
 }: {
   open: boolean;
@@ -25,7 +24,6 @@ export function AgendaSheet({
   sedeInicial?: string;
   promoInicial?: string;
   sedes: AgendaSede[];
-  preview: boolean;
   onClose: () => void;
 }) {
   const ref = useRef<HTMLDialogElement>(null);
@@ -41,7 +39,6 @@ export function AgendaSheet({
       ? { id: treatment.slug, name: treatment.name }
       : null;
   const needId = necesidadId || treatment?.needs[0] || landing?.needId || "valoracion";
-  const questions = landing?.needId === needId ? landing.questions : [];
 
   useEffect(() => {
     const dialog = ref.current;
@@ -79,17 +76,12 @@ export function AgendaSheet({
       {open ? (
         <ValuationWizard
           key={`${path}:${origin?.id ?? ""}:${needId}`}
-          frame="dialog"
-          preview={preview}
           needId={needId}
-          path={path}
-          questions={questions}
           extras={extraNeedsFor(needId)}
           sedes={sedes}
           origin={origin}
           promo={promoInicial}
           initialSede={sedeInicial ?? null}
-          deliverWhatsapp
           onClose={onClose}
         />
       ) : null}

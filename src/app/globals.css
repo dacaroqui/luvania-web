@@ -1315,7 +1315,7 @@ body:has(dialog[open]) .ficha-mobile-bar {
 
 .zone-pill {
   position: absolute;
-  top: 50%;
+  top: calc(50% + var(--label-y, 0px));
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
@@ -1337,13 +1337,15 @@ body:has(dialog[open]) .ficha-mobile-bar {
 
 .zone-rule {
   position: absolute;
-  top: 50%;
   width: var(--lead, 1.2rem);
-  height: 1px;
-  background: #e7b59a;
+  top: calc(50% + min(0px, var(--label-y, 0px)));
+  height: max(1px, abs(var(--label-y, 0px)));
+  border-block-end: 1px solid #bc816b;
 }
 .zone-pin.is-right .zone-rule { left: 50%; }
-.zone-pin.is-left .zone-rule { right: 50%; }
+.zone-pin.is-left .zone-rule { right: 50%; border-inline-start: 1px solid #bc816b; }
+.zone-pin[data-pin="labios"] .zone-rule { border-block-end: 0; border-block-start: 1px solid #bc816b; }
+.zone-pin[data-pin="ojos"] .zone-pill, .zone-pin[data-pin="labios"] .zone-pill { z-index: 1; }
 
 .body-panel {
   min-width: 0;
@@ -2258,6 +2260,7 @@ body:has(dialog[open]) .ficha-mobile-bar {
   flex-wrap: wrap;
   align-items: center;
   gap: 0.75rem 1rem;
+  margin-bottom: 1rem;
 }
 
 .catalog-count {
@@ -4336,7 +4339,7 @@ dialog.sheet.vx-dialog {
   color: #8d3d2c;
 }
 .vx-top p:first-child { min-width: 0; }
-.vx-progress { display: grid; flex: none; grid-template-columns: repeat(4, 1fr); gap: 0.35rem; padding-top: 0.45rem; }
+.vx-progress { display: grid; flex: none; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 0.35rem; padding-top: 0.45rem; }
 .vx-progress span { height: 0.28rem; border-radius: 999px; background: #eadfce; }
 .vx-progress .is-done { background: #ee876b; }
 .vx-heading { flex: none; padding: 0.85rem 1.15rem 0.2rem; }
@@ -4819,10 +4822,9 @@ dialog.sheet.vx-dialog {
   .lp-hair-facts > section + section { border-top: 0; border-left: 1px solid rgb(129 82 59 / 0.17); padding: 0 0 0 1.3rem; }
 }
 .vx.is-dialog .vx-scroll {
-  scrollbar-width: none;
+  scrollbar-width: thin;
   overscroll-behavior: contain;
 }
-.vx.is-dialog .vx-scroll::-webkit-scrollbar { display: none; }
 
 
 dialog.sheet.vx-dialog { width: min(57rem, calc(100vw - 1.5rem)); border: 0; padding: 0; }
@@ -5101,3 +5103,31 @@ dialog.sheet.vx-dialog { width: min(57rem, calc(100vw - 1.5rem)); border: 0; pad
 }
 .hair-mirror-ai-consent p { margin: 0 0 0.45rem; font-size: 0.88rem; }
 .hair-mirror-ai-consent button { margin: 0.2rem 0.4rem 0.2rem 0; }
+
+.review-mark { position: relative; display: inline-grid; width: 2rem; height: 2rem; margin-block: 0.45rem; place-items: center; border-radius: 50%; background: #f0dfd2; color: #824333; vertical-align: middle; }
+.review-mark-label { visibility: hidden; position: absolute; z-index: 3; inset-inline-start: 0; inset-block-end: calc(100% + 0.4rem); width: max-content; max-width: 13rem; padding: 0.45rem 0.65rem; border-radius: 0.6rem; background: #322520; color: #fff; font: 600 0.8rem/1.35 var(--font-nunito), sans-serif; }
+.review-mark:hover .review-mark-label, .review-mark:focus .review-mark-label { visibility: visible; }
+.sede-local-grid { display: grid; gap: 1.5rem; }
+@media (min-width: 960px) {
+  .sede-local-grid { grid-template-columns: minmax(0, 2fr) minmax(16rem, 1fr); align-items: start; }
+}
+.vx.is-dialog { max-height: min(48rem, calc(100dvh - 1.5rem)); height: auto; }
+.vx.is-dialog .vx-main { max-height: min(48rem, calc(100dvh - 1.5rem)); overflow-y: auto; }
+.vx.is-dialog .vx-scroll { overflow: visible; flex: none; }
+.vx-appointment, .vx-availability { display: grid; gap: 0.8rem; }
+.vx-appointment .vx-modalities { margin: 0; }
+.vx-nav { margin-top: 0.35rem; }
+.vx-modalities button { min-width: 0; }
+@media (max-width: 460px) {
+  .vx .vx-modalities { grid-template-columns: 1fr; }
+  .vx .vx-modalities button { grid-template-columns: auto 1fr; column-gap: 0.65rem; text-align: left; }
+  .vx .vx-modalities button svg { grid-row: span 2; }
+}
+
+.cart-content { min-height: 0; flex: 1 1 auto; overflow-y: auto; }
+.cart-content .cart-list { overflow: visible; }
+.cart-content .cart-list .treatment-media { width: 3.5rem; height: 3.5rem; flex: none; border-radius: 0.65rem; overflow: hidden; }
+.cart-suggestions { display: grid; gap: 0.5rem; padding: 0.75rem 1rem 1rem; }
+.cart-suggestions h3 { font-weight: 750; }
+.sede-option:disabled { opacity: 0.55; cursor: not-allowed; }
+.shop-media > .treatment-media { width: 100%; height: 100%; }

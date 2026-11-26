@@ -1,3 +1,4 @@
+import { MedicalReviewMark } from "@/components/medical-review-mark";
 import { BookButton } from "@/components/book-button";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { OfferCard, isPublishedOffer } from "@/components/offer-card";
@@ -238,13 +239,13 @@ export function LandingView({
           {riesgos && landing.simulation ? (
             <details id="riesgos" className="lp-hair-disclosure">
               <summary>Riesgos y contraindicaciones</summary>
-              {guide?.medicalReview === "pendiente" ? <p className="ficha-review-note">Contenido en revisión médica</p> : null}
+              {guide ? <MedicalReviewMark state={guide.medicalReview} /> : null}
               <p>{riesgos}</p>
               <Link href={`/tratamientos/${treatment.slug}/guia`}>Leer la guía</Link>
             </details>
           ) : riesgos ? (
             <section id="riesgos" className="ficha-block ficha-card">
-              {guide?.medicalReview === "pendiente" ? <p className="ficha-review-note">Contenido en revisión médica</p> : null}
+              {guide ? <MedicalReviewMark state={guide.medicalReview} /> : null}
               <h2 className="display">Riesgos y contraindicaciones</h2>
               <p>{riesgos}</p>
               <Link href={`/tratamientos/${treatment.slug}/guia`}>Leer la guía de {treatment.name}</Link>

@@ -5,6 +5,7 @@ import { sedes } from "@/data/sedes";
 import { cop } from "@/lib/format";
 import Link from "next/link";
 import { useCart } from "./cart-store";
+import { TreatmentMedia } from "./treatment-media";
 
 export function ShopCard({
   product,
@@ -25,10 +26,8 @@ export function ShopCard({
   return (
     <li className={`shop-card glass ${purchasable ? "" : "is-offline"} ${product.vencida ? "is-expired" : ""} ${inCart ? "is-added" : ""}`}>
       <Link href={`/tratamientos/${product.slug}`} className="shop-hit">
-        <span className="shop-media">
-          {/* provisional: stock */}
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={product.imagen} alt="" />
+        <span className="shop-media flex">
+          <TreatmentMedia name={product.nombre} image={product.imagen} caption />
           {product.descuento ? <span className="shop-badge">-{product.descuento}%</span> : null}
         </span>
         <span className="shop-copy">

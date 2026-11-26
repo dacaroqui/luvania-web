@@ -1,5 +1,6 @@
 "use client";
 
+import { canPurchase, shopProduct } from "@/data/shop";
 import { flags } from "@/lib/flags";
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 
@@ -82,16 +83,18 @@ export function CartProvider({ children }: { children: ReactNode }) {
       setSede: (slug) => setSedeState(slug),
       requestAdd: (slug, qty = 1, sedeHint) => {
         if (!flags.cart) return;
-        const nextSede = sedeHint || sede;
-        if (!nextSede) {
+        const product = sedeHint ? shopProduct(slug, sedeHint) : undefined;
+        if (!sedeHint || !product || !canPurchase(product) || (lines.length > 0 && sede !== sedeHint)) {
           setPending({ slug, qty });
           return;
         }
-        if (sedeHint) setSedeState(sedeHint);
+        setSedeState(sedeHint);
         setLines((current) => withLine(current, slug, qty));
         setOpen(true);
       },
       confirmSede: (slug) => {
+        const product = pending ? shopProduct(pending.slug, slug) : undefined;
+        if (!product || !canPurchase(product)) return;
         setSedeState(slug);
         if (pending) setLines((current) => withLine(current, pending.slug, pending.qty));
         setPending(null);

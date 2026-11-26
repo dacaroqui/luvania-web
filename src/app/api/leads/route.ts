@@ -9,6 +9,8 @@ const leadSchema = z.object({
   sede: z.enum(slugs),
   tratamiento: z.string().trim().max(160).optional().or(z.literal("")),
   promo: z.string().trim().max(160).optional().or(z.literal("")),
+  modalidad: z.enum(["presencial", "hibrida"]).optional(),
+  necesidad: z.string().trim().max(160).optional(),
   consentimiento: z.literal(true),
   website: z.string().max(0).optional().or(z.literal("")),
 });
@@ -45,6 +47,8 @@ export async function POST(request: Request) {
     sede: parsed.data.sede,
     tratamiento: parsed.data.tratamiento || "",
     promo: parsed.data.promo || "",
+    ...(parsed.data.modalidad ? { modalidad: parsed.data.modalidad } : {}),
+    ...(parsed.data.necesidad ? { necesidad: parsed.data.necesidad } : {}),
     origen: request.headers.get("referer") || "",
     at: new Date().toISOString(),
   };

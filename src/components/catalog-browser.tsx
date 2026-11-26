@@ -353,7 +353,7 @@ function CatalogCard({ product }: { product: CommerceProduct }) {
   return (
     <Link href={`/tratamientos/${product.slug}`} className="catalog-card glass">
       <span className="catalog-card-media">
-        <TreatmentMedia name={product.nombre} image={product.imagen} />
+        <TreatmentMedia name={product.nombre} image={product.imagen} caption />
         <span className="catalog-kicker">{product.especialidadNombre}</span>
       </span>
       <span className="catalog-card-copy">

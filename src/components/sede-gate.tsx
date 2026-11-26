@@ -1,5 +1,7 @@
 "use client";
 
+import { canPurchase, shopProduct } from "@/data/shop";
+import { cop } from "@/lib/format";
 import type { AgendaSede } from "@/data/types";
 import { useEffect, useId, useRef } from "react";
 import { CloseButton } from "./close-button";
@@ -70,15 +72,21 @@ export function SedeGate({ sedes }: { sedes: AgendaSede[] }) {
             <CloseButton onClick={cancelPending} />
           </header>
           <div className="agenda-body thin-scroll">
-            <p className="text-sm leading-6 text-mute">La sede queda guardada en el carrito. La puedes cambiar antes de finalizar.</p>
+            <p className="text-sm leading-6 text-mute">Confirma la sede y revisa el precio antes de agregar la promoción.</p>
+            {cart.lines.length > 0 ? <p className="text-sm text-mute">Si cambias de sede, el carrito actualizará los precios y la disponibilidad.</p> : null}
             <ul className="grid gap-2">
-              {sedes.map((sede) => (
-                <li key={sede.slug}>
-                  <button type="button" className="sede-option" onClick={() => cart.confirmSede(sede.slug)}>
-                    {sede.name}
-                  </button>
-                </li>
-              ))}
+              {sedes.map((sede) => {
+                const product = shopProduct(pending.slug, sede.slug);
+                const available = Boolean(product && canPurchase(product));
+                return (
+                  <li key={sede.slug}>
+                    <button type="button" className="sede-option flex w-full flex-wrap justify-between gap-2" disabled={!available} onClick={() => cart.confirmSede(sede.slug)}>
+                      <span>{sede.name}{cart.sede === sede.slug ? " · sede actual" : ""}</span>
+                      <span>{product && available ? cop(product.precio) : "No disponible"}</span>
+                    </button>
+                  </li>
+                );
+              })}
             </ul>
           </div>
         </div>
