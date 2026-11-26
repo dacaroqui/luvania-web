@@ -35,6 +35,7 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
     path: `/tratamientos/${guide.slug}/guia`,
     image: treatment.image,
     imageAlt: treatment.name,
+    type: "article",
     index: guide.medicalReview === "aprobado",
   });
 }
@@ -75,6 +76,8 @@ export default async function GuiaPage({ params }: { params: Promise<Params> }) 
           description: guide.description,
           url: `${site.url}/tratamientos/${guide.slug}/guia`,
           inLanguage: "es-CO",
+          mainEntityOfPage: { "@type": "WebPage", "@id": `${site.url}/tratamientos/${guide.slug}/guia` },
+          publisher: { "@type": "Organization", name: site.name, url: site.url },
           about: { "@type": "MedicalProcedure", name: treatment.name, url: fichaUrl },
           mentions: { "@type": "MedicalProcedure", name: treatment.name, url: fichaUrl },
           isPartOf: { "@type": "WebSite", name: site.name, url: site.url },

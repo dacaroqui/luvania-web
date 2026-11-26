@@ -7,11 +7,11 @@ import { needPages, zonePages } from "@/lib/hubs";
 import type { MetadataRoute } from "next";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const now = new Date();
   const paths = [
     "",
     "/sobre-luvania",
     "/tratamientos",
+    "/blog",
     "/promociones",
     "/sedes",
     "/franquicias",
@@ -29,10 +29,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
       .map((guide) => `/tratamientos/${guide.slug}/guia`),
     ...legalDocs.map((doc) => doc.href),
   ];
-  return paths.map((path) => ({
-    url: `${site.url}${path}`,
-    lastModified: now,
-    changeFrequency: path === "" ? "weekly" : "monthly",
-    priority: path === "" ? 1 : path.startsWith("/tratamientos/") ? 0.8 : 0.6,
-  }));
+  return paths.map((path) => ({ url: `${site.url}${path}` }));
 }

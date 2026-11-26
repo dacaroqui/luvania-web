@@ -33,7 +33,7 @@ export const metadata: Metadata = {
   },
   description: site.description,
   applicationName: site.name,
-  robots: { index: true, follow: true },
+  robots: { index: process.env.VERCEL_ENV !== "preview", follow: true },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
