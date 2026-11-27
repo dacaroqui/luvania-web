@@ -4835,12 +4835,31 @@ dialog.sheet.vx-dialog { width: min(57rem, calc(100vw - 1.5rem)); border: 0; pad
 .vx.is-dialog.vx-capillary-dialog { grid-template-rows: auto minmax(0, 1fr); }
 .vx-clinician {
   display: grid;
-  align-content: center;
-  gap: 0.22rem;
-  padding: 0.7rem clamp(1rem, 3vw, 1.75rem);
+  grid-template-columns: 3.6rem minmax(0, 1fr);
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.55rem clamp(1rem, 3vw, 1.75rem);
   background: #f5e8da;
   color: #322520;
 }
+.vx-clinician-photo {
+  position: relative;
+  width: 100%;
+  height: 4.2rem;
+  min-height: 0;
+  overflow: hidden;
+  border-radius: 0.5rem;
+}
+.vx-clinician-photo img {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 35%;
+}
+.vx-clinician-copy { display: grid; gap: 0.14rem; }
 .vx-clinician p {
   color: #8d3d2c;
   font-size: 0.69rem;
@@ -4848,12 +4867,21 @@ dialog.sheet.vx-dialog { width: min(57rem, calc(100vw - 1.5rem)); border: 0; pad
   letter-spacing: 0.12em;
   text-transform: uppercase;
 }
-.vx-clinician strong { font-size: 1.35rem; font-weight: 600; line-height: 1.06; }
+.vx-clinician strong { font-size: 1.3rem; font-weight: 600; line-height: 1.06; }
 .vx-clinician span { color: #655047; font-size: 0.8rem; }
+.vx-clinician small { color: #655047; font-size: 0.72rem; }
 @media (min-width: 900px) {
   .vx.is-dialog.vx-capillary-dialog { grid-template-rows: minmax(0, 1fr); }
-  .vx-clinician { gap: 0.45rem; padding: 1.35rem; }
-  .vx-clinician strong { font-size: 2.15rem; }
+  .vx-clinician {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr) auto;
+    align-items: stretch;
+    gap: 0;
+    padding: 0;
+  }
+  .vx-clinician-photo { height: auto; border-radius: 0; }
+  .vx-clinician-copy { gap: 0.35rem; padding: 1.15rem; }
+  .vx-clinician strong { font-size: 2rem; }
 }
 .vx.is-dialog .vx-top,
 .vx.is-dialog .vx-progress,

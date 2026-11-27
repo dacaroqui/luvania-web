@@ -377,9 +377,17 @@ export function ValuationWizard({
     <div className={`vx ${frame === "dialog" ? "is-dialog" : ""}${isCapillaryDialog ? " vx-capillary-dialog" : ""}`}>
       {isCapillaryDialog ? (
         <aside className="vx-clinician" aria-label="Quién te atiende">
-          <p>Valoración capilar</p>
-          <strong className="display">Equipo Luvania</strong>
-          <span>Profesional por confirmar</span>
+          <div className="vx-clinician-photo">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/images/valoracion-capilar-ilustrativa.webp" width={720} height={1080}
+              alt="Una profesional examina el cuero cabelludo de una paciente" decoding="async" />
+          </div>
+          <div className="vx-clinician-copy">
+            <p>Valoración capilar</p>
+            <strong className="display">Equipo Luvania</strong>
+            <span>Profesional por confirmar</span>
+            <small>Imagen ilustrativa</small>
+          </div>
         </aside>
       ) : (
         <aside className="vx-side">
