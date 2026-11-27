@@ -59,6 +59,12 @@ const STEPS = [
   { title: "¿Cómo te contactamos?", photo: "/stock/wellness.webp" },
 ];
 
+const capillaryModalityPhotos = {
+  presencial: { src: "/images/valoracion-capilar-ilustrativa.webp", description: "Visita una sede para la prevaloración." },
+  virtual: { src: "/images/prevaloracion-capilar-virtual.webp", description: "Conversa con el equipo por videollamada." },
+  hibrida: { src: "/images/prevaloracion-capilar-hibrida.webp", description: "Combina una visita a la sede con una videollamada." },
+};
+
 const modalities = [
   { id: "presencial", title: "Presencial", description: "En una sede", icon: "M4 20V7l8-4 8 4v13M3 20h18M10 20v-5h4v5M8 10h1m6 0h1" },
   { id: "virtual", title: "Virtual", description: "Por videollamada", icon: "M4 7h11v10H4zM15 10l5-3v10l-5-3" },
@@ -398,7 +404,7 @@ export function ValuationWizard({
       )}
       <div className="vx-main">
         <header className="vx-top">
-          <p>Valoración personalizada</p>
+          <p>{isCapillaryDialog ? "Prevaloración capilar" : "Valoración personalizada"}</p>
           <div className="vx-top-end">
             <p>0{step + 1} / 04</p>
             {frame === "dialog" && onClose ? <CloseButton onClick={onClose} /> : null}
@@ -573,9 +579,14 @@ export function ValuationWizard({
                   setModality(id);
                   setErrors({});
                 }}>
-                <svg viewBox="0 0 24 24" aria-hidden="true"><path d={icon} /></svg>
+                {isCapillaryDialog ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={capillaryModalityPhotos[id].src} alt="" decoding="async" />
+                ) : (
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d={icon} /></svg>
+                )}
                 <strong>{title}</strong>
-                <span>{description}</span>
+                <span>{isCapillaryDialog ? capillaryModalityPhotos[id].description : description}</span>
               </button>
             ))}
           </div>

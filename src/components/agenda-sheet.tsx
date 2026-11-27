@@ -70,7 +70,7 @@ export function AgendaSheet({
     <dialog
       ref={ref}
       className="sheet agenda-dialog vx-dialog"
-      aria-label="Agenda tu valoración"
+      aria-label={landing?.slug === "caida-del-cabello" ? "Prevaloración capilar" : "Agenda tu valoración"}
       onClose={onClose}
       onClick={(event) => {
         if (event.target === event.currentTarget) onClose();

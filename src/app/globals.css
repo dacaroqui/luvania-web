@@ -4903,6 +4903,24 @@ dialog.sheet.vx-dialog { width: min(57rem, calc(100vw - 1.5rem)); border: 0; pad
 .vx-modalities button svg { box-sizing: content-box; padding: 0.45rem; border-radius: 0.7rem; background: #f7e7da; }
 .vx-modalities button strong { font-size: 1rem; }
 .vx-modalities button > span { font-size: 0.8rem; color: #524239; }
+.vx-capillary-dialog .vx-modalities img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  object-position: center 42%;
+  border-radius: 0.6rem;
+}
+@media (max-width: 540px) {
+  .vx.vx-capillary-dialog .vx-modalities { grid-template-columns: minmax(0, 1fr); }
+  .vx-capillary-dialog .vx-modalities button {
+    grid-template-columns: 4.75rem minmax(0, 1fr);
+    grid-template-rows: auto auto;
+    align-content: center;
+    min-height: 0;
+    gap: 0.12rem 0.6rem;
+  }
+  .vx-capillary-dialog .vx-modalities img { grid-row: span 2; align-self: center; }
+}
 .vx-treatment-choice {
   display: flex;
   flex-wrap: wrap;
