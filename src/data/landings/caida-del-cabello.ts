@@ -6,12 +6,14 @@ const landing: Landing = {
   treatmentSlug: "hair-loss",
   title: "Caída del cabello: valoración | Luvania",
   description: "Valoración de la caída del cabello en Luvania. El plan se confirma en la cita, sin un plazo prometido.",
-  heroKicker: "Valoración",
-  heroTitle: "Caída del cabello",
+  heroKicker: "Valoración capilar en Bogotá",
+  heroTitle: "¿Tu cabello pierde densidad?",
+  heroIntro: "Revisa tu pérdida de volumen y conoce tus opciones.",
   promoFilter: "related",
   simulation: true,
+  showPersonalSimulation: false,
   showResults: true,
-  showDoctor: true,
+  showDoctor: false,
   questions: [
     {
       id: "desde-cuando",
@@ -29,7 +31,7 @@ const landing: Landing = {
       choices: [
         { id: "entradas", label: "Entradas" },
         { id: "coronilla", label: "Coronilla" },
-        { id: "raya", label: "Raya" },
+        { id: "raya", label: "Zona superior" },
         { id: "parches", label: "Parches" },
         { id: "todo", label: "Todo el cuero" },
       ],

@@ -4,17 +4,9 @@ import { JsonLd } from "@/components/json-ld";
 import { clampMeta, pageMeta } from "@/lib/seo";
 import type { Metadata } from "next";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 
 const journeys = {
-  "caida-del-cabello": {
-    title: "Me preocupa la caída del cabello",
-    steps: [
-      ["Mira el protocolo", "/tratamientos/hair-loss", "Caída del cabello es la ficha publicada. Hair Loss es el mismo nombre."],
-      ["Si también quieres estímulo", "/tratamientos/plasma-virtual", "El plasma virtual se usa en cuero cabelludo cuando el equipo lo indica."],
-      ["Agenda la valoración", "#agendar", "Ahí se decide si el camino es estético o si hay que derivar."],
-    ],
-  },
   abdomen: {
     title: "Quiero mejorar mi abdomen",
     steps: [
@@ -28,7 +20,7 @@ const journeys = {
 type Params = { slug: string };
 
 export function generateStaticParams() {
-  return Object.keys(journeys).map((slug) => ({ slug }));
+  return ["caida-del-cabello", ...Object.keys(journeys)].map((slug) => ({ slug }));
 }
 
 export async function generateMetadata({ params }: { params: Promise<Params> }): Promise<Metadata> {
@@ -44,6 +36,7 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
 
 export default async function RecorridoPage({ params }: { params: Promise<Params> }) {
   const { slug } = await params;
+  if (slug === "caida-del-cabello") redirect("/lp/caida-del-cabello");
   const journey = journeys[slug as keyof typeof journeys];
   if (!journey) notFound();
   const crumbs = [{ name: journey.title, href: `/recorridos/${slug}` }];

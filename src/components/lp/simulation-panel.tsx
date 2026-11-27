@@ -1,171 +1,538 @@
 "use client";
 
-import { mockDensitySimulation, type SimulationFrame } from "@/lib/simulation/provider";
-import { useEffect, useRef, useState } from "react";
+import { copyHairMask, createHairSegmenter, createHairTracker, locateHairline, type HairMask, type HairPose, type HairSegmenter, type HairTracker } from "@/lib/simulation/hair-tracker";
+import { paintDensity, prepareDensityMask, readPhoto, type DensityMask, type DensityStyle } from "@/lib/simulation/provider";
+import { useCallback, useEffect, useRef, useState, type KeyboardEvent, type MouseEvent, type ReactNode } from "react";
+
+import { captureHairEdit } from "@/lib/simulation/generative";
 import { CompareSlider } from "./compare-slider";
 
-export function SimulationPanel({ enabled }: { enabled: boolean }) {
-  const [consent, setConsent] = useState(false);
-  const [open, setOpen] = useState(false);
-  const [frame, setFrame] = useState<SimulationFrame | null>(null);
-  const [error, setError] = useState("");
-  const beforeUrl = useRef<string | null>(null);
-  const afterUrl = useRef<string | null>(null);
-  const [urls, setUrls] = useState<{ before: string; after: string } | null>(null);
+const initialPoint = { x: 0.5, y: 0.16 };
+const previewSize = 540;
+const frameInterval = 1000 / 30;
+const privacyNote = "La cámara en vivo se procesa en tu dispositivo.";
+const filterNote = "Filtro ilustrativo. No predice resultados de un tratamiento.";
+type Tracking = "loading" | "searching" | "ready" | "unavailable" | "manual";
+type Status = "idle" | "opening" | "live" | "loading-photo" | "photo" | "error";
 
-  useEffect(() => {
-    return () => {
-      if (beforeUrl.current) URL.revokeObjectURL(beforeUrl.current);
-      if (afterUrl.current) URL.revokeObjectURL(afterUrl.current);
+type Example = { before: ReactNode; after: ReactNode; label: string };
+
+export function SimulationPanel({
+  examples,
+  showPersonalSimulation = true,
+}: {
+  examples: Record<DensityStyle, Example>;
+  showPersonalSimulation?: boolean;
+}) {
+  const [status, setStatus] = useState<Status>("idle");
+  const [error, setError] = useState("");
+  const video = useRef<HTMLVideoElement>(null);
+  const beforeCanvas = useRef<HTMLCanvasElement>(null);
+  const aiRequest = useRef<AbortController | null>(null);
+  const [aiEnabled, setAiEnabled] = useState(false);
+  const [aiConsent, setAiConsent] = useState(false);
+  const [aiPending, setAiPending] = useState(false);
+  const [aiMessage, setAiMessage] = useState("");
+  const [generated, setGenerated] = useState(false);
+  const afterCanvas = useRef<HTMLCanvasElement>(null);
+  const [adjusting, setAdjusting] = useState(false);
+  const aimSurface = useRef<HTMLButtonElement>(null);
+  const aimToggle = useRef<HTMLButtonElement>(null);
+  const fileInput = useRef<HTMLInputElement>(null);
+  const stream = useRef<MediaStream | null>(null);
+  const frame = useRef(0);
+  const session = useRef(0);
+  const sourcePhoto = useRef<HTMLCanvasElement | null>(null);
+  const point = useRef(initialPoint);
+  const tracker = useRef<HairTracker | null>(null);
+  const pose = useRef<HairPose | null>(null);
+  const segmenter = useRef<HairSegmenter | null>(null);
+  const segmentation = useRef<{ source: HairMask; density: DensityMask; pose: HairPose | null } | null>(null);
+  const selectedStyle = useRef<DensityStyle>("masculino");
+  const [style, setStyle] = useState<DensityStyle>("masculino");
+  const [maskStatus, setMaskStatus] = useState<"loading" | "ready" | "empty" | "error">("loading");
+
+  function updateMask(source: HairMask | null) {
+    if (!source || !source.pixels.includes(1)) {
+      segmentation.current = null;
+      setMaskStatus("empty");
+      return;
+    }
+    segmentation.current = {
+      source,
+      density: prepareDensityMask(source, selectedStyle.current),
+      pose: pose.current,
     };
+    setMaskStatus("ready");
+  }
+  const manual = useRef(false);
+  const [tracking, setTracking] = useState<Tracking>("loading");
+
+  function updatePose(next: HairPose) {
+    const current = pose.current;
+    if (!current || manual.current) {
+      pose.current = next;
+    } else {
+      const blend = (a: number, b: number) => a + (b - a) * 0.46;
+      pose.current = {
+        x: blend(current.x, next.x), y: blend(current.y, next.y),
+        width: blend(current.width, next.width), height: blend(current.height, next.height),
+        angle: blend(current.angle, next.angle),
+      };
+    }
+    point.current = next;
+  }
+
+  const releaseCamera = useCallback(() => {
+    session.current += 1;
+    window.cancelAnimationFrame(frame.current);
+    stream.current?.getTracks().forEach((track) => track.stop());
+    stream.current = null;
+    tracker.current?.close();
+    tracker.current = null;
+    segmenter.current?.close();
+    segmenter.current = null;
+    segmentation.current = null;
+    pose.current = null;
+    manual.current = false;
+    if (video.current) video.current.srcObject = null;
+  }, []);
+
+  const clearPreview = useCallback(() => {
+    if (beforeCanvas.current) beforeCanvas.current.width = 1;
+    if (afterCanvas.current) afterCanvas.current.width = 1;
+    setAdjusting(false);
   }, []);
 
   useEffect(() => {
-    if (!open) return;
-    const motion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    document.getElementById("simulacion")?.scrollIntoView({ behavior: motion ? "auto" : "smooth", block: "nearest" });
-  }, [open]);
+    function closeOnPageHide() {
+      aiRequest.current?.abort();
+      aiRequest.current = null;
+      setAiConsent(false);
+      setAiPending(false);
+      setAiMessage("");
+      setGenerated(false);
+      releaseCamera();
+      sourcePhoto.current = null;
+      clearPreview();
+      setStatus("idle");
+    }
+    window.addEventListener("pagehide", closeOnPageHide);
+    return () => {
+      window.removeEventListener("pagehide", closeOnPageHide);
+      aiRequest.current?.abort();
+      releaseCamera();
+    };
+  }, [clearPreview, releaseCamera]);
 
-  async function onFile(file: File | undefined) {
-    if (!file || !consent) return;
-    setError("");
-    try {
-      const bitmap = await createImageBitmap(file);
-      const next = await mockDensitySimulation.simulate({ bitmap });
-      const beforeBlob = await canvasBlob(next.before);
-      const afterBlob = await canvasBlob(next.after);
-      if (beforeUrl.current) URL.revokeObjectURL(beforeUrl.current);
-      if (afterUrl.current) URL.revokeObjectURL(afterUrl.current);
-      beforeUrl.current = URL.createObjectURL(beforeBlob);
-      afterUrl.current = URL.createObjectURL(afterBlob);
-      setFrame(next);
-      setUrls({ before: beforeUrl.current, after: afterUrl.current });
-    } catch {
-      setError("No se pudo leer esa imagen en este navegador.");
+  function fail(message: string) {
+    releaseCamera();
+    sourcePhoto.current = null;
+    clearPreview();
+    setError(message);
+    setStatus("error");
+  }
+
+  function draw(source: CanvasImageSource, width: number, height: number, mirror: boolean) {
+    const before = beforeCanvas.current;
+    const after = afterCanvas.current;
+    if (!before || !after || !width || !height) return;
+    const scale = Math.min(1, previewSize / Math.max(width, height));
+    const outputWidth = Math.max(1, Math.round(width * scale));
+    const outputHeight = Math.max(1, Math.round(height * scale));
+    for (const target of [before, after]) {
+      if (target.width !== outputWidth) target.width = outputWidth;
+      if (target.height !== outputHeight) target.height = outputHeight;
+    }
+
+    const original = before.getContext("2d");
+    const filtered = after.getContext("2d", { willReadFrequently: true });
+    if (!original || !filtered) throw new Error("Canvas no disponible");
+
+    if (!mirror) {
+      original.clearRect(0, 0, outputWidth, outputHeight);
+      filtered.clearRect(0, 0, outputWidth, outputHeight);
+    }
+    original.setTransform(mirror ? -1 : 1, 0, 0, 1, mirror ? outputWidth : 0, 0);
+    original.drawImage(source, 0, 0, outputWidth, outputHeight);
+    original.resetTransform();
+    filtered.drawImage(before, 0, 0);
+    const current = pose.current;
+    const mask = segmentation.current;
+    if (current && mask) {
+      paintDensity(filtered, current, mask.density, manual.current ? current : mask.pose ?? current, selectedStyle.current);
     }
   }
 
+  async function openCamera() {
+    setError("");
+    sourcePhoto.current = null;
+    point.current = initialPoint;
+    setTracking("loading");
+    setMaskStatus("loading");
+
+    if (!navigator.mediaDevices?.getUserMedia) {
+      fail("La cámara no está disponible. Prueba con una foto.");
+      return;
+    }
+
+    const id = ++session.current;
+    setStatus("opening");
+    try {
+      const next = await navigator.mediaDevices.getUserMedia({
+        audio: false,
+        video: { facingMode: { ideal: "user" }, width: { ideal: 640 }, height: { ideal: 480 } },
+      });
+      const element = video.current;
+      if (session.current !== id || !element) {
+        next.getTracks().forEach((track) => track.stop());
+        return;
+      }
+      stream.current = next;
+      next.getVideoTracks()[0]?.addEventListener("ended", () => {
+        if (session.current === id) fail("La cámara se desconectó. Puedes volver a abrirla o usar una foto.");
+      }, { once: true });
+      element.srcObject = next;
+      await element.play();
+      if (session.current !== id) return;
+
+      void createHairTracker("VIDEO").then((model) => {
+        if (session.current !== id) {
+          model.close();
+          return;
+        }
+        tracker.current = model;
+        if (!manual.current) setTracking("searching");
+      }).catch(() => {
+        if (session.current === id && !manual.current) setTracking("unavailable");
+      });
+
+      void createHairSegmenter("VIDEO").then((which) => {
+        if (session.current !== id) {
+          which.close();
+          return;
+        }
+        segmenter.current = which;
+      }).catch(() => {
+        if (session.current === id) setMaskStatus("error");
+      });
+
+      let previous = -Infinity;
+      let nextMask = 0;
+      let lastDetection = -Infinity;
+      let lastFace = -Infinity;
+      let lastVideoTime = -1;
+      let shown = false;
+      const render = (now: number) => {
+        if (session.current !== id) return;
+        if (element.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA && element.videoWidth && now - previous >= frameInterval) {
+          if (tracker.current && !manual.current && now - lastDetection >= 95 && lastVideoTime !== element.currentTime) {
+            lastDetection = now;
+            lastVideoTime = element.currentTime;
+            try {
+              const detected = tracker.current.detectForVideo(element, now);
+              const next = locateHairline(detected, element.videoWidth, element.videoHeight, true);
+              if (next) {
+                updatePose(next);
+                lastFace = now;
+                setTracking("ready");
+              } else if (now - lastFace > 300) {
+                pose.current = null;
+                setTracking("searching");
+              }
+            } catch {
+              tracker.current?.close();
+              tracker.current = null;
+              pose.current = null;
+              setTracking("unavailable");
+            }
+          }
+          if (segmenter.current && now >= nextMask) {
+            const started = performance.now();
+            try {
+              segmenter.current.segmentForVideo(element, now, (result) => updateMask(copyHairMask(result, true)));
+              const elapsed = performance.now() - started;
+              nextMask = now + Math.max(320, elapsed * 4);
+            } catch {
+              segmenter.current?.close();
+              segmenter.current = null;
+              segmentation.current = null;
+              setMaskStatus("error");
+            }
+          }
+          try {
+            draw(element, element.videoWidth, element.videoHeight, true);
+          } catch {
+            fail("No pudimos mostrar el filtro en vivo. Prueba con una foto.");
+            return;
+          }
+          previous = now;
+          if (!shown) {
+            shown = true;
+            setStatus("live");
+          }
+        }
+        frame.current = window.requestAnimationFrame(render);
+      };
+      frame.current = window.requestAnimationFrame(render);
+    } catch {
+      if (session.current === id) fail("No pudimos acceder a la cámara. Revisa el permiso o usa una foto.");
+    }
+  }
+
+  async function openPhoto(file: File | undefined) {
+    if (!file) return;
+    releaseCamera();
+    const id = session.current;
+    setError("");
+    setStatus("loading-photo");
+    setMaskStatus("loading");
+    try {
+      const image = await readPhoto(file);
+      if (session.current !== id) return;
+      point.current = initialPoint;
+      sourcePhoto.current = image;
+      draw(image, image.width, image.height, false);
+      setStatus("photo");
+      setTracking("loading");
+      void createHairSegmenter("IMAGE").then((which) => {
+        try {
+          if (session.current !== id) return;
+          which.segment(image, (result) => updateMask(copyHairMask(result, false)));
+          draw(image, image.width, image.height, false);
+        } finally {
+          which.close();
+        }
+      }).catch(() => {
+        if (session.current === id) setMaskStatus("error");
+      });
+      void createHairTracker("IMAGE").then((model) => {
+        try {
+          if (session.current !== id || manual.current) return;
+          const next = locateHairline(model.detect(image), image.width, image.height, false);
+          if (next) {
+            updatePose(next);
+            draw(image, image.width, image.height, false);
+          }
+          setTracking(next ? "ready" : "unavailable");
+        } finally {
+          model.close();
+        }
+      }).catch(() => {
+        if (session.current === id && !manual.current) setTracking("unavailable");
+      });
+    } catch {
+      if (session.current === id) fail("No pudimos abrir la foto. Prueba con JPG, PNG o WebP.");
+    }
+  }
+
+  function chooseStyle(next: DensityStyle) {
+    selectedStyle.current = next;
+    setStyle(next);
+    const mask = segmentation.current;
+    if (mask) mask.density = prepareDensityMask(mask.source, next);
+    const image = sourcePhoto.current;
+    if (image) draw(image, image.width, image.height, false);
+  }
+
+  function close() {
+    aiRequest.current?.abort();
+    aiRequest.current = null;
+    setAiConsent(false);
+    setAiPending(false);
+    setAiMessage("");
+    setGenerated(false);
+    releaseCamera();
+    sourcePhoto.current = null;
+    clearPreview();
+    setStatus("idle");
+    setError("");
+  }
+
+  function adjustPoint(x: number, y: number) {
+    manual.current = true;
+    const previous = pose.current;
+    updatePose({
+      x: Math.max(0, Math.min(1, x)),
+      y: Math.max(0, Math.min(1, y)),
+      width: previous?.width ?? 0.3,
+      height: previous?.height ?? 0.14,
+      angle: previous?.angle ?? 0,
+    });
+    setTracking("manual");
+    const image = sourcePhoto.current;
+    if (image) draw(image, image.width, image.height, false);
+  }
+
+  function aim(event: MouseEvent<HTMLButtonElement>) {
+    const canvas = afterCanvas.current;
+    if (!canvas) return;
+    if (event.detail > 0) {
+      const bounds = canvas.getBoundingClientRect();
+      if (!bounds.width || !bounds.height) return;
+      const scale = Math.max(bounds.width / canvas.width, bounds.height / canvas.height);
+      const width = canvas.width * scale;
+      const height = canvas.height * scale;
+      const x = (event.clientX - bounds.left - (bounds.width - width) / 2) / width;
+      const y = (event.clientY - bounds.top) / height;
+      if (x < 0 || x > 1 || y < 0 || y > 1) return;
+      adjustPoint(x, y + (pose.current?.height ?? 0.14) * 0.4);
+    }
+    stopAdjusting();
+  }
+
+  function stopAdjusting() {
+    setAdjusting(false);
+    aimToggle.current?.focus();
+  }
+
+  function aimWithKeys(event: KeyboardEvent<HTMLButtonElement>) {
+    if (event.key === "Escape") {
+      stopAdjusting();
+      return;
+    }
+    const moves: Record<string, [number, number]> = {
+      ArrowLeft: [-0.025, 0], ArrowRight: [0.025, 0], ArrowUp: [0, -0.025], ArrowDown: [0, 0.025],
+    };
+    const move = moves[event.key];
+    if (!move) return;
+    event.preventDefault();
+    adjustPoint(point.current.x + move[0], point.current.y + move[1]);
+  }
+
+  const active = status === "live" || status === "photo";
+  const opened = active || status === "opening" || status === "loading-photo";
+
+  const example = examples[style];
+
+  useEffect(() => {
+    if (!active) return;
+    const controller = new AbortController();
+    void fetch("/api/simulacion/capilar", { signal: controller.signal }).then(async (response) => {
+      const data = response.ok ? await response.json() as { enabled?: boolean } : null;
+      if (!controller.signal.aborted) setAiEnabled(data?.enabled === true);
+    }).catch(() => undefined);
+    return () => controller.abort();
+  }, [active]);
+
+  async function generatePhoto() {
+    const before = beforeCanvas.current;
+    const after = afterCanvas.current;
+    const position = pose.current;
+    if (!before || !after || !position || aiRequest.current) return;
+    const controller = new AbortController();
+    const id = session.current;
+    aiRequest.current = controller;
+    setAiPending(true);
+    setAiConsent(false);
+    setAiMessage("Generando vista previa…");
+    try {
+      const capture = captureHairEdit(before, position, selectedStyle.current);
+      const edited = await capture.generate(controller.signal);
+      if (session.current !== id || controller.signal.aborted) return;
+      releaseCamera();
+      sourcePhoto.current = null;
+      before.width = before.height = after.width = after.height = edited.width;
+      before.getContext("2d")?.drawImage(capture.original, 0, 0);
+      after.getContext("2d")?.drawImage(edited, 0, 0);
+      setGenerated(true);
+      setAdjusting(false);
+      setStatus("photo");
+      setAiMessage("");
+    } catch (error) {
+      if (!controller.signal.aborted && session.current === id) {
+        setAiMessage(error instanceof Error ? error.message : "No pudimos generar la simulación.");
+      }
+    } finally {
+      if (aiRequest.current === controller) {
+        aiRequest.current = null;
+        setAiPending(false);
+      }
+    }
+  }
+
+  useEffect(() => {
+    if (adjusting) aimSurface.current?.focus({ preventScroll: true });
+  }, [adjusting]);
+
   return (
-    <section id="como-te-verias" className="lp-band">
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img className="lp-band-petal" src="/stock/petalo-b.webp" alt="" />
-      <div className="lp-band-grid">
-        <ExampleSplit />
-        <div className="lp-band-copy">
-          <h2 className="display">¿Cómo te verías?</h2>
-          <p>Visualiza un posible cambio con una simulación ilustrativa de tu tratamiento.</p>
-          <ul className="lp-band-points">
-            <li>
-              <PointIcon path="M12 3v3M12 18v3M3 12h3M18 12h3M6 6l2 2M16 16l2 2M18 6l-2 2M8 16l-2 2" />
-              <span>
-                <strong>Referencia visual orientativa</strong>
-                Un filtro de ejemplo, no un resultado.
-              </span>
-            </li>
-            <li>
-              <PointIcon path="M8 8h2l1.2-2h3.6L16 8h2a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2ZM12 11.2a2.3 2.3 0 1 0 0 4.6 2.3 2.3 0 0 0 0-4.6Z" />
-              <span>
-                <strong>Con tu foto de forma segura</strong>
-                Cámara o archivo, solo en este dispositivo.
-              </span>
-            </li>
-            <li>
-              <PointIcon path="M8 11V8.5a4 4 0 0 1 8 0V11M7 11h10v8H7v-8Z" />
-              <span>
-                <strong>Privada y confidencial</strong>
-                La imagen no se envía ni se guarda.
-              </span>
-            </li>
-          </ul>
+    <div id="como-te-verias" className="hair-mirror">
+      <div className="hair-mirror-toolbar">
+        <div className="hair-style-picker" role="group" aria-label="Estilo de densidad">
+          <button type="button" disabled={aiPending || generated} aria-pressed={style === "masculino"} onClick={() => chooseStyle("masculino")}>
+            Masculino
+          </button>
+          <button type="button" disabled={aiPending || generated} aria-pressed={style === "femenino"} onClick={() => chooseStyle("femenino")}>
+            Femenino
+          </button>
         </div>
-        <div className="lp-band-action">
-          {enabled ? (
-            <button
-              type="button"
-              className="btn-coral"
-              onClick={() => setOpen(true)}
-            >
-              <svg className="btn-arrow" viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M8 8h2l1.2-2h3.6L16 8h2a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2Z" />
-                <circle cx="13" cy="13.2" r="2.2" />
-              </svg>
-              Simular mi cambio
+        {showPersonalSimulation ? (
+          <div className="hair-mirror-actions">
+            <button className="btn-coral" type="button" aria-controls="espejo-capilar" aria-expanded={opened} onClick={opened ? close : openCamera}>
+              {opened ? status === "opening" ? "Cancelar cámara" : "Cerrar vista" : "Ver cómo se vería en mí"}
             </button>
-          ) : (
-            <p className="lp-blocked">La simulación ilustrativa no está disponible todavía.</p>
-          )}
-          <p className="lp-disclaimer">Simulación ilustrativa. No garantiza resultados; tu médico define el plan en la valoración.</p>
-        </div>
-      </div>
-      {enabled && open ? (
-        <div id="simulacion" className="lp-sim-flow">
-          <label className="lp-consent">
-            <input type="checkbox" checked={consent} onChange={(event) => setConsent(event.target.checked)} />
-            <span>Acepto usar la cámara o un archivo solo en este dispositivo. La imagen no se envía ni se guarda.</span>
-          </label>
-          <div className="lp-sim-actions">
-            <label className={consent ? "btn-line" : "btn-line is-disabled"}>
-              Tomar foto
-              <input type="file" accept="image/*" capture="user" disabled={!consent} onChange={(event) => onFile(event.target.files?.[0])} />
-            </label>
-            <label className={consent ? "btn-line" : "btn-line is-disabled"}>
-              Elegir archivo
-              <input type="file" accept="image/*" disabled={!consent} onChange={(event) => onFile(event.target.files?.[0])} />
-            </label>
+            {active && !generated && maskStatus === "ready" ? (
+              <button type="button" ref={aimToggle} className="hair-mirror-adjust" aria-pressed={adjusting}
+                onClick={() => adjusting ? stopAdjusting() : setAdjusting(true)}>
+                {adjusting ? "Listo" : "Ajustar zona"}
+              </button>
+            ) : null}
+            {aiEnabled && active && !generated && (tracking === "ready" || tracking === "manual") ? (
+              <button type="button" className="hair-mirror-adjust" disabled={aiPending || adjusting} onClick={() => setAiConsent(!aiConsent)}>
+                Simular con IA
+              </button>
+            ) : null}
           </div>
-          {error ? <p className="lp-error">{error}</p> : null}
-          {urls && frame ? (
-            <div className="lp-sim-result">
-              <CompareSlider
-                label="Comparar tu foto y la simulación de ejemplo"
-                beforeLabel="Tu foto"
-                afterLabel="Simulación"
-                before={
-                  // La foto solo existe en memoria. next/image no sirve un blob.
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img src={urls.before} alt="" />
-                }
-                after={
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img src={urls.after} alt="" />
-                }
-              />
-              <p className="lp-sim-note">El velo de la zona superior es un filtro de ejemplo. No predice cómo vas a quedar.</p>
-              <a className="btn-coral" href="#valoracion">
-                Iniciar valoración
-              </a>
-            </div>
-          ) : (
-            <p className="lp-sim-empty">Cuando aceptes, la foto se procesa aquí mismo. No queda guardada al salir.</p>
-          )}
+        ) : null}
+      </div>
+      {aiConsent ? (
+        <div className="hair-mirror-ai-consent">
+          <p>Para generar esta vista, se enviará una captura a OpenAI para editar la zona capilar.</p>
+          <button type="button" className="btn-coral" onClick={generatePhoto}>Autorizar y generar</button>
+          <button type="button" className="btn-line" onClick={() => setAiConsent(false)}>Cancelar</button>
         </div>
       ) : null}
-    </section>
-  );
-}
-
-function ExampleSplit() {
-  return (
-    <div className="lp-example" aria-hidden="true">
-      <div className="lp-example-half" />
-      <div className="lp-example-half is-after" />
-      <span className="compare-tag is-before">Antes</span>
-      <span className="compare-tag is-after">Simulación</span>
-      <span className="lp-badge">Ejemplo ilustrativo. No es una paciente.</span>
+      {aiMessage ? <p className="hair-mirror-message" role="status">{aiMessage}</p> : null}
+      <div id="espejo-capilar" className={generated ? "lp-results-frame hair-mirror-live hair-mirror-generated" : active ? "lp-results-frame hair-mirror-live" : "lp-results-frame"}>
+        <CompareSlider
+          label={active ? "Compara tu imagen sin filtro y con filtro" : example.label}
+          beforeLabel={generated ? "Antes · Captura" : active ? "Antes · Sin filtro" : "Antes"}
+          afterLabel={generated ? "Después · Simulación" : active ? "Después · Con filtro" : "Después"}
+          before={<><canvas ref={beforeCanvas} hidden={!active} aria-hidden="true" />{!active ? example.before : null}</>}
+          after={<><canvas ref={afterCanvas} hidden={!active} aria-hidden="true" />{!active ? example.after : null}</>}
+        />
+        {active && adjusting ? (
+          <button type="button" ref={aimSurface} className="hair-mirror-aim"
+            onClick={aim} onKeyDown={aimWithKeys} aria-label="Toca tu cabello o ajusta el filtro con las flechas. Pulsa Intro para terminar.">
+            <span>Toca tu cabello</span>
+          </button>
+        ) : null}
+      </div>
+      {active && !generated && maskStatus !== "error" && (tracking === "loading" || maskStatus === "loading") ? <p className="hair-mirror-message" role="status">Preparando el filtro…</p> : null}
+      {active && !generated && tracking === "searching" && maskStatus === "ready" ? <p className="hair-mirror-message" role="status">Mira de frente y deja visible la línea del cabello.</p> : null}
+      {active && !generated && tracking === "unavailable" && maskStatus === "ready" ? <p className="hair-mirror-message" role="status">Usa «Ajustar zona» para colocar el filtro.</p> : null}
+      {active && !generated && style === "femenino" && tracking === "ready" && maskStatus === "ready" ? <p className="hair-mirror-style-note">Para apreciar el cambio, muestra la parte superior del cabello.</p> : null}
+      {active && !generated && maskStatus === "empty" ? <p className="hair-mirror-message" role="status">Acércate para que se vea el cabello.</p> : null}
+      {active && !generated && maskStatus === "error" ? <p className="hair-mirror-message" role="status">El filtro no cargó. Cierra la vista e inténtalo de nuevo.</p> : null}
+      {status === "opening" ? <p className="hair-mirror-message" role="status">Abriendo cámara…</p> : null}
+      {status === "loading-photo" ? <p className="hair-mirror-message" role="status">Abriendo foto…</p> : null}
+      <video ref={video} muted playsInline className="hair-mirror-source" aria-hidden="true" />
+      {error ? (
+        <div className="hair-mirror-message">
+          <p role="alert">{error}</p>
+          <button className="btn-line" type="button" onClick={() => fileInput.current?.click()}>Elegir una foto</button>
+        </div>
+      ) : null}
+      <input ref={fileInput} type="file" accept="image/*" hidden onChange={(event) => {
+        void openPhoto(event.target.files?.[0]);
+        event.target.value = "";
+      }} />
+      {showPersonalSimulation ? (
+        <details className="hair-mirror-privacy">
+          <summary>Privacidad y alcance del filtro</summary>
+          <p>{privacyNote} {filterNote}{aiEnabled ? " La simulación con IA solicita autorización para enviar una captura a OpenAI." : ""}</p>
+        </details>
+      ) : null}
     </div>
   );
-}
-
-function PointIcon({ path }: { path: string }) {
-  return (
-    <svg viewBox="0 0 24 24" aria-hidden="true">
-      <path d={path} />
-    </svg>
-  );
-}
-
-function canvasBlob(canvas: HTMLCanvasElement) {
-  return new Promise<Blob>((resolve, reject) => {
-    canvas.toBlob((blob) => (blob ? resolve(blob) : reject(new Error("blob"))), "image/jpeg", 0.9);
-  });
 }

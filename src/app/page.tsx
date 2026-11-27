@@ -67,7 +67,7 @@ export default function HomePage() {
           <ul className="shot-grid">
             {shots.map((item) => (
               <li key={item.href}>
-                <Link href={item.href} className="shot-card">
+                <Link href={item.href} className="shot-card" data-reveal>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src={item.image} alt="" />
                   <span className="shot-label">
@@ -118,30 +118,32 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section data-tone="cream" className="relative z-[1] bg-cream">
+      <section data-tone="peach" className="expect-section relative z-[1]">
         <div className="mx-auto grid max-w-6xl items-center gap-10 px-4 py-16 sm:py-20 lg:grid-cols-[1.1fr_0.9fr]">
           <div>
             <p className="text-xs font-bold tracking-[0.18em] text-clay uppercase">Lo que sí puedes esperar</p>
-            <h2 className="display mt-3 text-5xl sm:text-6xl">{benefitLines[0]}</h2>
+            <h2 className="display mt-3 text-5xl sm:text-6xl">Cuidado que empieza por escucharte</h2>
             <p className="mt-4 max-w-md text-lg leading-8 text-mute">{benefitLines[4]}</p>
           </div>
-          <ul className="grid gap-3">
+          <ul className="expect-grid">
             {[
-              ["Tecnología", "Protocolos de cabina y aparatología, explicados en la valoración."],
-              ["Acompañamiento", "El equipo mira la zona antes de proponer un plan."],
-              ["Personalización", benefitLines[1]],
-              ["Valoración", "Tú decides. No hay compromiso de tratamiento."],
-            ].map(([title, copy]) => (
-              <li key={title} className="rounded-3xl bg-[#f7f4ea] px-5 py-4">
-                <h3 className="font-bold">{title}</h3>
-                <p className="mt-1 text-sm leading-6 text-mute">{copy}</p>
+              ["Tecnología", "Conoce qué se usa, cómo se aplica y qué implica para ti.", "M3 8h10M4 5l-1 3 1 3m8-6 1 3-1 3"],
+              ["Acompañamiento", "Resuelve tus dudas sobre el tratamiento y sus cuidados.", "M3 7a5 5 0 1 1 4 5l-3 1 1-2"],
+              ["Plan a tu medida", "Explora opciones según tu piel, tu cuerpo y tus objetivos.", "M8 2v12M2 8h12M4 4l8 8m0-8-8 8"],
+              ["Claridad para decidir", "Habla del costo y los tiempos antes de elegir un plan.", "m3 8 3 3 7-7"],
+            ].map(([title, copy, path]) => (
+              <li key={title} className="expect-card" data-reveal data-pointer>
+                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d={path} /></svg>
+                <h3>{title}</h3>
+                <p>{copy}</p>
               </li>
             ))}
           </ul>
         </div>
         <div className="mx-auto flex max-w-6xl flex-wrap gap-x-6 gap-y-2 px-4 pb-12 text-sm">
-          <Link href="/recorridos/caida-del-cabello" className="hero-secondary">
-            Me preocupa la caída del cabello
+          <Link href="/lp/caida-del-cabello" className="hair-entry" data-pointer>
+            <span><strong>Me preocupa la caída del cabello</strong><span>Explora la valoración capilar y prueba el filtro con tu foto.</span></span>
+            <Arrow />
           </Link>
           <Link href="/recorridos/abdomen" className="hero-secondary">
             Quiero mejorar mi abdomen
@@ -165,7 +167,7 @@ export default function HomePage() {
                 const treatment = getTreatment(guide.slug);
                 return (
                 <li key={guide.slug}>
-                  <Link href={`/tratamientos/${guide.slug}/guia`} className="guide-card glass">
+                  <Link href={`/tratamientos/${guide.slug}/guia`} className="guide-card glass" data-reveal data-pointer>
                     {treatment?.image ? (
                       // eslint-disable-next-line @next/next/no-img-element
                       <img src={treatment.image} alt="" />

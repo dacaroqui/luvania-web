@@ -1,10 +1,9 @@
+import { BookButton } from "@/components/book-button";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { OfferCard, isPublishedOffer } from "@/components/offer-card";
 import { getGuide } from "@/data/guides";
 import type { Landing } from "@/data/landings/types";
-import { extraNeedsFor } from "@/data/landings";
 import { offerIsExpired, offers } from "@/data/offers";
-import { resolveSedes } from "@/data/sedes";
 import { especialidadBySlug } from "@/data/taxonomy";
 import type { Treatment } from "@/data/types";
 import { publicText } from "@/lib/public-copy";
@@ -12,8 +11,6 @@ import { clinicalVisible } from "@/lib/review";
 import Link from "next/link";
 import { DoctorPlaceholder } from "./photo-placeholders";
 import { ResultadosReales } from "./resultados";
-import { SimulationPanel } from "./simulation-panel";
-import { ValuationWizard } from "./valuation-wizard";
 
 function patientCopy(value: string | undefined) {
   return publicText(value)
@@ -21,6 +18,25 @@ function patientCopy(value: string | undefined) {
     .map((part) => part.trim())
     .filter((part) => part && !/enlace |hair-loss|hair loss|nombre visible|menú viejo|menú antiguo/i.test(part))
     .join(" ");
+}
+
+function ShortCopy({ text }: { text: string }) {
+  const copy = text.replace(/\s+/g, " ").trim();
+  const words = copy.split(" ");
+  if (words.length <= 26) return <p>{text}</p>;
+  const preview = words.slice(0, 23).join(" ");
+  const end = Array.from(preview.matchAll(/[.!?](?=\s|$)/g)).at(-1)?.index;
+  const split = end !== undefined && end >= 45 ? end + 1 : preview.length;
+
+  return (
+    <>
+      <p>{copy.slice(0, split)}{split === preview.length && !/[.!?]$/.test(preview) ? "…" : ""}</p>
+      <details className="lp-hair-more">
+        <summary>Leer más</summary>
+        <p>{copy.slice(split).trim()}</p>
+      </details>
+    </>
+  );
 }
 
 function Mark({ path }: { path: string }) {
@@ -67,11 +83,11 @@ export function LandingView({
     return related.has(offer.treatmentSlug);
   });
   const especialidad = treatment ? especialidadBySlug(treatment.especialidad) : undefined;
-  const sedes = resolveSedes();
+  const booking = { tratamiento: treatment?.name, tratamientoId: treatment?.slug, necesidad: landing.needId };
   const crumbs = treatment
     ? [
         { name: "Tratamientos", href: "/tratamientos" },
-        { name: landing.heroTitle, href: `/lp/${landing.slug}` },
+        { name: landing.simulation ? "Caída del cabello" : landing.heroTitle, href: `/lp/${landing.slug}` },
       ]
     : [
         { name: "Promociones", href: "/promociones" },
@@ -92,27 +108,29 @@ export function LandingView({
       : null,
   ].filter((item): item is { href: string; title: string; text: string; path: string } => Boolean(item));
   const portrait = treatment?.image;
+  const capillaryHero = landing.slug === "caida-del-cabello";
+  const showPersonalSimulation = landing.simulation && landing.showPersonalSimulation !== false;
 
   return (
-    <main className="ficha lp-ficha">
-      <section className="ficha-hero" data-tone="cream">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img className="ficha-hero-petal" src="/stock/petalo-b.webp" alt="" />
+    <main className={landing.simulation ? "ficha lp-ficha lp-capilar" : "ficha lp-ficha"}>
+      <section className={capillaryHero ? "ficha-hero lp-capillary-hero" : "ficha-hero"} data-tone="cream">
+        {!capillaryHero ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img className="ficha-hero-petal" src="/stock/petalo-b.webp" alt="" />
+        ) : null}
         <div className="ficha-hero-grid">
           <div className="ficha-hero-copy">
             <Breadcrumbs items={crumbs} />
             <p className="ficha-kicker">{landing.heroKicker || especialidad?.name || "Valoración"}</p>
-            <h1 className="display">{landing.heroTitle}</h1>
+            <h1 className="display">
+              {capillaryHero ? landing.heroTitle.replace(" pierde", "\npierde") : landing.heroTitle}
+            </h1>
             {intro ? <p className="ficha-summary">{intro}</p> : null}
             <div className="ficha-hero-actions">
-              <a className="btn-coral" href="#valoracion">
-                Iniciar valoración
-              </a>
-              {landing.simulation ? (
-                <a className="btn-line" href="#como-te-verias">
-                  ¿Cómo te verías?
-                </a>
-              ) : null}
+              <BookButton {...booking}>
+                {landing.simulation ? "Agendar valoración" : "Iniciar valoración"}
+              </BookButton>
+              {showPersonalSimulation ? <a className="btn-line" href="#como-te-verias">Probar simulación</a> : null}
             </div>
           </div>
           <div className="ficha-hero-visual">
@@ -129,17 +147,45 @@ export function LandingView({
                 </>
               )}
             </div>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img className="ficha-portrait-petal" src="/stock/petalo-a.webp" alt="" />
-            {preview && landing.showDoctor ? <DoctorPlaceholder /> : null}
+            {!capillaryHero ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img className="ficha-portrait-petal" src="/stock/petalo-a.webp" alt="" />
+            ) : null}
+            {preview && landing.showDoctor && !landing.simulation ? <DoctorPlaceholder /> : null}
           </div>
         </div>
       </section>
 
-      {preview && landing.showResults ? <ResultadosReales /> : null}
-      {landing.simulation ? <SimulationPanel enabled={preview} /> : null}
+      {landing.simulation || (preview && landing.showResults) ? (
+        <ResultadosReales withMirror={landing.simulation} showPersonalSimulation={showPersonalSimulation} />
+      ) : null}
 
-      {treatment && cards.length ? (
+      {landing.simulation && treatment ? (
+        <section className="lp-hair-overview" aria-label="Conoce el tratamiento capilar">
+          <div className="lp-hair-facts">
+            {queEs ? <section id="que-es"><h2 className="display">Qué es</h2><ShortCopy text={queEs} /></section> : null}
+            {beneficios.length ? (
+              <section id="beneficios">
+                <h2 className="display">Beneficios</h2>
+                <ul className="lp-benefits">{beneficios.slice(0, 2).map((item) => <li key={item}><ShortCopy text={item} /></li>)}</ul>
+                {beneficios.length > 2 ? <details className="lp-hair-more"><summary>Más beneficios</summary><ul className="lp-benefits">{beneficios.slice(2).map((item) => <li key={item}>{item}</li>)}</ul></details> : null}
+              </section>
+            ) : null}
+            {paraQuien ? (
+              <section id="para-quien">
+                <h2 className="display">Para quién</h2>
+                <ShortCopy text={paraQuien} />
+                {duracion ? <details className="lp-hair-more"><summary>Duración</summary><p>{duracion}</p></details> : null}
+              </section>
+            ) : null}
+          </div>
+          <div className="lp-hair-book">
+            <BookButton {...booking}>Agendar valoración</BookButton>
+          </div>
+        </section>
+      ) : null}
+
+      {!landing.simulation && treatment && cards.length ? (
         <section className="lp-split" aria-labelledby="conoce">
           <div className="lp-split-copy">
             <h2 id="conoce" className="display">
@@ -150,7 +196,7 @@ export function LandingView({
           <ul className="lp-know">
             {cards.map((card) => (
               <li key={card.href}>
-                <a className="lp-know-card glass-card" href={card.href}>
+                <a className="lp-know-card glass-card" data-reveal data-pointer href={card.href}>
                   <Mark path={card.path} />
                   <span>
                     <strong>{card.title}</strong>
@@ -163,9 +209,9 @@ export function LandingView({
         </section>
       ) : null}
 
-      {treatment && (queEs || beneficios.length || paraQuien || riesgos || faqs.length) ? (
+      {treatment && (landing.simulation || queEs || beneficios.length || paraQuien || riesgos || faqs.length) ? (
         <div className="lp-detail">
-          {queEs ? (
+          {!landing.simulation && queEs ? (
             <section id="que-es" className="ficha-block ficha-que">
               <div>
                 <h2 className="display">Qué es</h2>
@@ -173,7 +219,7 @@ export function LandingView({
               </div>
             </section>
           ) : null}
-          {beneficios.length ? (
+          {!landing.simulation && beneficios.length ? (
             <section id="beneficios" className="ficha-block ficha-card">
               <h2 className="display">Beneficios</h2>
               <ul className="lp-benefits">
@@ -183,14 +229,21 @@ export function LandingView({
               </ul>
             </section>
           ) : null}
-          {paraQuien ? (
+          {!landing.simulation && paraQuien ? (
             <section className="ficha-block ficha-card-soft">
               <h2 className="display">Para quién</h2>
               <p>{paraQuien}</p>
               {duracion ? <p>{duracion}</p> : null}
             </section>
           ) : null}
-          {riesgos ? (
+          {riesgos && landing.simulation ? (
+            <details id="riesgos" className="lp-hair-disclosure">
+              <summary>Riesgos y contraindicaciones</summary>
+              {guide?.medicalReview === "pendiente" ? <p className="ficha-review-note">Contenido en revisión médica</p> : null}
+              <p>{riesgos}</p>
+              <Link href={`/tratamientos/${treatment.slug}/guia`}>Leer la guía</Link>
+            </details>
+          ) : riesgos ? (
             <section id="riesgos" className="ficha-block ficha-card">
               {guide?.medicalReview === "pendiente" ? <p className="ficha-review-note">Contenido en revisión médica</p> : null}
               <h2 className="display">Riesgos y contraindicaciones</h2>
@@ -233,31 +286,17 @@ export function LandingView({
         </section>
       ) : null}
 
-      <section className="lp-next">
+      {!landing.simulation ? <section className="lp-next" data-reveal data-pointer>
         <div>
           <Mark path="M7 4v2M17 4v2M5 8h14v11H5V8Zm0 4h14" />
           <h2 className="display">¿Lista para dar el siguiente paso?</h2>
           <p>Agenda tu valoración personalizada en la sede de tu preferencia.</p>
         </div>
-        <a className="btn-coral" href="#valoracion">
-          Agenda tu valoración
-        </a>
-      </section>
-
-      <ValuationWizard
-        preview={preview}
-        needId={landing.needId}
-        path={`/lp/${landing.slug}`}
-        questions={landing.questions}
-        extras={extraNeedsFor(landing.needId)}
-        sedes={sedes.map((sede) => ({ slug: sede.slug, name: sede.name }))}
-        origin={treatment ? { id: treatment.slug, name: treatment.name } : null}
-      />
+        <BookButton {...booking}>Agenda tu valoración</BookButton>
+      </section> : null}
 
       <div className="ficha-mobile-bar">
-        <a className="btn-coral" href="#valoracion">
-          Iniciar valoración
-        </a>
+        <BookButton {...booking}>Iniciar valoración</BookButton>
       </div>
     </main>
   );

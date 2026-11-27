@@ -1,40 +1,30 @@
 "use client";
 
+import { catalog } from "@/data/catalog";
 import caidaLanding from "@/data/landings/caida-del-cabello";
+import { needById } from "@/data/taxonomy";
 import type { ExtraNeed, LandingQuestion } from "@/data/landings/types";
 import { needPages } from "@/lib/hubs";
-import { createMockAgenda, type AgendaSlot, type MeetStatus } from "@/lib/agenda/provider";
+import { createMockAgenda, type AgendaSlot } from "@/lib/agenda/provider";
 import { agendaLink } from "@/lib/whatsapp";
 import { submitCrmLead, type CrmAnswer } from "@/lib/crm-lead";
-import { blockedPayment } from "@/lib/payment/provider";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { CloseButton } from "../close-button";
 
 type Answer = { opciones: string[]; texto: string };
 type Modality = "presencial" | "virtual" | "hibrida";
-type VirtualMode = "ahora" | "agendar";
 type Sede = { slug: string; name: string; whatsapp?: string };
 
 const empty = (): Answer => ({ opciones: [], texto: "" });
 
 const ANTES: LandingQuestion = {
   id: "antes",
-  prompt: "¿Has probado algún tratamiento antes?",
+  prompt: "¿Has probado algo antes?",
   choices: [
     { id: "primera", label: "No, sería mi primera vez" },
     { id: "cabina", label: "Sí, tratamientos en cabina" },
     { id: "productos", label: "Sí, productos o suplementos" },
-  ],
-};
-
-const RESULTADO: LandingQuestion = {
-  id: "resultado",
-  prompt: "¿Qué resultado esperas conseguir?",
-  choices: [
-    { id: "piel", label: "Mejorar el aspecto de mi piel" },
-    { id: "comoda", label: "Sentirme más cómoda conmigo" },
-    { id: "orientacion", label: "Recibir orientación profesional" },
   ],
 };
 
@@ -49,12 +39,37 @@ const ZONA: LandingQuestion = {
   ],
 };
 
+const valuationZones: Partial<Record<string, string>> = {
+  rostro: "Rostro",
+  cuello: "Rostro",
+  capilar: "Cabello",
+  abdomen: "Cuerpo",
+  piernas: "Cuerpo",
+  brazos: "Cuerpo",
+  gluteos: "Cuerpo",
+  intima: "Cuerpo",
+  manos: "Cuerpo",
+  corporal: "Cuerpo",
+};
+
 const STEPS = [
-  { title: "Cuéntanos sobre ti", subtitle: "Empecemos por lo que te gustaría mejorar.", kicker: "Tu experiencia Luvania", line: "Tu belleza comienza contigo.", photo: "/stock/hero.webp" },
-  { title: "Conozcamos tus preferencias", subtitle: "Así evitamos repetir un camino que no te sirvió.", kicker: "Tus preferencias", line: "A tu ritmo.", photo: "/stock/faciales.webp" },
-  { title: "Tu valoración Luvania", subtitle: "La sede y la modalidad se confirman con el equipo.", kicker: "La cita", line: "En sede o en línea.", photo: "/stock/experiencia.webp" },
-  { title: "Ya casi terminamos", subtitle: "Revisa el resumen y deja cómo contactarte.", kicker: "El cierre", line: "Un paso más.", photo: "/stock/wellness.webp" },
+  { title: "¿Qué quieres mejorar?", photo: "/stock/hero.webp" },
+  { title: "Tu experiencia", photo: "/stock/faciales.webp" },
+  { title: "¿Cómo prefieres tu valoración?", photo: "/stock/experiencia.webp" },
+  { title: "¿Cómo te contactamos?", photo: "/stock/wellness.webp" },
 ];
+
+const capillaryModalityPhotos = {
+  presencial: { src: "/images/valoracion-capilar-ilustrativa.webp", description: "Visita una sede para la prevaloración." },
+  virtual: { src: "/images/prevaloracion-capilar-virtual.webp", description: "Conversa con el equipo por videollamada." },
+  hibrida: { src: "/images/prevaloracion-capilar-hibrida.webp", description: "Combina una visita a la sede con una videollamada." },
+};
+
+const modalities = [
+  { id: "presencial", title: "Presencial", description: "En una sede", icon: "M4 20V7l8-4 8 4v13M3 20h18M10 20v-5h4v5M8 10h1m6 0h1" },
+  { id: "virtual", title: "Virtual", description: "Por videollamada", icon: "M4 7h11v10H4zM15 10l5-3v10l-5-3" },
+  { id: "hibrida", title: "Híbrida", description: "En sede y por video", icon: "M4 8h15m-4-4 4 4-4 4M20 16H5m4-4-4 4 4 4" },
+] as const;
 
 export function ValuationWizard({
   preview,
@@ -84,24 +99,32 @@ export function ValuationWizard({
   onClose?: () => void;
 }) {
   const agenda = useMemo(() => createMockAgenda(preview), [preview]);
+  const scrollArea = useRef<HTMLDivElement>(null);
   const [step, setStep] = useState(0);
+  const [appointmentDetails, setAppointmentDetails] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [patient, setPatient] = useState({ nombre: "", celular: "", email: "" });
   const [consent, setConsent] = useState(false);
   const [website, setWebsite] = useState("");
-  const [answers, setAnswers] = useState<Record<string, Answer>>({});
-  const [picked, setPicked] = useState<string[]>(() => (needPages.some((need) => need.slug === needId) ? [needId] : []));
+  const primaryNeed = needPages.find((need) => need.slug === needId) ?? needById(needId);
+  const [answers, setAnswers] = useState<Record<string, Answer>>(() => {
+    const zone = catalog.find((item) => item.slug === origin?.id)?.zones[0];
+    const initialZone = zone ? valuationZones[zone] : undefined;
+    return initialZone ? { [ZONA.id]: { opciones: [initialZone], texto: "" } } : {};
+  });
+  const [picked, setPicked] = useState<string[]>(() => primaryNeed ? [needId] : []);
   const [otra, setOtra] = useState("");
-  const [extraAnswers, setExtraAnswers] = useState<Record<string, Record<string, Answer>>>({});
   const [modality, setModality] = useState<Modality | null>(null);
-  const [virtualMode, setVirtualMode] = useState<VirtualMode | null>(null);
   const [sede, setSede] = useState<string | null>(initialSede);
   const [slots, setSlots] = useState<AgendaSlot[]>([]);
   const [day, setDay] = useState<string | null>(null);
   const [slot, setSlot] = useState<AgendaSlot | null>(null);
-  const [meet, setMeet] = useState<MeetStatus | null>(null);
+  const [meetState, setMeetState] = useState<"loading" | "ready" | "unavailable">("loading");
+  const [meetUrl, setMeetUrl] = useState("");
+  const [meetPending, setMeetPending] = useState(false);
+  const meetRequest = useRef<{ start: string; id: string } | null>(null);
+  const bookingInFlight = useRef(false);
   const [reservationId, setReservationId] = useState<string | null>(null);
-  const [upsell, setUpsell] = useState<boolean | null>(null);
   const [phase, setPhase] = useState<"form" | "recibida">("form");
   const [note, setNote] = useState("");
   const [pending, setPending] = useState(false);
@@ -114,20 +137,33 @@ export function ValuationWizard({
 
   useEffect(() => {
     if (step !== 2 || !modality) return;
-    if (modality === "virtual" && virtualMode === "ahora") {
-      setSlots([]);
-      return;
-    }
     let live = true;
-    agenda.getSlots({ modality, sede, days: 5 }).then((next) => {
+    const controller = new AbortController();
+    function showSlots(next: AgendaSlot[]) {
       if (!live) return;
       setSlots(next);
-      setDay((current) => current ?? next[0]?.day ?? null);
-    });
+      setDay((current) => next.some((item) => item.day === current) ? current : next[0]?.day ?? null);
+      setSlot((current) => next.find((item) => item.id === current?.id) ?? null);
+    }
+    if (modality === "virtual") {
+      setMeetState("loading");
+      void fetch("/api/agenda/meet", { signal: controller.signal }).then(async (response) => {
+        if (!response.ok) throw new Error("agenda");
+        const data = await response.json() as { enabled: boolean; slots: AgendaSlot[] };
+        if (!live) return;
+        setMeetState(data.enabled ? "ready" : "unavailable");
+        showSlots(data.slots);
+      }).catch(() => {
+        if (live) { setMeetState("unavailable"); showSlots([]); }
+      });
+    } else {
+      void agenda.getSlots({ modality, sede, days: 5 }).then(showSlots);
+    }
     return () => {
       live = false;
+      controller.abort();
     };
-  }, [agenda, modality, virtualMode, sede, step]);
+  }, [agenda, modality, sede, step]);
 
   const provided = questions.length ? questions : caidaLanding.questions;
   const bank = [...provided];
@@ -150,62 +186,50 @@ export function ValuationWizard({
   };
 
   const needsSede = modality === "presencial" || modality === "hibrida";
-  const wantsSlot = modality !== null && !(modality === "virtual" && virtualMode === "ahora");
+  const wantsSlot = modality !== null;
   const hairDetail = picked.includes("caida-cabello") || answerOf("zona-general").opciones.includes("Cabello");
-  const tried = answerOf("antes").opciones[0];
-  const showTriedDetail = tried && tried !== "No, sería mi primera vez";
   const days = [...new Set(slots.map((item) => item.day))];
-  const cards = [
-    ...needPages.filter((need) => need.slug === needId || extras.some((item) => item.id === need.slug)),
-  ];
+  const guidedHair = needId === "caida-cabello" && picked.includes(needId);
+  const cards = needPages.filter((need) => need.slug === needId || extras.some((item) => item.id === need.slug));
+  if (primaryNeed && !cards.some((need) => need.slug === needId)) {
+    cards.unshift({ slug: needId, name: primaryNeed.name, text: "" });
+  }
 
   function validate(index: number) {
     const next: Record<string, string> = {};
     if (index === 0) {
-      if (picked.length === 0 && !otra.trim()) next.mejorar = "Elige al menos una necesidad.";
+      if (!origin && picked.length === 0 && !otra.trim()) next.mejorar = "Elige al menos una necesidad.";
       if (picked.includes("otra") && !otra.trim()) next.otra = "Cuéntanos esa otra necesidad.";
-      if (!answerOf("zona-general").opciones.length) next["zona-general"] = "Elige una zona.";
+      if (!guidedHair && !answerOf("zona-general").opciones.length) next[ZONA.id] = "Elige una zona.";
       if (hairDetail && byId("zona") && !answerOf("zona").opciones.length) next.zona = "Elige la zona del cuero.";
       if (!answerOf("desde-cuando").opciones.length) next["desde-cuando"] = "Elige hace cuánto lo notas.";
     }
     if (index === 1) {
       if (!answerOf("antes").opciones.length) next.antes = "Elige una opción.";
-      if (showTriedDetail && byId("probado") && !answerOf("probado").opciones.length && !answerOf("probado").texto.trim()) {
-        next.probado = "Cuéntanos qué probaste.";
-      }
-      if (!answerOf("resultado").opciones.length) next.resultado = "Elige el cambio que buscas.";
-      if (picked.includes("caida-cabello") && byId("satisfecha") && !answerOf("satisfecha").opciones.length) {
-        next.satisfecha = "Elige una opción.";
-      }
       if (!answerOf("cuando").opciones.length) next.cuando = "Elige un momento.";
-      if (byId("decision") && !answerOf("decision").opciones.length) next.decision = "Elige qué te ayudaría a decidir.";
     }
     if (index === 2) {
       if (!modality) next.modalidad = "Elige cómo quieres la valoración.";
-      if (modality === "virtual" && !virtualMode) next.virtual = "Elige si es ahora o con hora.";
+      if (modality === "virtual" && (meetState !== "ready" || !slot)) next.horario = "Elige un horario disponible para continuar.";
       if (needsSede && !sede) next.sede = "Elige una sede.";
-      if (preview && wantsSlot && slots.length > 0 && !slot) next.horario = "Elige un horario de ejemplo, o espera la confirmación.";
     }
     if (index === 3) {
-      for (const id of picked) {
-        const need = extras.find((item) => item.id === id);
-        if (!need) continue;
-        const pendingQuestion = need.questions.find((question) => {
-          const value = extraAnswers[id]?.[question.id] ?? empty();
-          return value.opciones.length === 0 && !value.texto.trim();
-        });
-        if (pendingQuestion) next[`extra-${id}`] = "Responde esta necesidad o desmárcala en el primer paso.";
-      }
-      if (preview && upsell === null) next.upsell = "Dinos si quieres ver la oferta después.";
       if (patient.nombre.trim().length < 2) next.nombre = "Escribe tu nombre.";
       if (patient.celular.replace(/\D/g, "").length < 7) next.celular = "Escribe un celular de al menos 7 dígitos.";
+      if (modality === "virtual" && patient.email.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(patient.email.trim())) next.email = "Revisa el correo o déjalo vacío.";
       if (!consent) next.consentimiento = "Hace falta la autorización para contactarte.";
     }
     setErrors(next);
-    return Object.values(next).every((value) => !value);
+    const hasErrors = Object.keys(next).length > 0;
+    if (hasErrors) {
+      requestAnimationFrame(() => scrollArea.current?.querySelector(".vx-error")?.scrollIntoView({ block: "nearest" }));
+    }
+    return !hasErrors;
   }
 
   function go(nextStep: number) {
+    if (scrollArea.current) scrollArea.current.scrollTop = 0;
+    setAppointmentDetails(false);
     setStep(nextStep);
     setErrors({});
   }
@@ -215,8 +239,49 @@ export function ValuationWizard({
     return { id: question.id, pregunta: question.prompt, opciones: current.opciones, texto: current.texto.trim() };
   }
 
+  async function finishMeet(selected: AgendaSlot) {
+    if (bookingInFlight.current) return;
+    bookingInFlight.current = true;
+    setPending(true);
+    setNote("");
+    const previous = meetRequest.current;
+    const id = previous?.start === selected.start ? previous.id : crypto.randomUUID();
+    meetRequest.current = { start: selected.start, id };
+    try {
+      const response = await fetch("/api/agenda/meet", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          requestId: id, start: selected.start, name: patient.nombre.trim(), phone: patient.celular.trim(),
+          email: patient.email.trim() || undefined, consent, website,
+        }),
+      });
+      const result = await response.json() as { status?: string; url?: string; error?: string };
+      if (response.ok && result.status === "confirmed" && result.url) {
+        setMeetUrl(result.url);
+        setMeetPending(false);
+        if (scrollArea.current) scrollArea.current.scrollTop = 0;
+        setPhase("recibida");
+      } else if (response.status === 202) {
+        setMeetPending(true);
+        setNote("Estamos preparando tu enlace de Meet. Pulsa «Consultar enlace» en unos segundos.");
+      } else {
+        setNote(result.error || "No pudimos confirmar la cita. Intenta de nuevo.");
+      }
+    } catch {
+      setNote("No pudimos comprobar la reserva. Intenta de nuevo con el mismo horario.");
+    } finally {
+      bookingInFlight.current = false;
+      setPending(false);
+    }
+  }
+
   async function finish() {
-    if (!validate(3) || !modality) return;
+    if (pending || !validate(3) || !modality) return;
+    if (modality === "virtual") {
+      if (slot) await finishMeet(slot);
+      return;
+    }
     setPending(true);
     setNote("");
     let reserved = reservationId;
@@ -226,14 +291,12 @@ export function ValuationWizard({
         const result = await agenda.reserve(slot, channel);
         reserved = result.reservationId;
         setReservationId(result.reservationId);
-        setMeet(result.meet);
       } catch {
         reserved = null;
       }
     }
-    const shared = [ZONA, ANTES, RESULTADO, ...bank].filter((question, index, list) => list.findIndex((item) => item.id === question.id) === index);
+    const shared = [ZONA, ANTES, ...bank].filter((question, index, list) => list.findIndex((item) => item.id === question.id) === index);
     const confirmed = Boolean(reserved && !reserved.startsWith("ejemplo-"));
-    await blockedPayment.createIntent({ concept: "valoracion" });
     const crm = submitCrmLead({
       paciente: { nombre: patient.nombre.trim(), celular: patient.celular.trim(), email: patient.email.trim() || null },
       fuente: { utm_source: utm.source, utm_campaign: utm.campaign, path },
@@ -253,13 +316,13 @@ export function ValuationWizard({
           if (id === needId) return [];
           const need = extras.find((item) => item.id === id);
           if (!need) return [];
-          return [{ id, principal: false, respuestas: need.questions.map((question) => pack(question, extraAnswers[id]?.[question.id])) }];
+          return [{ id, principal: false, respuestas: [] }];
         }),
       ],
-      modalidad: { tipo: modality, virtual: modality === "virtual" ? virtualMode : null },
+      modalidad: { tipo: modality, virtual: null },
       slot: slot && reserved ? { id: slot.id, start: slot.start, end: slot.end, reservationId: reserved } : null,
       sede: needsSede ? sede : null,
-      upsell: upsell === null ? null : { accepted: upsell, pay: null, receive: null },
+      upsell: null,
       pago: { status: "no-disponible", amount: null, currency: "COP" },
     });
     const chosen = sedes.find((item) => item.slug === sede);
@@ -307,28 +370,41 @@ export function ValuationWizard({
   const summary = [
     ["Necesidad", cards.filter((item) => picked.includes(item.slug)).map((item) => item.name).concat(otra.trim() ? [otra.trim()] : []).join(", ")],
     ["Zona", answerOf("zona-general").opciones.join(", ")],
-    ["Preferencias", [answerOf("antes").opciones[0], answerOf("resultado").opciones[0], answerOf("cuando").opciones[0]].filter(Boolean).join(" · ")],
+    ["Preferencias", [answerOf("antes").opciones[0], answerOf("cuando").opciones[0]].filter(Boolean).join(" · ")],
     ["Sede", sedes.find((item) => item.slug === sede)?.name ?? ""],
-    ["Modalidad", modality ? `${modality}${virtualMode ? ` · ${virtualMode}` : ""}` : ""],
-    ["Origen", origin ? `${origin.name} (${origin.id})` : ""],
-    ["Horario", slot ? `${slot.dayLabel} ${slot.label}${preview ? " · ejemplo, sin confirmar" : ""}` : preview ? "" : "Te confirmaremos la disponibilidad"],
+    ["Modalidad", modalities.find((item) => item.id === modality)?.title ?? ""],
+    ["Tratamiento", origin?.name ?? ""],
+    ["Horario", slot ? `${slot.dayLabel} ${slot.label}${preview && modality !== "virtual" ? " · ejemplo, sin confirmar" : " · hora Colombia"}` : preview ? "" : "Te confirmaremos la disponibilidad"],
   ].filter(([, value]) => value);
 
+  const isCapillaryDialog = frame === "dialog" && path.replace(/\/$/, "") === `/lp/${caidaLanding.slug}`;
+
   const shell = (
-    <div className={`vx ${frame === "dialog" ? "is-dialog" : ""}`}>
-      <aside className="vx-side">
-        {/* provisional: stock */}
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={STEPS[step].photo} alt="" />
-        <div>
-          <p>{STEPS[step].kicker}</p>
-          <h2 className="display">{STEPS[step].line}</h2>
-          <span className="lp-badge">Foto provisional</span>
-        </div>
-      </aside>
+    <div className={`vx ${frame === "dialog" ? "is-dialog" : ""}${isCapillaryDialog ? " vx-capillary-dialog" : ""}`}>
+      {isCapillaryDialog ? (
+        <aside className="vx-clinician" aria-label="Quién te atiende">
+          <div className="vx-clinician-photo">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/images/valoracion-capilar-ilustrativa.webp" width={720} height={1080}
+              alt="Una profesional examina el cuero cabelludo de una paciente" decoding="async" />
+          </div>
+          <div className="vx-clinician-copy">
+            <p>Valoración capilar</p>
+            <strong className="display">Equipo Luvania</strong>
+            <span>Profesional por confirmar</span>
+            <small>Imagen ilustrativa</small>
+          </div>
+        </aside>
+      ) : (
+        <aside className="vx-side">
+          {/* provisional: stock */}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={STEPS[step].photo} alt="" />
+        </aside>
+      )}
       <div className="vx-main">
         <header className="vx-top">
-          <p>Valoración personalizada</p>
+          <p>{isCapillaryDialog ? "Prevaloración capilar" : "Valoración personalizada"}</p>
           <div className="vx-top-end">
             <p>0{step + 1} / 04</p>
             {frame === "dialog" && onClose ? <CloseButton onClick={onClose} /> : null}
@@ -339,15 +415,10 @@ export function ValuationWizard({
             <span key={item.title} className={index <= step ? "is-done" : ""} />
           ))}
         </div>
-        <div className="vx-heading vx-step" key={phase === "recibida" ? "recibida" : `titulo-${step}`}>
-          <h3 className="display">{phase === "recibida" ? "Solicitud recibida" : STEPS[step].title}</h3>
-          <p className="vx-sub">
-            {phase === "recibida"
-              ? "El equipo te contacta para confirmar la disponibilidad. Esta pantalla no es una cita confirmada."
-              : STEPS[step].subtitle}
-          </p>
+        <div className="vx-heading">
+          <h3 className="display">{phase === "recibida" ? (meetUrl ? "Valoración confirmada" : "Solicitud recibida") : step === 2 && appointmentDetails ? "Elige los detalles de tu cita" : STEPS[step].title}</h3>
         </div>
-        <div className="vx-scroll thin-scroll">
+        <div className={frame === "dialog" ? "vx-scroll" : "vx-scroll thin-scroll"} ref={scrollArea}>
           {phase === "recibida" ? (
             <div className="vx-step">
               <ul className="vx-summary">
@@ -358,21 +429,28 @@ export function ValuationWizard({
                   </li>
                 ))}
               </ul>
-              <p>{note || "Siguiente paso: te escribimos al celular que dejaste para acordar la sede y la hora."}</p>
+              {meetUrl ? (
+                <a className="btn-coral" href={meetUrl} target="_blank" rel="noreferrer">Entrar a Google Meet</a>
+              ) : <p>{note || "Siguiente paso: te escribimos al celular que dejaste para acordar la sede y la hora."}</p>}
             </div>
           ) : (
             <div className="vx-step" key={step}>
-              {step === 0 ? <StepOne /> : null}
-              {step === 1 ? <StepTwo /> : null}
-              {step === 2 ? <StepThree /> : null}
-              {step === 3 ? <StepFour /> : null}
+              {step === 0 ? renderStepOne() : null}
+              {step === 1 ? renderStepTwo() : null}
+              {step === 2 ? renderStepThree() : null}
+              {step === 3 ? renderStepFour() : null}
             </div>
           )}
         </div>
         {phase === "form" ? (
           <div className="vx-nav">
             {step > 0 ? (
-              <button type="button" className="btn-line" onClick={() => go(step - 1)}>
+              <button type="button" className="btn-line" disabled={pending || meetPending} onClick={() => {
+                if (step === 2 && appointmentDetails) {
+                  setAppointmentDetails(false);
+                  setErrors({});
+                } else go(step - 1);
+              }}>
                 Volver
               </button>
             ) : (
@@ -383,6 +461,15 @@ export function ValuationWizard({
                 type="button"
                 className="btn-coral"
                 onClick={() => {
+                  if (step === 2 && !appointmentDetails) {
+                    if (!modality) {
+                      setErrors({ modalidad: "Elige cómo quieres la valoración." });
+                      return;
+                    }
+                    setErrors({});
+                    setAppointmentDetails(true);
+                    return;
+                  }
                   if (validate(step)) go(step + 1);
                 }}
               >
@@ -390,7 +477,7 @@ export function ValuationWizard({
               </button>
             ) : (
               <button type="button" className="btn-coral" disabled={pending} onClick={finish}>
-                {pending ? "Enviando…" : "Enviar solicitud"}
+                {pending ? "Confirmando…" : meetPending ? "Consultar enlace" : modality === "virtual" ? "Confirmar valoración" : "Enviar solicitud"}
               </button>
             )}
           </div>
@@ -399,7 +486,7 @@ export function ValuationWizard({
     </div>
   );
 
-  function FieldError({ id }: { id: string }) {
+  function renderFieldError({ id }: { id: string }) {
     if (!errors[id]) return null;
     return (
       <p id={`${id}-error`} className="vx-error" role="alert">
@@ -408,11 +495,17 @@ export function ValuationWizard({
     );
   }
 
-  function StepOne() {
+  function renderStepOne() {
     const desde = byId("desde-cuando");
     const detalle = byId("zona");
+    const guided = guidedHair || Boolean(origin);
     return (
       <>
+        {origin ? (
+          <p className="vx-treatment-choice"><span>Tratamiento seleccionado</span><strong>{origin.name}</strong></p>
+        ) : null}
+        <details className="vx-optional" open={!guided || Boolean(errors.mejorar || errors.otra) || undefined}>
+        <summary>{guided ? "Agregar otra necesidad" : "Elegir necesidades"}</summary>
         <fieldset className="vx-field" aria-describedby={errors.mejorar ? "mejorar-error" : undefined}>
           <legend>¿Qué te gustaría mejorar?</legend>
           <div className="vx-cards">
@@ -442,72 +535,88 @@ export function ValuationWizard({
               <span>Otra necesidad</span>
             </button>
           </div>
-          <FieldError id="mejorar" />
+          {renderFieldError({ id: "mejorar" })}
         </fieldset>
         {picked.includes("otra") ? (
           <label className="vx-field">
             Cuéntanos esa otra necesidad
             <input value={otra} onChange={(event) => setOtra(event.target.value)} />
-            <FieldError id="otra" />
+            {renderFieldError({ id: "otra" })}
           </label>
         ) : null}
-        <OneField question={ZONA} />
-        {hairDetail && detalle ? <ManyField question={detalle} /> : null}
-        {desde ? <OneField question={desde} /> : null}
+        </details>
+        {!guidedHair ? renderOneField({ question: ZONA }) : null}
+        {hairDetail && detalle ? renderManyField({ question: detalle }) : null}
+        {desde ? renderOneField({ question: desde }) : null}
       </>
     );
   }
 
-  function StepTwo() {
-    const probado = byId("probado");
-    const satisfecha = byId("satisfecha");
+  function renderStepTwo() {
     const cuando = byId("cuando");
-    const decision = byId("decision");
     return (
       <>
-        <OneField question={ANTES} />
-        {showTriedDetail && probado ? <ManyField question={probado} /> : null}
-        <OneField question={RESULTADO} />
-        {picked.includes("caida-cabello") && satisfecha ? <ManyField question={satisfecha} /> : null}
-        {cuando ? <OneField question={cuando} /> : null}
-        {decision ? <ManyField question={decision} /> : null}
+        {renderOneField({ question: ANTES, visual: true })}
+        {cuando ? renderOneField({ question: cuando, visual: true }) : null}
       </>
     );
   }
 
-  function StepThree() {
+  function renderStepThree() {
+    if (!appointmentDetails) {
+      return (
+        <>
+          {promo ? <p className="agenda-summary">{promo}</p> : null}
+          <div className="vx-cards vx-modalities" role="group" aria-label="Modalidad">
+            {modalities.map(({ id, title, description, icon }) => (
+              <button key={id} type="button" className={modality === id ? "is-on" : ""} aria-pressed={modality === id}
+                onClick={() => {
+                  if (modality !== id) {
+                    setSlots([]);
+                    setDay(null);
+                    setSlot(null);
+                  }
+                  setModality(id);
+                  setErrors({});
+                }}>
+                {isCapillaryDialog ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={capillaryModalityPhotos[id].src} alt="" decoding="async" />
+                ) : (
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d={icon} /></svg>
+                )}
+                <strong>{title}</strong>
+                <span>{isCapillaryDialog ? capillaryModalityPhotos[id].description : description}</span>
+              </button>
+            ))}
+          </div>
+          {renderFieldError({ id: "modalidad" })}
+        </>
+      );
+    }
     return (
       <>
-        {promo ? <p className="agenda-summary">{promo}</p> : null}
-        <div className="vx-cards" role="group" aria-label="Modalidad">
-          {(
-            [
-              ["presencial", "Presencial", "Siempre queda agendada. Eliges una sede."],
-              ["virtual", "Virtual", "Videollamada ahora, en horario de asesora, o con hora."],
-              ["hibrida", "Híbrida", "Una parte en sede y otra por videollamada."],
-            ] as const
-          ).map(([id, name, text]) => (
-            <button key={id} type="button" className={modality === id ? "is-on" : ""} aria-pressed={modality === id} onClick={() => setModality(id)}>
-              <strong>{name}</strong>
-              <span>{text}</span>
-              {preview ? <em className="lp-badge">Beneficio por definir</em> : null}
-            </button>
-          ))}
-        </div>
-        <FieldError id="modalidad" />
         {modality === "virtual" ? (
-          <div className="vx-chips" role="group" aria-label="Cuándo">
-            <button type="button" className={virtualMode === "ahora" ? "is-on" : ""} disabled={!preview} aria-pressed={virtualMode === "ahora"} onClick={() => setVirtualMode("ahora")}>
-              Atenderme ahora
-            </button>
-            <button type="button" className={virtualMode === "agendar" ? "is-on" : ""} aria-pressed={virtualMode === "agendar"} onClick={() => setVirtualMode("agendar")}>
-              Agendar hora
-            </button>
-          </div>
+          meetState === "loading" ? <p role="status">Consultando horarios…</p> :
+            meetState === "unavailable" ? <p>La agenda virtual aún no está disponible. Puedes volver y elegir otra modalidad.</p> :
+            !days.length ? <p>No hay cupos virtuales disponibles en los próximos días.</p> : (
+              <div className="vx-contact">
+                <label className="vx-field">
+                  Día
+                  <select value={day ?? ""} onChange={(event) => { setDay(event.target.value); setSlot(null); }}>
+                    {days.map((item) => <option key={item} value={item}>{slots.find((option) => option.day === item)?.dayLabel}</option>)}
+                  </select>
+                </label>
+                <label className="vx-field">
+                  Hora de Colombia
+                  <select value={slot?.id ?? ""} onChange={(event) => setSlot(slots.find((item) => item.id === event.target.value && item.day === day) ?? null)}>
+                    <option value="">Elige una hora</option>
+                    {slots.filter((item) => item.day === day).map((item) => <option key={item.id} value={item.id}>{item.label}</option>)}
+                  </select>
+                </label>
+              </div>
+            )
         ) : null}
-        {preview && modality === "virtual" ? <span className="lp-badge">Horario de asesora por definir</span> : null}
-        {preview && modality === "virtual" && virtualMode === "ahora" ? <p>Fila de ejemplo. No hay una asesora conectada.</p> : null}
-        <FieldError id="virtual" />
         {needsSede ? (
           <fieldset className="vx-field">
             <legend>Sede</legend>
@@ -521,13 +630,13 @@ export function ValuationWizard({
                   </button>
                 ))}
             </div>
-            <FieldError id="sede" />
+            {renderFieldError({ id: "sede" })}
           </fieldset>
         ) : null}
-        {modality && wantsSlot ? (
+        {modality !== "virtual" && wantsSlot && (!needsSede || sede) ? (
           preview && slots.length ? (
             <div>
-              <span className="lp-badge">Horarios de ejemplo</span>
+              <span className="lp-badge">Horarios de ejemplo (opcional)</span>
               <div className="vx-chips">
                 {days.map((item) => (
                   <button key={item} type="button" className={day === item ? "is-on" : ""} onClick={() => { setDay(item); setSlot(null); }}>
@@ -547,107 +656,39 @@ export function ValuationWizard({
             <p>Te confirmaremos la disponibilidad. No hay horarios publicados.</p>
           )
         ) : null}
-        <FieldError id="horario" />
-        {modality && modality !== "presencial" ? (
-          <aside className="lp-meet">
-            <p>Google Meet</p>
-            {preview ? <span className="lp-badge">Enlace por definir</span> : null}
-            <p>La videollamada usará Google Meet. El enlace no se crea hasta conectar la cuenta.</p>
-            <button type="button" disabled>
-              {nextMeetLabel(nextMeetSafe(meet))}
-            </button>
-          </aside>
-        ) : null}
+        {renderFieldError({ id: "horario" })}
       </>
     );
   }
 
-  function StepFour() {
+  function renderStepFour() {
     return (
       <>
-        <ul className="vx-summary">
-          {summary.map(([label, value]) => (
-            <li key={label}>
-              <span>{label}</span>
-              <strong>{value}</strong>
-              <button type="button" onClick={() => go(label === "Sede" || label === "Modalidad" || label === "Horario" ? 2 : label === "Preferencias" ? 1 : 0)}>
-                Editar
-              </button>
-            </li>
-          ))}
-        </ul>
-        {picked.map((id) => {
-          const need = extras.find((item) => item.id === id);
-          if (!need || need.questions.length === 0) return null;
-          return (
-            <fieldset key={id} className="vx-field">
-              <legend>¿Tienes alguna otra necesidad? {need.name}</legend>
-              {need.questions.map((question) => {
-                const value = extraAnswers[id]?.[question.id] ?? empty();
-                return (
-                  <div key={question.id}>
-                    <p>{question.prompt}</p>
-                    <div className="vx-chips">
-                      {question.choices.map((choice) => {
-                        const on = value.opciones.includes(choice.label);
-                        return (
-                          <button
-                            key={choice.id}
-                            type="button"
-                            className={on ? "is-on" : ""}
-                            aria-pressed={on}
-                            onClick={() => {
-                              const opciones = on ? value.opciones.filter((item) => item !== choice.label) : [...value.opciones, choice.label];
-                              setExtraAnswers({ ...extraAnswers, [id]: { ...extraAnswers[id], [question.id]: { ...value, opciones } } });
-                            }}
-                          >
-                            {choice.label}
-                          </button>
-                        );
-                      })}
-                    </div>
-                  </div>
-                );
-              })}
-              <FieldError id={`extra-${id}`} />
-            </fieldset>
-          );
-        })}
-        {preview ? (
-          <article className="lp-upsell">
-            <span className="lp-badge">Montos por definir</span>
-            <h4 className="display">Paga un monto por definir y recibe un paquete por definir</h4>
-            <div className="vx-chips">
-              <button type="button" className={upsell ? "is-on" : ""} aria-pressed={upsell === true} onClick={() => setUpsell(true)}>
-                Quiero verla después
-              </button>
-              <button type="button" className={upsell === false ? "is-on" : ""} aria-pressed={upsell === false} onClick={() => setUpsell(false)}>
-                No, gracias
-              </button>
-            </div>
-            <FieldError id="upsell" />
-          </article>
-        ) : (
-          <p>Esta oferta aún no está publicada.</p>
-        )}
-        <p>El pago en línea todavía no tiene pasarela.</p>
-        <button type="button" className="btn-coral" disabled>
-          Pago en línea próximamente
-        </button>
+        <details className="vx-optional">
+          <summary>Revisar mi solicitud</summary>
+          <ul className="vx-summary">
+            {summary.map(([label, value]) => (
+              <li key={label}><span>{label}</span><strong>{value}</strong></li>
+            ))}
+          </ul>
+        </details>
+        <div className="vx-contact">
         <label className="vx-field">
           Nombre completo
           <input autoComplete="name" value={patient.nombre} onChange={(event) => setPatient({ ...patient, nombre: event.target.value })} />
-          <FieldError id="nombre" />
+          {renderFieldError({ id: "nombre" })}
         </label>
         <label className="vx-field">
           Celular
           <input autoComplete="tel" inputMode="tel" value={patient.celular} onChange={(event) => setPatient({ ...patient, celular: event.target.value })} />
-          <FieldError id="celular" />
+          {renderFieldError({ id: "celular" })}
         </label>
         <label className="vx-field">
-          Correo, si quieres
+          Correo (opcional)
           <input autoComplete="email" inputMode="email" value={patient.email} onChange={(event) => setPatient({ ...patient, email: event.target.value })} />
+          {renderFieldError({ id: "email" })}
         </label>
+        </div>
         <label className="vx-check">
           <input type="checkbox" checked={consent} onChange={(event) => setConsent(event.target.checked)} />
           <span>
@@ -655,7 +696,7 @@ export function ValuationWizard({
             <Link href="/politicas/datos-personales">política de datos</Link>.
           </span>
         </label>
-        <FieldError id="consentimiento" />
+        {renderFieldError({ id: "consentimiento" })}
         <label className="absolute -left-[9999px]" aria-hidden="true">
           Sitio web
           <input value={website} tabIndex={-1} autoComplete="off" onChange={(event) => setWebsite(event.target.value)} />
@@ -665,24 +706,26 @@ export function ValuationWizard({
     );
   }
 
-  function OneField({ question }: { question: LandingQuestion }) {
+  function renderOneField({ question, visual = false }: { question: LandingQuestion; visual?: boolean }) {
     const current = answerOf(question.id).opciones[0];
     return (
       <fieldset className="vx-field" aria-describedby={errors[question.id] ? `${question.id}-error` : undefined}>
         <legend>{question.prompt}</legend>
-        <div className="vx-chips">
+        <div className={visual ? "vx-cards vx-visual-options" : "vx-chips"}>
           {question.choices.map((choice) => (
             <button key={choice.id} type="button" className={current === choice.label ? "is-on" : ""} aria-pressed={current === choice.label} onClick={() => chooseOne(question, choice.label)}>
-              {choice.label}
+              {visual ? <ExperienceIcon id={choice.id} /> : null}
+              <span>{visual ? experienceLabels[choice.id] ?? choice.label : choice.label}</span>
+              {visual ? <i aria-hidden="true">{current === choice.label ? "✓" : ""}</i> : null}
             </button>
           ))}
         </div>
-        <FieldError id={question.id} />
+        {renderFieldError({ id: question.id })}
       </fieldset>
     );
   }
 
-  function ManyField({ question }: { question: LandingQuestion }) {
+  function renderManyField({ question }: { question: LandingQuestion }) {
     const current = answerOf(question.id);
     return (
       <fieldset className="vx-field">
@@ -697,11 +740,7 @@ export function ValuationWizard({
             );
           })}
         </div>
-        <label>
-          Si quieres agregar algo
-          <textarea rows={2} value={current.texto} onChange={(event) => setAnswers({ ...answers, [question.id]: { ...current, texto: event.target.value } })} />
-        </label>
-        <FieldError id={question.id} />
+        {renderFieldError({ id: question.id })}
       </fieldset>
     );
   }
@@ -714,12 +753,21 @@ export function ValuationWizard({
   );
 }
 
-function nextMeetSafe(meet: MeetStatus | null) {
-  return meet;
-}
+const experienceLabels: Record<string, string> = {
+  primera: "Es mi primera vez", cabina: "Tratamiento en cabina", productos: "Productos o suplementos",
+  semana: "Lo antes posible", mes: "El próximo mes", tres: "Estoy explorando",
+};
+const experienceIcons: Record<string, string> = {
+  "primera": "M12 3l2.2 6.8L21 12l-6.8 2.2L12 21l-2.2-6.8L3 12l6.8-2.2z",
+  "cabina": "M4 19V7l8-4 8 4v12M3 19h18M10 19v-5h4v5",
+  "productos": "M9 4h6v4l3 3v8H6v-8l3-3zm-3 9h12",
+  "semana": "M13 3L5 14h6l-1 7 9-11h-6z",
+  "mes": "M5 6h14v14H5zM8 4v4m8-4v4M5 10h14",
+  "tres": "M12 3l8 8-8 10-8-10zM9 14l6-5-2 6z"
+};
 
-function nextMeetLabel(meet: MeetStatus | null) {
-  return meet ? "Meet pendiente de conectar" : "Abrir Meet";
+function ExperienceIcon({ id }: { id: string }) {
+  return <svg viewBox="0 0 24 24" aria-hidden="true"><path d={experienceIcons[id] ?? experienceIcons.mes} /></svg>;
 }
 
 function NeedMark({ id }: { id: string }) {

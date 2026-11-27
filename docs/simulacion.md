@@ -1,31 +1,9 @@
-# Simulación «¿Cómo te verías?»
+# Espejo capilar
 
-La sección vive en la landing `/lp/[necesidad]`. La persona acepta un consentimiento, elige cámara o archivo, y el navegador dibuja un antes y una simulación. El archivo no se envía ni se guarda.
+El comparador muestra dos versiones del mismo cuadro. MediaPipe Face Landmarker ubica la zona superior y Selfie Multiclass segmenta cabello, piel y fondo. El filtro toma color de los mechones vecinos y se limita al cabello real y a la piel adyacente dentro de la zona capilar. El estilo Masculino enfatiza entradas y línea frontal. Femenino trabaja sobre la raya y la densidad superior. La persona elige el estilo.
 
-## Interfaz
+El modelo y el runtime se descargan bajo demanda; cámara y fotos se procesan en el navegador. Si el modelo no encuentra cabello, se conserva la imagen sin filtro. El espejo representa un cambio ilustrativo de densidad, no genera una cabellera en zonas sin pelo ni predice resultados clínicos.
 
-`SimulationProvider` en `src/lib/simulation/provider.ts`:
+Referencias de producto: [Banuba Virtual Hairstyle Try-On](https://www.banuba.com/virtual-hairstyle-try-on) para seguimiento y cámara, [Perfect Corp. Hair Style API](https://docs.perfectcorp.com/reference/ai_hairstyle/section/overview/integration-guide) para edición de una foto. La implementación usa el [segmentador de Google](https://developers.google.com/edge/mediapipe/solutions/vision/image_segmenter).
 
-```ts
-simulate({ bitmap }: { bitmap: ImageBitmap }): Promise<{
-  before: HTMLCanvasElement;
-  after: HTMLCanvasElement;
-  mock: true;
-  label: "Simulación de ejemplo";
-}>
-```
-
-Hoy la implementación es `mockDensitySimulation` (`id: "mock-densidad-superior"`). Copia la foto a un canvas y pinta un velo suave, con trazos cortos, solo en la zona superior. No aumenta el cabello ni promete densidad. Lleva el aviso «Simulación de ejemplo» y el texto fijo: «Simulación ilustrativa. No garantiza resultados; tu médico define el plan en la valoración.»
-
-En producción la sección no abre la cámara ni corre el mock. Queda el aviso de que aún no está disponible.
-
-`prefers-reduced-motion` quita la transición del comparador. El resultado aparece de una vez.
-
-## Conectar un modelo
-
-1. Implementa otro `SimulationProvider` y úsalo en `SimulationPanel` en lugar de `mockDensitySimulation`.
-2. Sigue en el navegador. Si algún día el archivo tuviera que salir del dispositivo, hace falta un consentimiento distinto, escrito, y no se reutiliza el de esta pantalla.
-3. El disclaimer no se quita.
-4. No guardes la imagen en el payload del CRM (`docs/crm-payload.md`).
-5. No animes el resultado si la persona pidió menos movimiento.
-6. Marca `mock: false` solo cuando el modelo sea el que el equipo haya aprobado para mostrar.
+El espejo cerrado muestra dos pares de retratos sintéticos, etiquetados como ejemplo generado con IA: entradas y raya. Las dos variantes están disponibles desde el selector antes de activar la cámara. Al cerrarla, el comparador vuelve al ejemplo seleccionado.

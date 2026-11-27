@@ -9,6 +9,7 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       { source: "/clinicas/luvania", destination: "/", permanent: true },
+      { source: "/articulo/perfilamiento-maxilar", destination: "/tratamientos/perfilamiento-maxilar-hombres", permanent: true },
       { source: "/pqr", destination: "/pqrs", permanent: true },
       { source: "/ofertas", destination: "/promociones", permanent: true },
       { source: "/galerias", destination: "/sedes", permanent: true },

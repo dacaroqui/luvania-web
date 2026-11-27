@@ -67,6 +67,23 @@ function BenefitIcon({ index }: { index: number }) {
   );
 }
 
+const detailIcons = {
+  audience: "M15 7a3 3 0 1 1-6 0 3 3 0 0 1 6 0ZM5 20v-2a4 4 0 0 1 4-4h6a4 4 0 0 1 4 4v2",
+  caution: "M12 3 3 7v5c0 4 4 7 9 9 5-2 9-5 9-9V7l-9-4Zm0 5v4m0 4h.01",
+  time: "M12 7v5l3 2m6-2a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z",
+  procedure: "M5 4h14v16H5zM9 9h6m-6 6h6",
+  care: "M20 9c0 4-8 10-8 10S4 13 4 9a4 4 0 0 1 8-1 4 4 0 0 1 8 1Z",
+};
+
+function DetailHeading({ icon, children }: { icon: keyof typeof detailIcons; children: string }) {
+  return (
+    <h2 className="display ficha-detail-heading">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d={detailIcons[icon]} /></svg>
+      {children}
+    </h2>
+  );
+}
+
 function NameList({ items }: { items: { name: string; href?: string }[] }) {
   if (items.length === 0) return null;
   return (
@@ -138,7 +155,6 @@ export default async function TratamientoPage({ params }: { params: Promise<Para
           .map((id) => guide.blocks.find((block) => block.id === id && block.card))
           .filter((block): block is NonNullable<typeof block> => Boolean(block))
       : [];
-  const heroBenefits = beneficios.slice(0, 4);
 
   const sections = [
     showHow ? { id: "como-funciona", label: "Cómo funciona" } : null,
@@ -213,16 +229,6 @@ export default async function TratamientoPage({ params }: { params: Promise<Para
                 </a>
               ) : null}
             </div>
-            {heroBenefits.length ? (
-              <ul className="ficha-hero-benefits">
-                {heroBenefits.map((item, index) => (
-                  <li key={item}>
-                    <BenefitIcon index={index} />
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
-            ) : null}
           </div>
           <div className="ficha-hero-visual">
             <div className="ficha-portrait">
@@ -303,18 +309,18 @@ export default async function TratamientoPage({ params }: { params: Promise<Para
 
         <div className="ficha-main">
           {showHow ? (
-            <section id="como-funciona" className="ficha-block">
+            <section id="como-funciona" className="ficha-block" data-reveal>
               <h2 className="display">Cómo funciona</h2>
-              {procedimiento ? <p>{procedimiento}</p> : null}
+              <TreatmentCopy text={procedimiento} label="Ver detalles del procedimiento" />
               {video ? <VideoBlock src={video} name={treatment.name} /> : null}
             </section>
           ) : null}
 
           {queEs ? (
-            <section id="que-es" className="ficha-block ficha-que">
+            <section id="que-es" className="ficha-block ficha-que" data-reveal>
               <div>
                 <h2 className="display">Qué es</h2>
-                <p>{queEs}</p>
+                <TreatmentCopy text={queEs} />
                 {showGuide ? <GuideLink slug={treatment.slug} anchor="que-es" /> : null}
               </div>
               {treatment.image ? (
@@ -327,11 +333,11 @@ export default async function TratamientoPage({ params }: { params: Promise<Para
           ) : null}
 
           {beneficios.length ? (
-            <section id="beneficios" className="ficha-block ficha-beneficios">
+            <section id="beneficios" className="ficha-block ficha-beneficios" data-reveal>
               <h2 className="display">Beneficios</h2>
               <ul>
                 {beneficios.map((item, index) => (
-                  <li key={item}>
+                  <li key={item} data-reveal data-pointer>
                     <BenefitIcon index={index} />
                     <span>{item}</span>
                   </li>
@@ -343,15 +349,15 @@ export default async function TratamientoPage({ params }: { params: Promise<Para
           {paraQuien || riesgos ? (
             <div className="ficha-pair">
               {paraQuien ? (
-                <section id="para-quien" className="ficha-card">
-                  <h2 className="display">¿Para quién es?</h2>
-                  <p>{paraQuien}</p>
+                <section id="para-quien" className="ficha-card ficha-detail-card" data-reveal>
+                  <DetailHeading icon="audience">¿Para quién es?</DetailHeading>
+                  <TreatmentCopy text={paraQuien} />
                 </section>
               ) : null}
               {riesgos ? (
-                <section id="riesgos" className="ficha-card ficha-card-soft">
-                  <h2 className="display">Riesgos y contraindicaciones</h2>
-                  <p>{riesgos}</p>
+                <section id="riesgos" className="ficha-card ficha-detail-card is-caution" data-reveal>
+                  <DetailHeading icon="caution">Riesgos y contraindicaciones</DetailHeading>
+                  <TreatmentCopy text={riesgos} label="Ver todos los riesgos y contraindicaciones" />
                   {showGuide ? <GuideLink slug={treatment.slug} anchor="efectos" /> : null}
                 </section>
               ) : null}
@@ -361,18 +367,20 @@ export default async function TratamientoPage({ params }: { params: Promise<Para
           {clinicalCards
             .filter((block) => block.id === "procedimiento")
             .map((block) => (
-              <section key={block.id} id="procedimiento" className="ficha-card ficha-card-soft">
-                <h2 className="display">Cómo es el procedimiento</h2>
-                <p>{block.card}</p>
+              <section key={block.id} id="procedimiento" className="ficha-card ficha-detail-card" data-reveal>
+                <DetailHeading icon="procedure">Cómo es el procedimiento</DetailHeading>
+                <TreatmentCopy text={block.card} />
                 <GuideLink slug={treatment.slug} anchor={block.id} />
               </section>
             ))}
 
           {sesiones || duracion ? (
-            <section id="sesiones" className="ficha-card">
-              <h2 className="display">Sesiones y duración</h2>
-              {sesiones ? <p>{sesiones}</p> : null}
-              {duracion ? <p>{duracion}</p> : null}
+            <section id="sesiones" className="ficha-card ficha-detail-card is-timing" data-reveal>
+              <DetailHeading icon="time">Sesiones y duración</DetailHeading>
+              <dl className="ficha-session-facts">
+                {sesiones ? <div><dt>Sesiones</dt><dd>{sesiones}</dd></div> : null}
+                {duracion ? <div><dt>Duración</dt><dd>{duracion}</dd></div> : null}
+              </dl>
               {showGuide ? <GuideLink slug={treatment.slug} anchor="sesiones" /> : null}
             </section>
           ) : null}
@@ -380,22 +388,22 @@ export default async function TratamientoPage({ params }: { params: Promise<Para
           {clinicalCards
             .filter((block) => block.id !== "procedimiento")
             .map((block) => (
-              <section key={block.id} id={block.id} className="ficha-card">
-                <h2 className="display">
+              <section key={block.id} id={block.id} className={`ficha-card ficha-detail-card ${block.id === "efectos" ? "is-caution" : "is-timing"}`} data-reveal>
+                <DetailHeading icon={block.id === "efectos" ? "caution" : "care"}>
                   {block.id === "preparacion"
                     ? "Cuidados antes"
                     : block.id === "cuidados"
                       ? "Cuidados después"
                       : "Efectos y contraindicaciones"}
-                </h2>
-                <p>{block.card}</p>
+                </DetailHeading>
+                <TreatmentCopy text={block.card} />
                 {guide?.medicalReview === "pendiente" ? <p className="ficha-review-note">Contenido en revisión médica</p> : null}
                 <GuideLink slug={treatment.slug} anchor={block.id} />
               </section>
             ))}
 
           {showGuide && guide ? (
-            <section id="guia" className="ficha-guide-block glass">
+            <section id="guia" className="ficha-guide-block glass" data-reveal>
               <p className="ficha-guide-kicker">Guía completa</p>
               <h2 className="display">{guide.h1}</h2>
               <p className="ficha-guide-lead">{guide.description}</p>
@@ -406,16 +414,17 @@ export default async function TratamientoPage({ params }: { params: Promise<Para
           ) : null}
 
           {!showGuide && guideMatches.length ? (
-            <section id="guias" className="ficha-guide-block glass">
-              <p className="ficha-guide-kicker">Guías relacionadas</p>
-              <h2 className="display">De la misma zona</h2>
+            <section id="guias" className="ficha-guide-block glass" data-reveal>
+              <h2 className="display">Guías relacionadas</h2>
               <ul className="ficha-guide-list">
                 {guideMatches.map(({ guide: item }) => (
                   <li key={item.slug}>
                     <Link href={`/tratamientos/${item.slug}/guia`}>
-                      <span className="display">{item.h1}</span>
-                      <span>{item.description}</span>
-                      <span>{readingMinutes(item)} min de lectura</span>
+                      <h3 className="display">{item.h1}</h3>
+                      <p>{item.description}</p>
+                      <span className="ficha-guide-card-meta">
+                        {readingMinutes(item)} min de lectura <span aria-hidden="true">↗</span>
+                      </span>
                     </Link>
                   </li>
                 ))}
@@ -424,7 +433,7 @@ export default async function TratamientoPage({ params }: { params: Promise<Para
           ) : null}
 
           {faqs.length ? (
-            <section id="preguntas" className="ficha-block">
+            <section id="preguntas" className="ficha-block" data-reveal>
               <h2 className="display">Preguntas frecuentes</h2>
               <div className="ficha-faqs">
                 {faqs.map((faq) => (
@@ -460,7 +469,7 @@ export default async function TratamientoPage({ params }: { params: Promise<Para
         </section>
       ) : null}
 
-      <Valoracion layout="steps" />
+      <Valoracion tratamiento={treatment.name} tratamientoId={treatment.slug} necesidad={treatment.needs[0]} promo={promoLabel} />
 
       <div className="ficha-mobile-bar">
         {offer ? <p className="ficha-mobile-price">{cop(offer.priceNow)}</p> : null}
@@ -469,6 +478,22 @@ export default async function TratamientoPage({ params }: { params: Promise<Para
         </BookButton>
       </div>
     </main>
+  );
+}
+
+function TreatmentCopy({ text, label = "Leer más" }: { text?: string; label?: string }) {
+  if (!text) return null;
+  const end = text.search(/[.!?](?=\s+[A-ZÁÉÍÓÚÑ¿¡])/);
+  if (text.length <= 220 || end < 45 || end > 220) return <p>{text}</p>;
+
+  return (
+    <>
+      <p>{text.slice(0, end + 1)}</p>
+      <details className="treatment-more">
+        <summary>{label}</summary>
+        <p>{text.slice(end + 1).trim()}</p>
+      </details>
+    </>
   );
 }
 

@@ -58,7 +58,8 @@ export function Providers({
   useEffect(() => {
     captureUtm();
     const sync = () => {
-      if (window.location.hash === "#agendar") openAgenda();
+      const { hash, pathname } = window.location;
+      if (hash === "#agendar" || (hash === "#valoracion" && pathname.startsWith("/lp/"))) openAgenda();
     };
     sync();
     window.addEventListener("hashchange", sync);

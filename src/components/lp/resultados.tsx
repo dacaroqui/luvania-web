@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import { CompareSlider } from "./compare-slider";
+import { SimulationPanel } from "./simulation-panel";
+import type { DensityStyle } from "@/lib/simulation/provider";
 
 const CASES = [
   {
@@ -21,10 +23,26 @@ const CASES = [
   },
 ];
 
-export function ResultadosReales() {
+export function ResultadosReales({
+  withMirror = false,
+  showPersonalSimulation = true,
+}: {
+  withMirror?: boolean;
+  showPersonalSimulation?: boolean;
+}) {
+  return withMirror ? <CapillaryExample showPersonalSimulation={showPersonalSimulation} /> : <ResultsCarousel />;
+}
+
+function ResultsCarousel() {
   const [index, setIndex] = useState(0);
   const item = CASES[index];
   const go = (delta: number) => setIndex((current) => (current + delta + CASES.length) % CASES.length);
+
+  const example = {
+    label: `Comparar el caso ${index + 1}. Foto real autorizada pendiente.`,
+    before: <Placeholder tone={item.before} />,
+    after: <Placeholder tone={item.after} />,
+  };
 
   return (
     <section className="lp-split" aria-labelledby="resultados-reales">
@@ -32,7 +50,7 @@ export function ResultadosReales() {
         <h2 id="resultados-reales" className="display">
           Resultados reales de Luvania
         </h2>
-        <p>Cuando haya fotos autorizadas, se comparan aquí. Hoy el espacio queda reservado.</p>
+        <p>Fotos de pacientes pendientes de autorización.</p>
         <div className="lp-arrows">
           <button type="button" className="lp-arrow" aria-label="Caso anterior" onClick={() => go(-1)}>
             <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -51,14 +69,40 @@ export function ResultadosReales() {
       </div>
       <div className="lp-results-frame">
         <span className="lp-badge">Foto real autorizada pendiente</span>
-        <CompareSlider
-          key={item.id}
-          label={`Comparar el caso ${index + 1}. Foto real autorizada pendiente.`}
-          before={<Placeholder tone={item.before} />}
-          after={<Placeholder tone={item.after} />}
-        />
+        <CompareSlider key={item.id} {...example} />
       </div>
     </section>
+  );
+}
+
+function CapillaryExample({ showPersonalSimulation }: { showPersonalSimulation: boolean }) {
+  const examples = {
+    masculino: {
+      label: "Comparar el ejemplo de densidad en entradas",
+      before: <ExamplePhoto style="masculino" side="antes" />,
+      after: <ExamplePhoto style="masculino" side="despues" />,
+    },
+    femenino: {
+      label: "Comparar el ejemplo ilustrativo de densidad en la zona superior",
+      before: <ExamplePhoto style="femenino" side="antes" />,
+      after: <ExamplePhoto style="femenino" side="despues" />,
+    },
+  };
+
+  return (
+    <section className="lp-hair-stage" aria-label="Comparador de densidad capilar">
+      <SimulationPanel examples={examples} showPersonalSimulation={showPersonalSimulation} />
+    </section>
+  );
+}
+
+function ExamplePhoto({ side, style }: { side: "antes" | "despues"; style: DensityStyle }) {
+  const area = style === "femenino" ? "la zona superior" : "las entradas";
+  const alt = side === "antes" ? `Retrato ilustrativo con menor densidad en ${area}` : `El mismo retrato con mayor densidad en ${area}`;
+  const file = style === "femenino" ? "capilar-raya" : "capilar-ejemplo";
+  return (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img className={`hair-demo-photo is-${style}`} src={`/images/${file}-${side}.webp`} alt={alt} width={750} height={750} decoding="async" />
   );
 }
 
