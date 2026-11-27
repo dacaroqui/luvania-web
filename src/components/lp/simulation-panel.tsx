@@ -17,7 +17,13 @@ type Status = "idle" | "opening" | "live" | "loading-photo" | "photo" | "error";
 
 type Example = { before: ReactNode; after: ReactNode; label: string };
 
-export function SimulationPanel({ examples }: { examples: Record<DensityStyle, Example> }) {
+export function SimulationPanel({
+  examples,
+  showPersonalSimulation = true,
+}: {
+  examples: Record<DensityStyle, Example>;
+  showPersonalSimulation?: boolean;
+}) {
   const [status, setStatus] = useState<Status>("idle");
   const [error, setError] = useState("");
   const video = useRef<HTMLVideoElement>(null);
@@ -460,22 +466,24 @@ export function SimulationPanel({ examples }: { examples: Record<DensityStyle, E
             Femenino
           </button>
         </div>
-        <div className="hair-mirror-actions">
-          <button className="btn-coral" type="button" aria-controls="espejo-capilar" aria-expanded={opened} onClick={opened ? close : openCamera}>
-            {opened ? status === "opening" ? "Cancelar cámara" : "Cerrar vista" : "Ver cómo se vería en mí"}
-          </button>
-          {active && !generated && maskStatus === "ready" ? (
-            <button type="button" ref={aimToggle} className="hair-mirror-adjust" aria-pressed={adjusting}
-              onClick={() => adjusting ? stopAdjusting() : setAdjusting(true)}>
-              {adjusting ? "Listo" : "Ajustar zona"}
+        {showPersonalSimulation ? (
+          <div className="hair-mirror-actions">
+            <button className="btn-coral" type="button" aria-controls="espejo-capilar" aria-expanded={opened} onClick={opened ? close : openCamera}>
+              {opened ? status === "opening" ? "Cancelar cámara" : "Cerrar vista" : "Ver cómo se vería en mí"}
             </button>
-          ) : null}
-          {aiEnabled && active && !generated && (tracking === "ready" || tracking === "manual") ? (
-            <button type="button" className="hair-mirror-adjust" disabled={aiPending || adjusting} onClick={() => setAiConsent(!aiConsent)}>
-              Simular con IA
-            </button>
-          ) : null}
-        </div>
+            {active && !generated && maskStatus === "ready" ? (
+              <button type="button" ref={aimToggle} className="hair-mirror-adjust" aria-pressed={adjusting}
+                onClick={() => adjusting ? stopAdjusting() : setAdjusting(true)}>
+                {adjusting ? "Listo" : "Ajustar zona"}
+              </button>
+            ) : null}
+            {aiEnabled && active && !generated && (tracking === "ready" || tracking === "manual") ? (
+              <button type="button" className="hair-mirror-adjust" disabled={aiPending || adjusting} onClick={() => setAiConsent(!aiConsent)}>
+                Simular con IA
+              </button>
+            ) : null}
+          </div>
+        ) : null}
       </div>
       {aiConsent ? (
         <div className="hair-mirror-ai-consent">
@@ -519,10 +527,12 @@ export function SimulationPanel({ examples }: { examples: Record<DensityStyle, E
         void openPhoto(event.target.files?.[0]);
         event.target.value = "";
       }} />
-      <details className="hair-mirror-privacy">
-        <summary>Privacidad y alcance del filtro</summary>
-        <p>{privacyNote} {filterNote}{aiEnabled ? " La simulación con IA solicita autorización para enviar una captura a OpenAI." : ""}</p>
-      </details>
+      {showPersonalSimulation ? (
+        <details className="hair-mirror-privacy">
+          <summary>Privacidad y alcance del filtro</summary>
+          <p>{privacyNote} {filterNote}{aiEnabled ? " La simulación con IA solicita autorización para enviar una captura a OpenAI." : ""}</p>
+        </details>
+      ) : null}
     </div>
   );
 }

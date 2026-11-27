@@ -17,8 +17,10 @@ export type Landing = {
   heroIntro?: string;
   /** `related` usa el tratamiento y sus relacionados. `all` usa las ofertas publicadas. */
   promoFilter: "related" | "all";
-  /** La simulación del navegador solo se enciende si el anuncio la tiene. Hoy es el filtro de densidad capilar. */
+  /** Activa la experiencia capilar y su comparador de ejemplo. */
   simulation: boolean;
+  /** Permite pausar la vista personal sin ocultar el comparador. */
+  showPersonalSimulation?: boolean;
   showResults: boolean;
   showDoctor: boolean;
   questions: LandingQuestion[];

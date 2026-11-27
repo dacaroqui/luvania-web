@@ -23,8 +23,14 @@ const CASES = [
   },
 ];
 
-export function ResultadosReales({ withMirror = false }: { withMirror?: boolean }) {
-  return withMirror ? <CapillaryExample /> : <ResultsCarousel />;
+export function ResultadosReales({
+  withMirror = false,
+  showPersonalSimulation = true,
+}: {
+  withMirror?: boolean;
+  showPersonalSimulation?: boolean;
+}) {
+  return withMirror ? <CapillaryExample showPersonalSimulation={showPersonalSimulation} /> : <ResultsCarousel />;
 }
 
 function ResultsCarousel() {
@@ -69,7 +75,7 @@ function ResultsCarousel() {
   );
 }
 
-function CapillaryExample() {
+function CapillaryExample({ showPersonalSimulation }: { showPersonalSimulation: boolean }) {
   const examples = {
     masculino: {
       label: "Comparar el ejemplo de densidad en entradas",
@@ -85,7 +91,7 @@ function CapillaryExample() {
 
   return (
     <section className="lp-hair-stage" aria-label="Comparador de densidad capilar">
-      <SimulationPanel examples={examples} />
+      <SimulationPanel examples={examples} showPersonalSimulation={showPersonalSimulation} />
     </section>
   );
 }

@@ -11,6 +11,7 @@ const landing: Landing = {
   heroIntro: "Revisa tu pérdida de volumen y conoce tus opciones.",
   promoFilter: "related",
   simulation: true,
+  showPersonalSimulation: false,
   showResults: true,
   showDoctor: false,
   questions: [

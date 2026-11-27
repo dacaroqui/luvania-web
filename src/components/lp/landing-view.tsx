@@ -109,6 +109,7 @@ export function LandingView({
   ].filter((item): item is { href: string; title: string; text: string; path: string } => Boolean(item));
   const portrait = treatment?.image;
   const capillaryHero = landing.slug === "caida-del-cabello";
+  const showPersonalSimulation = landing.simulation && landing.showPersonalSimulation !== false;
 
   return (
     <main className={landing.simulation ? "ficha lp-ficha lp-capilar" : "ficha lp-ficha"}>
@@ -129,7 +130,7 @@ export function LandingView({
               <BookButton {...booking}>
                 {landing.simulation ? "Agendar valoración" : "Iniciar valoración"}
               </BookButton>
-              {landing.simulation ? <a className="btn-line" href="#como-te-verias">Probar simulación</a> : null}
+              {showPersonalSimulation ? <a className="btn-line" href="#como-te-verias">Probar simulación</a> : null}
             </div>
           </div>
           <div className="ficha-hero-visual">
@@ -156,7 +157,7 @@ export function LandingView({
       </section>
 
       {landing.simulation || (preview && landing.showResults) ? (
-        <ResultadosReales withMirror={landing.simulation} />
+        <ResultadosReales withMirror={landing.simulation} showPersonalSimulation={showPersonalSimulation} />
       ) : null}
 
       {landing.simulation && treatment ? (
