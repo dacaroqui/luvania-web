@@ -1,5 +1,6 @@
 "use client";
 
+import { offerForTreatment, offerMatchesSede } from "@/data/offers";
 import type { AgendaSede } from "@/data/types";
 import { useEffect, useId, useRef } from "react";
 import { CloseButton } from "./close-button";
@@ -52,6 +53,8 @@ export function SedeGate({ sedes }: { sedes: AgendaSede[] }) {
   }, [pending]);
 
   if (!pending) return null;
+  const offer = offerForTreatment(pending.slug);
+  const availableSedes = offer ? sedes.filter((sede) => offerMatchesSede(offer, sede.slug)) : sedes;
 
   return (
     <div
@@ -72,7 +75,7 @@ export function SedeGate({ sedes }: { sedes: AgendaSede[] }) {
           <div className="agenda-body thin-scroll">
             <p className="text-sm leading-6 text-mute">La sede queda guardada en el carrito. La puedes cambiar antes de finalizar.</p>
             <ul className="grid gap-2">
-              {sedes.map((sede) => (
+              {availableSedes.map((sede) => (
                 <li key={sede.slug}>
                   <button type="button" className="sede-option" onClick={() => cart.confirmSede(sede.slug)}>
                     {sede.name}

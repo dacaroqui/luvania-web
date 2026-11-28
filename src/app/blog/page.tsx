@@ -1,5 +1,7 @@
 import { allGuides, readingMinutes } from "@/data/guides";
 import { getTreatment } from "@/data";
+import { blogArticles } from "@/data/blog-articles";
+import { TreatmentMedia } from "@/components/treatment-media";
 import { verifiedCatalog } from "@/data/catalog";
 import { publicText } from "@/lib/public-copy";
 import { clinicalVisible } from "@/lib/review";
@@ -15,11 +17,14 @@ const prioritySlugs = [
   "dewlap-lipopapada-sin-cirugia", "hilos-tensores",
 ];
 const catalog = verifiedCatalog();
-const topics = prioritySlugs.flatMap((slug) => catalog.filter((item) => item.slug === slug));
+const topics = prioritySlugs.flatMap((slug) => guides.some((guide) => guide.slug === slug)
+  ? []
+  : catalog.filter((item) => item.slug === slug));
+const cardSizes = "(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 33vw";
 
 export const metadata = pageMeta({
   title: "Guías de tratamientos | Luvania",
-  description: "Consulta tratamientos y guías de Luvania en Bogotá sobre caída del cabello, perfilamiento mandibular, toxina botulínica, ojeras y más.",
+  description: "Guías de Luvania en Bogotá para preparar tu valoración estética, comparar precios por sede y conocer tratamientos faciales, corporales y capilares.",
   path: "/blog",
 });
 
@@ -31,12 +36,29 @@ export default function BlogPage() {
       <p className="mt-4 max-w-2xl text-lg leading-8 text-mute">
         Explora qué aborda cada tratamiento y qué puedes preguntar en tu valoración en Bogotá.
       </p>
+      <section aria-labelledby="guias-practicas" className="mt-8">
+        <h2 id="guias-practicas" className="display text-3xl">Guías prácticas</h2>
+        <ul className="guide-index">
+          {blogArticles.map((article) => (
+            <li key={article.slug}>
+              <Link href={`/blog/${article.slug}`} className="guide-card glass">
+                <Image src={article.image.src} alt="" width={article.image.width} height={article.image.height} sizes={cardSizes} />
+                <span>
+                  <span className="display">{article.title}</span>
+                  <span>{article.description}</span>
+                </span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </section>
       <section aria-labelledby="temas-de-valoracion" className="mt-8">
         <h2 id="temas-de-valoracion" className="display text-3xl">Temas de valoración</h2>
         <ul className="guide-index">
           {topics.map((item) => (
             <li key={item.slug}>
               <Link href={`/tratamientos/${item.slug}`} className="guide-card glass">
+                <TreatmentMedia name={item.name} image={getTreatment(item.slug)?.image} decorative />
                 <span>
                   <span className="display">{item.name}</span>
                   <span>{publicText(item.summary, item.name)}</span>
@@ -58,11 +80,8 @@ export default function BlogPage() {
                   <Link href={`/tratamientos/${guide.slug}/guia`} className="guide-card glass">
                     {guide.cover ? (
                       <Image src={guide.cover.src} alt="" width={guide.cover.width} height={guide.cover.height}
-                        sizes="(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 33vw" />
-                    ) : treatment?.image ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img src={treatment.image} alt="" />
-                    ) : null}
+                        sizes={cardSizes} />
+                    ) : <TreatmentMedia name={guide.h1} image={treatment?.image} decorative /> }
                     <span>
                       <span className="ficha-guide-kicker">{readingMinutes(guide)} min</span>
                       <span className="display">{guide.h1}</span>

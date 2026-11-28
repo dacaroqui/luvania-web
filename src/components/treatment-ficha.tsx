@@ -1,6 +1,8 @@
 "use client";
 
-import { canPurchase, shopProduct } from "@/data/shop";
+import { canPurchase, shopProduct, type ShopProduct } from "@/data/shop";
+import { priceCaption } from "@/data/purchase";
+import { cop } from "@/lib/format";
 import { useEffect, useState } from "react";
 import { useCart } from "./cart-store";
 
@@ -59,5 +61,37 @@ export function FichaAddButton({ slug, nombre }: { slug: string; nombre: string 
       {inCart ? `Agregado · ${inCart}` : "Agregar al carrito"}
       <span className="sr-only">{nombre}</span>
     </button>
+  );
+}
+
+export function FichaSedeOffers({ rows, slug, nombre }: {
+  rows: { slug: string; name: string; product: ShopProduct | null }[];
+  slug: string;
+  nombre: string;
+}) {
+  const cart = useCart();
+  const selected = rows.find((row) => row.slug === cart.sede);
+  const caption = selected?.product && !selected.product.vencida ? priceCaption(selected.product.tipoPrecio) : null;
+
+  return (
+    <div id="precios-por-sede" className="ficha-sede-offers">
+      <fieldset>
+        <legend>Precios y promociones por sede</legend>
+        <div className="ficha-sede-options">
+          {rows.map((row) => (
+            <label key={row.slug} className="ficha-sede-row">
+              <input type="radio" name="ficha-sede" checked={cart.sede === row.slug} onChange={() => cart.setSede(row.slug)} />
+              <strong>{row.name}</strong>
+              {row.product && !row.product.vencida
+                ? <strong>{cop(row.product.precio)}</strong>
+                : <small>Sin promoción publicada</small>}
+            </label>
+          ))}
+        </div>
+      </fieldset>
+      {caption ? <p className="ficha-caption">{caption}</p> : null}
+      <p className="ficha-validity">Si tu sede no muestra un precio, consúltalo al agendar.</p>
+      {selected ? <FichaAddButton slug={slug} nombre={nombre} /> : null}
+    </div>
   );
 }

@@ -5147,3 +5147,31 @@ dialog.sheet.vx-dialog { width: min(57rem, calc(100vw - 1.5rem)); border: 0; pad
 }
 .hair-mirror-ai-consent p { margin: 0 0 0.45rem; font-size: 0.88rem; }
 .hair-mirror-ai-consent button { margin: 0.2rem 0.4rem 0.2rem 0; }
+
+.ficha-main .ficha-que-text { grid-template-columns: minmax(0, 1fr); }
+.ficha-sede-offers { scroll-margin-top: 7rem; display: grid; gap: 0.45rem; }
+.ficha-sede-offers legend { margin-bottom: 0.55rem; font-weight: 750; }
+.ficha-sede-options { display: grid; gap: 0.35rem; }
+.ficha-sede-row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 2.75rem;
+  padding: 0.48rem 0.55rem;
+  border: 1px solid #e3d4c7;
+  border-radius: 0.65rem;
+  background: #fffaf4;
+  cursor: pointer;
+}
+.ficha-sede-row:has(:checked) { border-color: #a9604d; background: #f9eee4; }
+.ficha-sede-row input { accent-color: #91523e; }
+.ficha-sede-row small { display: block; color: #655047; font-size: 0.75rem; }
+.ficha-sede-row > strong { font-size: 0.88rem; white-space: nowrap; }
+
+.guide-card .treatment-media { aspect-ratio: 4 / 3; }
+.shop-media .treatment-media { width: 100%; height: 100%; }
+.cart-list .treatment-media { width: 4.5rem; height: 3rem; border-radius: 0.6rem; }
+.cart-list .treatment-frame { min-height: 0; }
+.cart-list .treatment-frame .flor { width: 1.65rem; }
+.cart-unavailable li { grid-template-columns: minmax(0, 1fr) auto; }

@@ -1,3 +1,4 @@
+import { blogArticles } from "@/data/blog-articles";
 import { catalog } from "@/data/catalog";
 import { allGuides } from "@/data/guides";
 import { resolveSedes } from "@/data/sedes";
@@ -32,5 +33,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
       url: `${site.url}/tratamientos/${guide.slug}/guia`,
       ...(guide.cover ? { images: [new URL(guide.cover.src, site.url).href] } : {}),
     }));
-  return [...paths.map((path) => ({ url: `${site.url}${path}` })), ...guides];
+  const editorial = blogArticles.map((article) => ({
+    url: `${site.url}/blog/${article.slug}`,
+    images: [new URL(article.image.src, site.url).href],
+  }));
+  return [...paths.map((path) => ({ url: `${site.url}${path}` })), ...editorial, ...guides];
 }

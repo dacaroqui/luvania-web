@@ -204,8 +204,7 @@
     "placeholder": false,
     "placeholderNote": "",
     "inAudit44": true,
-    "status": "VERIFIED",
-    "image": "/tratamientos/drenaje-linfatico.webp"
+    "status": "VERIFIED"
   },
   {
     "slug": "lipomax",
@@ -254,8 +253,7 @@
     "placeholder": true,
     "placeholderNote": "Página de origen delgada. El mecanismo del equipo queda por confirmar.",
     "inAudit44": true,
-    "status": "VERIFIED",
-    "image": "/tratamientos/lipomax.webp"
+    "status": "VERIFIED"
   },
   {
     "slug": "velanova",
@@ -356,8 +354,7 @@
     "placeholder": true,
     "placeholderNote": "Página de origen delgada. No se publican parámetros del equipo.",
     "inAudit44": true,
-    "status": "VERIFIED",
-    "image": "/tratamientos/electroporacion.webp"
+    "status": "VERIFIED"
   },
   {
     "slug": "toxina-botulinica-tipo-a",
@@ -744,8 +741,7 @@
     "placeholder": false,
     "placeholderNote": "",
     "inAudit44": true,
-    "status": "VERIFIED",
-    "image": "/tratamientos/bolsas-en-los-ojos.webp"
+    "status": "VERIFIED"
   },
   {
     "slug": "lifting-facial",
@@ -892,7 +888,7 @@
     "placeholderNote": "La página original no tenía secciones y mezclaba el nombre con un slug «hombres».",
     "inAudit44": true,
     "status": "VERIFIED",
-    "image": "/tratamientos/perfilamiento-maxilar-hombres.webp"
+    "image": "/guias/perfil-mandibula-menton.webp"
   },
   {
     "slug": "hilos-tensores",
@@ -942,7 +938,7 @@
     "placeholderNote": "",
     "inAudit44": true,
     "status": "VERIFIED",
-    "image": "/tratamientos/hilos-tensores.webp"
+    "image": "/guias/consulta-hilos-tensores.webp"
   },
   {
     "slug": "dewlap-lipopapada-sin-cirugia",
@@ -991,7 +987,7 @@
     "placeholderNote": "",
     "inAudit44": true,
     "status": "VERIFIED",
-    "image": "/tratamientos/dewlap-lipopapada-sin-cirugia.webp"
+    "image": "/guias/perfil-contorno-bajo-menton.webp"
   },
   {
     "slug": "limpieza-facial-profunda",
@@ -1038,8 +1034,7 @@
     "placeholder": false,
     "placeholderNote": "",
     "inAudit44": true,
-    "status": "VERIFIED",
-    "image": "/tratamientos/limpieza-facial-profunda.webp"
+    "status": "VERIFIED"
   },
   {
     "slug": "electroplasma",
@@ -1087,8 +1082,7 @@
     "placeholder": false,
     "placeholderNote": "",
     "inAudit44": true,
-    "status": "VERIFIED",
-    "image": "/tratamientos/electroplasma.webp"
+    "status": "VERIFIED"
   },
   {
     "slug": "biorevitalizacion",
@@ -1187,8 +1181,7 @@
     "placeholder": true,
     "placeholderNote": "Página de origen delgada. El tipo de equipo no estaba especificado.",
     "inAudit44": true,
-    "status": "VERIFIED",
-    "image": "/tratamientos/microdermoabrasion.webp"
+    "status": "VERIFIED"
   },
   {
     "slug": "diatermia",
@@ -1237,8 +1230,7 @@
     "placeholder": false,
     "placeholderNote": "",
     "inAudit44": true,
-    "status": "VERIFIED",
-    "image": "/tratamientos/diatermia.webp"
+    "status": "VERIFIED"
   },
   {
     "slug": "porcelanizacion",
@@ -1334,8 +1326,7 @@
     "placeholder": false,
     "placeholderNote": "",
     "inAudit44": true,
-    "status": "VERIFIED",
-    "image": "/tratamientos/cromoterapia.webp"
+    "status": "VERIFIED"
   },
   {
     "slug": "factores-de-crecimiento",
@@ -1384,8 +1375,7 @@
     "placeholder": true,
     "placeholderNote": "Se solapa con Plasma virtual y Electroplasma. Falta la distinción oficial del protocolo.",
     "inAudit44": true,
-    "status": "VERIFIED",
-    "image": "/tratamientos/factores-de-crecimiento.webp"
+    "status": "VERIFIED"
   },
   {
     "slug": "collagen-therapy",
@@ -1434,8 +1424,7 @@
     "placeholder": false,
     "placeholderNote": "",
     "inAudit44": true,
-    "status": "VERIFIED",
-    "image": "/tratamientos/collagen-therapy.webp"
+    "status": "VERIFIED"
   },
   {
     "slug": "peeling-ultrasonico",
@@ -1483,8 +1472,7 @@
     "placeholder": false,
     "placeholderNote": "",
     "inAudit44": true,
-    "status": "VERIFIED",
-    "image": "/tratamientos/peeling-ultrasonico.webp"
+    "status": "VERIFIED"
   },
   {
     "slug": "proface",
@@ -1531,8 +1519,7 @@
     "placeholder": true,
     "placeholderNote": "Protocolo de marca con ficha delgada. Falta la secuencia oficial.",
     "inAudit44": true,
-    "status": "VERIFIED",
-    "image": "/tratamientos/proface.webp"
+    "status": "VERIFIED"
   },
   {
     "slug": "lipolisis-de-diodo-laser",
@@ -1582,8 +1569,7 @@
     "placeholder": false,
     "placeholderNote": "",
     "inAudit44": true,
-    "status": "VERIFIED",
-    "image": "/tratamientos/lipolisis-de-diodo-laser.webp"
+    "status": "VERIFIED"
   },
   {
     "slug": "celulitis",
@@ -1729,8 +1715,7 @@
     "placeholder": false,
     "placeholderNote": "",
     "inAudit44": true,
-    "status": "VERIFIED",
-    "image": "/tratamientos/rejuvenecimiento-vaginal.webp"
+    "status": "VERIFIED"
   },
   {
     "slug": "detoxificacion",
@@ -1777,8 +1762,7 @@
     "placeholder": false,
     "placeholderNote": "",
     "inAudit44": true,
-    "status": "VERIFIED",
-    "image": "/tratamientos/detoxificacion.webp"
+    "status": "VERIFIED"
   },
   {
     "slug": "moldeo-corporal",
@@ -1830,8 +1814,7 @@
     "placeholder": true,
     "placeholderNote": "Página de origen delgada. Falta el protocolo escrito de la metaloterapia.",
     "inAudit44": true,
-    "status": "VERIFIED",
-    "image": "/tratamientos/moldeo-corporal.webp"
+    "status": "VERIFIED"
   },
   {
     "slug": "corrientes-rusas",
@@ -1881,8 +1864,7 @@
     "placeholder": true,
     "placeholderNote": "Página de origen delgada.",
     "inAudit44": true,
-    "status": "VERIFIED",
-    "image": "/tratamientos/corrientes-rusas.webp"
+    "status": "VERIFIED"
   },
   {
     "slug": "detox-therapy",
@@ -1930,8 +1912,7 @@
     "placeholder": true,
     "placeholderNote": "Solape de nombres con Detoxificación y Detox-Reductor.",
     "inAudit44": true,
-    "status": "VERIFIED",
-    "image": "/tratamientos/detox-therapy.webp"
+    "status": "VERIFIED"
   },
   {
     "slug": "ems-garden-sculpt",
@@ -1981,8 +1962,7 @@
     "placeholder": false,
     "placeholderNote": "",
     "inAudit44": true,
-    "status": "VERIFIED",
-    "image": "/tratamientos/ems-garden-sculpt.webp"
+    "status": "VERIFIED"
   },
   {
     "slug": "hair-loss",
@@ -2274,8 +2254,7 @@
     "placeholderNote": "Oferta sin página. Texto mínimo a propósito.",
     "inAudit44": false,
     "status": "NEEDS_REVIEW",
-    "neutralSummary": "Protocolo en revisión con dirección médica. Puedes agendar una valoración y el equipo te orienta, sin un precio ni un número de sesiones publicados aquí.",
-    "image": "/tratamientos/liporeductor.webp"
+    "neutralSummary": "Protocolo en revisión con dirección médica. Puedes agendar una valoración y el equipo te orienta, sin un precio ni un número de sesiones publicados aquí."
   },
   {
     "slug": "shock-therapy-bronce",
@@ -2324,8 +2303,7 @@
     "placeholderNote": "Oferta sin página.",
     "inAudit44": false,
     "status": "NEEDS_REVIEW",
-    "neutralSummary": "Protocolo en revisión con dirección médica. Puedes agendar una valoración y el equipo te orienta, sin un precio ni un número de sesiones publicados aquí.",
-    "image": "/tratamientos/shock-therapy-bronce.webp"
+    "neutralSummary": "Protocolo en revisión con dirección médica. Puedes agendar una valoración y el equipo te orienta, sin un precio ni un número de sesiones publicados aquí."
   },
   {
     "slug": "detox-reductor",
@@ -2374,8 +2352,7 @@
     "placeholderNote": "Oferta sin página. Solape de nombres por resolver.",
     "inAudit44": false,
     "status": "NEEDS_REVIEW",
-    "neutralSummary": "Protocolo en revisión con dirección médica. Puedes agendar una valoración y el equipo te orienta, sin un precio ni un número de sesiones publicados aquí.",
-    "image": "/tratamientos/detox-reductor.webp"
+    "neutralSummary": "Protocolo en revisión con dirección médica. Puedes agendar una valoración y el equipo te orienta, sin un precio ni un número de sesiones publicados aquí."
   },
   {
     "slug": "autosanguis",
@@ -2423,8 +2400,7 @@
     "placeholderNote": "Oferta sin página. Definición clínica pendiente.",
     "inAudit44": false,
     "status": "NEEDS_REVIEW",
-    "neutralSummary": "Protocolo en revisión con dirección médica. Puedes agendar una valoración y el equipo te orienta, sin un precio ni un número de sesiones publicados aquí.",
-    "image": "/tratamientos/autosanguis.webp"
+    "neutralSummary": "Protocolo en revisión con dirección médica. Puedes agendar una valoración y el equipo te orienta, sin un precio ni un número de sesiones publicados aquí."
   },
   {
     "slug": "dercelu",
@@ -2472,8 +2448,7 @@
     "placeholderNote": "Oferta sin página.",
     "inAudit44": false,
     "status": "NEEDS_REVIEW",
-    "neutralSummary": "Protocolo en revisión con dirección médica. Puedes agendar una valoración y el equipo te orienta, sin un precio ni un número de sesiones publicados aquí.",
-    "image": "/tratamientos/dercelu.webp"
+    "neutralSummary": "Protocolo en revisión con dirección médica. Puedes agendar una valoración y el equipo te orienta, sin un precio ni un número de sesiones publicados aquí."
   },
   {
     "slug": "rinomodelacion",
@@ -2520,8 +2495,7 @@
     "placeholderNote": "Borrador del gestor y oferta publicada, sin página pública. Texto inferido.",
     "inAudit44": false,
     "status": "NEEDS_REVIEW",
-    "neutralSummary": "Protocolo en revisión con dirección médica. Puedes agendar una valoración y el equipo te orienta, sin un precio ni un número de sesiones publicados aquí.",
-    "image": "/tratamientos/rinomodelacion.webp"
+    "neutralSummary": "Protocolo en revisión con dirección médica. Puedes agendar una valoración y el equipo te orienta, sin un precio ni un número de sesiones publicados aquí."
   },
   {
     "slug": "cavitacion",

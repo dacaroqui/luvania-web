@@ -27,6 +27,8 @@ export function PromosBrowser() {
           </button>
         ))}
       </div>
+      {!sede ? <p className="mt-3 text-sm text-mute">Los precios son de referencia. Elige una sede para consultar su precio y sus promociones.</p> : null}
+      {visible.length === 0 ? <p className="mt-6">No hay promociones publicadas para esta sede.</p> : null}
       <ul className="shop-grid mt-6">
         {visible.map((offer) => (
           <OfferCard key={offer.slug} offer={offer} sede={sede} />
