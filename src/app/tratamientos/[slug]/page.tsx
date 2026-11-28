@@ -3,16 +3,16 @@ import { Breadcrumbs, breadcrumbLd } from "@/components/breadcrumbs";
 import { JsonLd } from "@/components/json-ld";
 import { TreatmentCard } from "@/components/treatment-card";
 import { TreatmentView } from "@/components/treatment-view";
-import { FichaAddButton, FichaTabs } from "@/components/treatment-ficha";
+import { FichaSedeOffers, FichaTabs } from "@/components/treatment-ficha";
 import { Valoracion } from "@/components/valoracion";
 import { getTreatment, isIndexable, relatedTreatments, treatments } from "@/data";
 import { getGuide, readingMinutes } from "@/data/guides";
-import { discountPercent, offerForTreatment } from "@/data/offers";
-import { priceCaption, purchaseTerms } from "@/data/purchase";
+import { offerForTreatment } from "@/data/offers";
+import { shopProduct } from "@/data/shop";
+
 import { resolveSedes } from "@/data/sedes";
 import { site } from "@/data/site";
 import { especialidadBySlug, needById, zoneById } from "@/data/taxonomy";
-import { cop } from "@/lib/format";
 import { needPages, zonePages } from "@/lib/hubs";
 import { publicText } from "@/lib/public-copy";
 import { guideSentence, relatedGuides } from "@/lib/guide-links";
@@ -127,14 +127,6 @@ export default async function TratamientoPage({ params }: { params: Promise<Para
     : [];
   const showHow = Boolean(procedimiento || video);
   const offer = offerForTreatment(treatment.slug);
-  const percent = offer && !offer.priceBeforeSuspicious ? discountPercent(offer) : null;
-  const promoLabel = offer
-    ? offer.priceBeforeSuspicious
-      ? cop(offer.priceNow)
-      : `${cop(offer.priceNow)}, antes ${cop(offer.priceBefore)}`
-    : undefined;
-  const terms = purchaseTerms(treatment.slug);
-  const caption = priceCaption(terms.tipoPrecio);
   const zones = treatment.zones.map((id) => ({
     name: zoneById(id)?.name ?? id,
     href: zoneHref.has(id) ? `/zonas/${id}` : undefined,
@@ -143,7 +135,11 @@ export default async function TratamientoPage({ params }: { params: Promise<Para
     name: needById(id)?.name ?? id,
     href: needHref.has(id) ? `/necesidades/${id}` : undefined,
   }));
-  const sedes = resolveSedes().map((sede) => ({ name: sede.name, href: `/sedes/${sede.slug}` }));
+  const locations = resolveSedes();
+  const sedes = locations.map((sede) => ({ name: sede.name, href: `/sedes/${sede.slug}` }));
+  const sedeOffers = (verified || offer) ? locations.map(({ slug, name }) => ({
+    slug, name, product: shopProduct(treatment.slug, slug) ?? null,
+  })) : [];
   const related = verified ? relatedTreatments(treatment).filter((item) => item.status === "VERIFIED").slice(0, 3) : [];
   const guide = getGuide(treatment.slug);
   const showGuide = Boolean(guide && clinicalVisible(guide.medicalReview));
@@ -216,7 +212,7 @@ export default async function TratamientoPage({ params }: { params: Promise<Para
             <h1 className="display">{treatment.name}</h1>
             {summary ? <p className="ficha-summary">{summary}</p> : null}
             <div className="ficha-hero-actions">
-              <BookButton tratamiento={treatment.name} tratamientoId={treatment.slug} necesidad={treatment.needs[0]} promo={promoLabel}>Agenda tu valoración</BookButton>
+              <BookButton tratamiento={treatment.name} tratamientoId={treatment.slug} necesidad={treatment.needs[0]}>Agenda tu valoración</BookButton>
               {showHow ? (
                 <a className="ficha-how" href="#como-funciona">
                   <span className="ficha-play" aria-hidden="true">
@@ -249,18 +245,12 @@ export default async function TratamientoPage({ params }: { params: Promise<Para
         <FichaTabs items={sections} />
         <aside className="ficha-aside">
           <div className="ficha-price glass">
-            {offer && percent ? <p className="ficha-discount">{percent}% de descuento</p> : null}
-            {offer ? (
-              <>
-                <p className="ficha-amount">{cop(offer.priceNow)}</p>
-                {caption ? <p className="ficha-caption">{caption}</p> : null}
-                <p className="ficha-validity">Sujeto a valoración y vigencia.</p>
-              </>
+            {sedeOffers.length ? (
+              <FichaSedeOffers rows={sedeOffers} slug={treatment.slug} nombre={treatment.name} />
             ) : null}
-            <BookButton className="btn-coral ficha-book" tratamiento={treatment.name} tratamientoId={treatment.slug} necesidad={treatment.needs[0]} promo={promoLabel}>
+            <BookButton className="btn-coral ficha-book" tratamiento={treatment.name} tratamientoId={treatment.slug} necesidad={treatment.needs[0]}>
               Agenda tu valoración
             </BookButton>
-            {offer ? <FichaAddButton slug={treatment.slug} nombre={treatment.name} /> : null}
             <ul className="ficha-meta">
               {zones.length ? (
                 <li>
@@ -317,18 +307,12 @@ export default async function TratamientoPage({ params }: { params: Promise<Para
           ) : null}
 
           {queEs ? (
-            <section id="que-es" className="ficha-block ficha-que" data-reveal>
+            <section id="que-es" className="ficha-block ficha-que ficha-que-text" data-reveal>
               <div>
                 <h2 className="display">Qué es</h2>
                 <TreatmentCopy text={queEs} />
                 {showGuide ? <GuideLink slug={treatment.slug} anchor="que-es" /> : null}
               </div>
-              {treatment.image ? (
-                <figure>
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={treatment.image} alt="" width={960} height={640} />
-                </figure>
-              ) : null}
             </section>
           ) : null}
 
@@ -469,11 +453,11 @@ export default async function TratamientoPage({ params }: { params: Promise<Para
         </section>
       ) : null}
 
-      <Valoracion tratamiento={treatment.name} tratamientoId={treatment.slug} necesidad={treatment.needs[0]} promo={promoLabel} />
+      <Valoracion tratamiento={treatment.name} tratamientoId={treatment.slug} necesidad={treatment.needs[0]} />
 
       <div className="ficha-mobile-bar">
-        {offer ? <p className="ficha-mobile-price">{cop(offer.priceNow)}</p> : null}
-        <BookButton className="btn-coral" tratamiento={treatment.name} tratamientoId={treatment.slug} necesidad={treatment.needs[0]} promo={promoLabel}>
+        {sedeOffers.length ? <a className="ficha-mobile-price" href="#precios-por-sede">Precios por sede</a> : null}
+        <BookButton className="btn-coral" tratamiento={treatment.name} tratamientoId={treatment.slug} necesidad={treatment.needs[0]}>
           Agenda tu valoración
         </BookButton>
       </div>

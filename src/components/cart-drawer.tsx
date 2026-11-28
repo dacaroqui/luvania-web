@@ -7,6 +7,7 @@ import Link from "next/link";
 import { useEffect, useId, useRef } from "react";
 import { CloseButton } from "./close-button";
 import { useCart } from "./cart-store";
+import { TreatmentMedia } from "./treatment-media";
 
 export function CartDrawer({ sedes }: { sedes: AgendaSede[] }) {
   const cart = useCart();
@@ -24,11 +25,12 @@ export function CartDrawer({ sedes }: { sedes: AgendaSede[] }) {
     const product = shopProduct(line.slug, cart.sede);
     return product && canPurchase(product) ? [{ line, product }] : [];
   });
+  const unavailable = cart.lines.filter((line) => !items.some((item) => item.line.slug === line.slug));
   const subtotal = items.reduce((sum, item) => sum + item.product.precio * item.line.cantidad, 0);
   const chosen = sedes.find((item) => item.slug === cart.sede) ?? null;
 
   function checkout() {
-    if (!chosen || items.length === 0) return;
+    if (!chosen || items.length === 0 || unavailable.length > 0) return;
     const lines = items.map(
       (item) => `• ${item.product.nombre} x${item.line.cantidad} — ${cop(item.product.precio * item.line.cantidad)}`,
     );
@@ -59,7 +61,7 @@ export function CartDrawer({ sedes }: { sedes: AgendaSede[] }) {
       </header>
       {items.length === 0 ? (
         <div className="cart-empty">
-          <p>Tu carrito está vacío.</p>
+          <p>{unavailable.length ? "No hay promociones disponibles para esta sede." : "Tu carrito está vacío."}</p>
           <Link href="/promociones" onClick={() => cart.setOpen(false)}>
             Ver promociones
           </Link>
@@ -68,8 +70,7 @@ export function CartDrawer({ sedes }: { sedes: AgendaSede[] }) {
         <ul className="cart-list thin-scroll">
           {items.map(({ line, product }) => (
             <li key={line.slug}>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={product.imagen} alt="" />
+              <TreatmentMedia image={product.imagen} name={product.nombre} decorative />
               <div>
                 <p className="cart-name">{product.nombre}</p>
                 <p className="cart-line-price">{cop(product.precio)}</p>
@@ -90,6 +91,16 @@ export function CartDrawer({ sedes }: { sedes: AgendaSede[] }) {
           ))}
         </ul>
       )}
+      {unavailable.length ? (
+        <ul className="cart-list cart-unavailable">
+          {unavailable.map((line) => (
+            <li key={line.slug}>
+              <p>{shopProduct(line.slug)?.nombre ?? line.slug} · Sin promoción disponible en esta sede</p>
+              <button type="button" className="cart-remove" onClick={() => cart.remove(line.slug)}>Eliminar</button>
+            </li>
+          ))}
+        </ul>
+      ) : null}
       <footer className="cart-foot">
         <p className="cart-subtotal">
           <span>Subtotal</span>
@@ -111,7 +122,7 @@ export function CartDrawer({ sedes }: { sedes: AgendaSede[] }) {
             </select>
           </label>
         ) : null}
-        <button type="button" className="shop-add" onClick={checkout} disabled={items.length === 0 || !chosen}>
+        <button type="button" className="shop-add" onClick={checkout} disabled={items.length === 0 || unavailable.length > 0 || !chosen}>
           Finalizar por WhatsApp
         </button>
       </footer>

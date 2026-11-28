@@ -1,11 +1,12 @@
-import { offerExclusiveSedes, offerIsExpired, offers, resolvedPrice } from "./offers";
+import { offerExclusiveSedes, offerIsExpired, offerMatchesSede, offers, resolvedPrice } from "./offers";
+import { getTreatment } from "./index";
 import { purchaseTerms, type TipoPrecio } from "./purchase";
 
 export type ShopProduct = {
   id: string;
   nombre: string;
   slug: string;
-  imagen: string;
+  imagen?: string;
   precio: number;
   precioAntes: number | null;
   descuento: number | null;
@@ -18,7 +19,7 @@ export type ShopProduct = {
 };
 
 export function shopProducts(sede?: string | null): ShopProduct[] {
-  return offers.map((offer) => {
+  return offers.filter((offer) => offerMatchesSede(offer, sede ?? null)).map((offer) => {
     const terms = purchaseTerms(offer.treatmentSlug);
     const money = resolvedPrice(offer, sede);
     const vencida = offerIsExpired(offer);
@@ -27,8 +28,7 @@ export function shopProducts(sede?: string | null): ShopProduct[] {
       id: offer.treatmentSlug,
       nombre: offer.name,
       slug: offer.treatmentSlug,
-      /* provisional: stock. Fotos de Pexels hasta la sesión de marca. */
-      imagen: `/tratamientos/${offer.treatmentSlug}.webp`,
+      imagen: getTreatment(offer.treatmentSlug)?.image,
       precio: money.priceNow,
       precioAntes,
       descuento: precioAntes ? Math.round((1 - money.priceNow / money.priceBefore) * 100) : null,

@@ -1,5 +1,6 @@
 "use client";
 
+import { offerForTreatment, offerMatchesSede } from "@/data/offers";
 import { flags } from "@/lib/flags";
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 
@@ -83,7 +84,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
       requestAdd: (slug, qty = 1, sedeHint) => {
         if (!flags.cart) return;
         const nextSede = sedeHint || sede;
-        if (!nextSede) {
+        const offer = offerForTreatment(slug);
+        if (!nextSede || (offer && !offerMatchesSede(offer, nextSede))) {
           setPending({ slug, qty });
           return;
         }
@@ -92,6 +94,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
         setOpen(true);
       },
       confirmSede: (slug) => {
+        const offer = pending && offerForTreatment(pending.slug);
+        if (offer && !offerMatchesSede(offer, slug)) return;
         setSedeState(slug);
         if (pending) setLines((current) => withLine(current, pending.slug, pending.qty));
         setPending(null);
